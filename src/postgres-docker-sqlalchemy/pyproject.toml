@@ -1,0 +1,11 @@
+[project]
+name = "postgres-docker-sqlalchemy"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "sqlalchemy",
+  "psycopg2-binary",
+  "python-dotenv",
+]
