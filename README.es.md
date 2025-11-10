@@ -138,14 +138,15 @@ Este repositorio es de código abierto y está disponible bajo la [Licencia MIT]
 
 Cada ejemplo acredita las tecnologías y recursos que lo hicieron posible. Consulta los READMEs individuales de cada ejemplo para atribuciones específicas.
 
+## 🌐 Sígueme
+
+Conéctate conmigo en LinkedIn para más contenido y actualizaciones:
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/raulcastillabravo/)
+
 ---
 
 **¡Feliz programación! 🚀**
 
 Si encuentras estos ejemplos útiles, por favor considera darle una ⭐ a este repositorio
 
-## 🌐 Sígueme
-
-Conéctate conmigo en LinkedIn para más contenido y actualizaciones:
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/raulcastillabravo/)
