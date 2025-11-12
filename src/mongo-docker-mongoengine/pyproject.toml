@@ -1,0 +1,10 @@
+[project]
+name = "mongo-docker-mongoengine"
+version = "0.1.0"
+description = "Minimal viable example for MongoDB with Docker and MongoEngine"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "mongoengine>=0.28.2",
+    "python-dotenv>=1.0.0",
+]
