@@ -80,6 +80,7 @@ src/[nombre-mve]/
 |---------|-------------|--------------|
 | [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | Configuración de PostgreSQL con Docker Compose y ORM SQLAlchemy | PostgreSQL, Docker, SQLAlchemy, Python |
 | [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/) | Configuración de MongoDB con Docker Compose y ODM mongoengine | MongoDB, Docker, mongoengine, Python |
+| [redis-docker](./src/redis-docker/) | Configuración de Redis con Docker Compose y Python | Redis, Docker, Python |
 | *Más ejemplos próximamente...* | | |
 
 ## 🛠️ Stack Tecnológico
