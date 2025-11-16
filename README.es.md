@@ -55,18 +55,21 @@ src/[nombre-mve]/
 ### Ejecutar un Ejemplo
 
 1. **Clonar el repositorio**:
+
    ```bash
    git clone https://github.com/raulcastillabravo/mve-collection.git
    cd mve-collection
    ```
 
 2. **Abrir un ejemplo en VS Code**:
+
    ```bash
    cd src/postgres-docker-sqlalchemy
    code .
    ```
 
 3. **Reabrir en Dev Container**:
+
    - Presiona `F1` o `Ctrl+Shift+P` (Windows/Linux) / `Cmd+Shift+P` (Mac)
    - Selecciona: **Dev Containers: Reopen in Container**
    - Espera a que el contenedor se construya y las dependencias se instalen
@@ -76,23 +79,27 @@ src/[nombre-mve]/
 
 ## 📚 Ejemplos Disponibles
 
-| Ejemplo | Descripción | Tecnologías |
-|---------|-------------|--------------|
+| Ejemplo                                                         | Descripción                                                     | Tecnologías                            |
+| --------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------- |
 | [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | Configuración de PostgreSQL con Docker Compose y ORM SQLAlchemy | PostgreSQL, Docker, SQLAlchemy, Python |
-| [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/) | Configuración de MongoDB con Docker Compose y ODM mongoengine | MongoDB, Docker, mongoengine, Python |
-| [redis-docker](./src/redis-docker/) | Configuración de Redis con Docker Compose y Python | Redis, Docker, Python |
-| *Más ejemplos próximamente...* | | |
+| [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/)     | Configuración de MongoDB con Docker Compose y ODM mongoengine   | MongoDB, Docker, mongoengine, Python   |
+| [redis-docker](./src/redis-docker/)                             | Configuración de Redis con Docker Compose y Python              | Redis, Docker, Python                  |
+| [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | Configuración de RabbitMQ con Docker Compose y Python           | Redis, Docker, Python                  |
+| _Más ejemplos próximamente..._                                  |                                                                 |                                        |
 
 ## 🛠️ Stack Tecnológico
 
 ### Tecnologías Core
+
 - **Python 3.12+**: Lenguaje de programación principal
 - **uv**: Instalador y resolvedor rápido de paquetes de Python
 - **Docker**: Contenedorización y orquestación de servicios
 - **Dev Containers**: Entornos de desarrollo consistentes
 
 ### Tecnologías Específicas por Ejemplo
+
 Cada ejemplo puede incluir tecnologías adicionales como:
+
 - Bases de datos (PostgreSQL, MongoDB, Redis)
 - Frameworks web (FastAPI, Flask, Django)
 - Colas de mensajes (RabbitMQ, Kafka)
@@ -120,12 +127,14 @@ Cada ejemplo puede incluir tecnologías adicionales como:
 ## 📖 ¿Por Qué Este Repositorio?
 
 Aprender nuevas tecnologías a menudo implica:
+
 - ❌ Navegar por documentación extensa
 - ❌ Depurar problemas complejos de configuración
 - ❌ Encontrar ejemplos desactualizados
 - ❌ Dependencias o configuraciones faltantes
 
 Este repositorio resuelve estos problemas proporcionando:
+
 - ✅ Ejemplos listos para ejecutar
 - ✅ Entornos contenedorizados
 - ✅ Especificaciones completas de dependencias
@@ -151,4 +160,3 @@ Conéctate conmigo en LinkedIn para más contenido y actualizaciones:
 **¡Feliz programación! 🚀**
 
 Si encuentras estos ejemplos útiles, por favor considera darle una ⭐ a este repositorio
-

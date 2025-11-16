@@ -55,18 +55,21 @@ src/[mve-name]/
 ### Running an Example
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/raulcastillabravo/mve-collection.git
    cd mve-collection
    ```
 
 2. **Open an example in VS Code**:
+
    ```bash
    cd src/postgres-docker-sqlalchemy
    code .
    ```
 
 3. **Reopen in Dev Container**:
+
    - Press `F1` or `Ctrl+Shift+P` (Windows/Linux) / `Cmd+Shift+P` (Mac)
    - Select: **Dev Containers: Reopen in Container**
    - Wait for the container to build and dependencies to install
@@ -76,23 +79,27 @@ src/[mve-name]/
 
 ## 📚 Available Examples
 
-| Example | Description | Technologies |
-|---------|-------------|--------------|
+| Example                                                         | Description                                             | Technologies                           |
+| --------------------------------------------------------------- | ------------------------------------------------------- | -------------------------------------- |
 | [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | PostgreSQL setup with Docker Compose and SQLAlchemy ORM | PostgreSQL, Docker, SQLAlchemy, Python |
-| [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/) | MongoDB setup with Docker Compose and mongoengine ODM | MongoDB, Docker, mongoengine, Python |
-| [redis-docker](./src/redis-docker/) | Redis setup with Docker Compose and Python | Redis, Docker, Python |
-| *More examples coming soon...* | | |
+| [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/)     | MongoDB setup with Docker Compose and mongoengine ODM   | MongoDB, Docker, mongoengine, Python   |
+| [redis-docker](./src/redis-docker/)                             | Redis setup with Docker Compose and Python              | Redis, Docker, Python                  |
+| [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | RabbitMQ setup with Docker Compose and Python           | Redis, Docker, Python                  |
+| _More examples coming soon..._                                  |                                                         |                                        |
 
 ## 🛠️ Technology Stack
 
 ### Core Technologies
+
 - **Python 3.12+**: Primary programming language
 - **uv**: Fast Python package installer and resolver
 - **Docker**: Containerization and service orchestration
 - **Dev Containers**: Consistent development environments
 
 ### Example-Specific Technologies
+
 Each example may include additional technologies like:
+
 - Databases (PostgreSQL, MongoDB, Redis)
 - Web frameworks (FastAPI, Flask, Django)
 - Message queues (RabbitMQ, Kafka)
@@ -120,12 +127,14 @@ Contributions are welcome! If you have a minimal viable example you'd like to sh
 ## 📖 Why This Repository?
 
 Learning new technologies often involves:
+
 - ❌ Wading through extensive documentation
 - ❌ Debugging complex setup issues
 - ❌ Finding outdated examples
 - ❌ Missing dependencies or configurations
 
 This repository solves these problems by providing:
+
 - ✅ Ready-to-run examples
 - ✅ Containerized environments
 - ✅ Complete dependency specifications
@@ -151,4 +160,3 @@ Connect with me on LinkedIn for more content and updates:
 **Happy coding! 🚀**
 
 If you find these examples helpful, please consider giving this repository a ⭐
-
