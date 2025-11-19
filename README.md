@@ -84,7 +84,8 @@ src/[mve-name]/
 | [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | PostgreSQL setup with Docker Compose and SQLAlchemy ORM | PostgreSQL, Docker, SQLAlchemy, Python |
 | [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/)     | MongoDB setup with Docker Compose and mongoengine ODM   | MongoDB, Docker, mongoengine, Python   |
 | [redis-docker](./src/redis-docker/)                             | Redis setup with Docker Compose and Python              | Redis, Docker, Python                  |
-| [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | RabbitMQ setup with Docker Compose and Python           | Redis, Docker, Python                  |
+| [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | RabbitMQ setup with Docker Compose and Python           | RabbitMQ, Docker, Python               |
+| [airflow-docker](./src/airflow-docker/)                         | Apache Airflow setup with Docker Compose and Python     | Apache Airflow, Docker, Python         |
 | _More examples coming soon..._                                  |                                                         |                                        |
 
 ## 🛠️ Technology Stack

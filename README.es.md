@@ -85,6 +85,7 @@ src/[nombre-mve]/
 | [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/)     | Configuración de MongoDB con Docker Compose y ODM mongoengine   | MongoDB, Docker, mongoengine, Python   |
 | [redis-docker](./src/redis-docker/)                             | Configuración de Redis con Docker Compose y Python              | Redis, Docker, Python                  |
 | [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | Configuración de RabbitMQ con Docker Compose y Python           | Redis, Docker, Python                  |
+| [airflow-docker](./src/airflow-docker/)                         | Configuración de Apache Airflow con Docker Compose y Python     | Apache Airflow, Docker, Python         |
 | _Más ejemplos próximamente..._                                  |                                                                 |                                        |
 
 ## 🛠️ Stack Tecnológico
