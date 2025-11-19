@@ -86,6 +86,7 @@ src/[nombre-mve]/
 | [redis-docker](./src/redis-docker/)                             | Configuración de Redis con Docker Compose y Python              | Redis, Docker, Python                  |
 | [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | Configuración de RabbitMQ con Docker Compose y Python           | Redis, Docker, Python                  |
 | [airflow-docker](./src/airflow-docker/)                         | Configuración de Apache Airflow con Docker Compose y Python     | Apache Airflow, Docker, Python         |
+| [minio-docker-boto3](./src/minio-docker-boto3/)                 | Configuración de MinIO con Docker Compose y Boto3               | MinIO, Docker, Boto3, Python           |
 | _Más ejemplos próximamente..._                                  |                                                                 |                                        |
 
 ## 🛠️ Stack Tecnológico
