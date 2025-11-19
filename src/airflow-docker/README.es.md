@@ -1,4 +1,4 @@
-# Airflow + Docker ETL Pipeline Example
+# Ejemplo de Pipeline ETL con Airflow + Docker
 
 Ejemplo mínimo viable para Apache Airflow con Docker, demostrando un pipeline ETL (Extract, Transform, Load) simple usando Python y pandas con almacenamiento basado en archivos.
 
@@ -6,8 +6,6 @@ Ejemplo mínimo viable para Apache Airflow con Docker, demostrando un pipeline E
 
 ```
 airflow-etl-pipeline/
-├── .devcontainer/
-│   └── devcontainer.json
 ├── docker-compose.yml
 ├── .env
 ├── dags/
@@ -15,10 +13,6 @@ airflow-etl-pipeline/
 │   ├── extract.py
 │   ├── transform.py
 │   └── load.py
-├── storage/
-│   ├── extract/
-│   ├── transform/
-│   └── load/
 ├── logs/
 ├── plugins/
 ├── pyproject.toml
@@ -30,35 +24,23 @@ airflow-etl-pipeline/
 ## Requisitos Previos
 
 - Docker y Docker Compose instalados
-- VS Code con la extensión Dev Containers (opcional, para usar dev container)
 - Navegador web para acceder a la interfaz de Airflow
 
-## Opción 1: Usando Dev Container (Recomendado)
+## Configuración
 
-### Paso 1: Abrir Proyecto en Dev Container
-
-1. Abre VS Code en la carpeta del proyecto
-2. Presiona `F1` o `Ctrl+Shift+P` (Windows/Linux) / `Cmd+Shift+P` (Mac)
-3. Escribe y selecciona: **Dev Containers: Reopen in Container**
-4. Espera a que el contenedor se construya y las dependencias se instalen
-
-### Paso 2: Crear Directorios Requeridos
-
-Dentro del terminal del dev container:
+### Paso 1: Instalar Dependencias con uv
 
 ```bash
-mkdir -p dags logs plugins storage/extract storage/transform storage/load
+pip install uv && uv sync
 ```
 
-### Paso 3: Copiar Archivos del DAG
-
-Copia los archivos del pipeline ETL al directorio `dags`:
+### Paso 2: Crear Directorios Requeridos y Copiar Archivos
 
 ```bash
-cp extract.py transform.py load.py dag.py dags/
+mkdir -p dags logs plugins
 ```
 
-### Paso 4: Iniciar Airflow
+### Paso 3: Iniciar Airflow
 
 Inicia todos los servicios de Airflow:
 
@@ -78,7 +60,7 @@ Deberías ver todos los servicios ejecutándose:
 - `airflow_webserver`
 - `airflow_scheduler`
 
-### Paso 5: Acceder a la Interfaz de Airflow
+### Paso 4: Acceder a la Interfaz de Airflow
 
 Abre tu navegador web y navega a:
 
@@ -88,16 +70,16 @@ http://localhost:8080
 
 Inicia sesión con las credenciales por defecto:
 
-- **Usuario:** `admin`
-- **Contraseña:** `admin`
+- **Usuario:** `airflow`
+- **Contraseña:** `airflow`
 
-### Paso 6: Habilitar el DAG
+### Paso 5: Habilitar el DAG
 
 1. En la interfaz de Airflow, deberías ver el DAG `etl_pipeline`
 2. Haz clic en el interruptor para habilitar el DAG (se volverá verde/azul)
 3. El DAG está programado para ejecutarse automáticamente cada 30 segundos
 
-### Paso 7: Monitorizar la Ejecución
+### Paso 6: Monitorizar la Ejecución
 
 1. Haz clic en el nombre del DAG para ver sus detalles
 2. Verás la vista de Grafo mostrando las tres tareas:
@@ -105,7 +87,7 @@ Inicia sesión con las credenciales por defecto:
 3. Observa cómo las tareas se ejecutan automáticamente cada 30 segundos
 4. Cada tarea cambiará de blanco → verde claro → verde oscuro (completada)
 
-### Paso 8: Ver Logs
+### Paso 7: Ver Logs
 
 Para ver los logs detallados de cada tarea:
 
@@ -176,42 +158,25 @@ Data to be loaded:
 ✓ Saved to: storage/load/data_20240115_143052.csv
 ```
 
-### Paso 9: Verificar Archivos Generados
+### Paso 8: Verificar Archivos Generados
 
-Revisa los directorios de storage para ver los archivos CSV generados:
+Los archivos generados se almacenan dentro del contenedor worker de Airflow. Para verlos:
+
+1. Identifica el contenedor worker de Airflow:
 
 ```bash
-ls -la storage/extract/
-ls -la storage/transform/
-ls -la storage/load/
+docker ps
+```
+
+2. Lista los archivos en el directorio storage dentro del contenedor:
+
+```bash
+docker exec -it <worker_container_id> ls -la storage/extract/
+docker exec -it <worker_container_id> ls -la storage/transform/
+docker exec -it <worker_container_id> ls -la storage/load/
 ```
 
 Cada ejecución crea archivos con timestamps como `data_20240115_143052.csv`.
-
-## Opción 2: Configuración Local (Sin Dev Container)
-
-### Paso 1: Instalar Dependencias con uv
-
-```bash
-pip install uv && uv sync
-```
-
-### Paso 2: Crear Directorios Requeridos y Copiar Archivos
-
-```bash
-mkdir -p dags logs plugins storage/extract storage/transform storage/load
-cp extract.py transform.py load.py dag.py dags/
-```
-
-### Paso 3: Iniciar Airflow
-
-```bash
-docker-compose up -d
-```
-
-### Paso 4: Acceder y Usar Airflow
-
-Sigue los pasos 5-9 de la Opción 1.
 
 ## Explicación del Pipeline ETL
 
@@ -269,15 +234,11 @@ El operador `>>` define el orden de ejecución: `tarea1 >> tarea2` significa que
 
 El decorador `@dag` crea un DAG usando el patrón de context manager de Python.
 
-### XCom (Cross-Communication)
-
-Los valores de retorno de las tareas se almacenan automáticamente en XCom y se pasan a las tareas dependientes.
-
-### Scheduler
+### Planificador (Scheduler)
 
 Monitoriza los DAGs y activa la ejecución de tareas según la programación (cada 30 segundos en este ejemplo).
 
-### Webserver
+### Servidor Web (Webserver)
 
 Proporciona la interfaz web para monitorizar y gestionar DAGs.
 
@@ -286,8 +247,8 @@ Proporciona la interfaz web para monitorizar y gestionar DAGs.
 El archivo `.env` contiene:
 
 ```
-AIRFLOW_USER=admin
-AIRFLOW_PASSWORD=admin
+AIRFLOW_USER=airflow
+AIRFLOW_PASSWORD=airflow
 ```
 
 ## Comandos Útiles
@@ -336,18 +297,18 @@ docker exec airflow_webserver airflow tasks list etl_pipeline
 ### Comandos de Gestión de Archivos
 
 ```bash
-# Ver archivos generados
-ls -la storage/extract/
-ls -la storage/transform/
-ls -la storage/load/
+# Ver archivos generados dentro del worker
+docker exec -it <worker_container_id> ls -la storage/extract/
+docker exec -it <worker_container_id> ls -la storage/transform/
+docker exec -it <worker_container_id> ls -la storage/load/
 
 # Ver contenido de un archivo específico
-cat storage/extract/data_20240115_143052.csv
+docker exec -it <worker_container_id> cat storage/extract/data_20240115_143052.csv
 
 # Limpiar archivos antiguos (opcional)
-rm storage/extract/*.csv
-rm storage/transform/*.csv
-rm storage/load/*.csv
+docker exec -it <worker_container_id> rm storage/extract/*.csv
+docker exec -it <worker_container_id> rm storage/transform/*.csv
+docker exec -it <worker_container_id> rm storage/load/*.csv
 ```
 
 ## Solución de Problemas
@@ -378,14 +339,6 @@ Espera a que la base de datos se inicialice (puede tomar 30-60 segundos).
 3. Espera unos segundos para que Airflow escanee nuevos DAGs
 4. Recarga la interfaz web
 
-### Directorios de Storage No Encontrados
-
-Asegúrate de que los directorios de storage existen:
-
-```bash
-mkdir -p storage/extract storage/transform storage/load
-```
-
 ### Tareas Fallando
 
 1. Revisa los logs de tareas en la interfaz de Airflow
@@ -401,7 +354,7 @@ Para eliminar todo completamente:
 docker-compose down -v
 
 # Eliminar archivos y directorios generados
-rm -rf logs/* storage/extract/* storage/transform/* storage/load/*
+rm -rf logs/*
 ```
 
 ## Próximos Pasos
