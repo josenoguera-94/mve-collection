@@ -9,9 +9,6 @@ DOWNLOADED_FILE_NAME = "downloaded_data.csv"
 def main():
     client = MinioClient()
 
-    # Create Bucket
-    client.create_bucket(BUCKET_NAME)
-
     # Create a dummy DataFrame
     df = pd.DataFrame({
         'id': range(1, 6),
