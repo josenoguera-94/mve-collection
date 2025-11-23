@@ -83,31 +83,21 @@ python main_acquire.py
 You should see output like:
 
 ```
-=== Redis Mutex Example (using lock/unlock) ===
-Multiple threads writing to the same file with mutex protection.
-
-[Thread 1] Acquiring lock...
-[Thread 2] Acquiring lock...
-[Thread 3] Acquiring lock...
-[Thread 4] Acquiring lock...
-[Thread 5] Acquiring lock...
-[Thread 3] ✓ Lock acquired
+[Thread 1] ✓ Done
 [Thread 3] ✓ Done
-[Thread 3] ✓ Lock released
-[Thread 1] ✓ Lock acquired
-...
+[Thread 2] ✓ Done
+[Thread 5] ✓ Done
+[Thread 4] ✓ Done
+```
 
-=== Results ===
-Contents of shared_file.txt:
-------------------------------------------------------------
-[2025-11-22 17:50:15] Thread 3 wrote line 1
-[2025-11-22 17:50:16] Thread 1 wrote line 2
-[2025-11-22 17:50:17] Thread 5 wrote line 3
-[2025-11-22 17:50:18] Thread 2 wrote line 4
-[2025-11-22 17:50:19] Thread 4 wrote line 5
-------------------------------------------------------------
+The file `shared_file.txt` will contain:
 
-✓ All writes completed sequentially without race conditions
+```
+Thread 1 wrote this line
+Thread 3 wrote this line
+Thread 2 wrote this line
+Thread 5 wrote this line
+Thread 4 wrote this line
 ```
 
 ## Option 2: Local Setup (Without Dev Container)
@@ -250,49 +240,84 @@ exit
 ### Example 1: Using explicit lock/unlock (main.py)
 
 ```python
+import threading
+import time
+import random
 from mutex import RedisMutex
 
-def write_to_file(thread_id: int, filename: str):
-    # Each thread creates its own mutex
+def write_to_file(thread_id: int):
     mutex = RedisMutex()
     resource = "file_write_lock"
-    
-    # Acquire lock explicitly
-    if not mutex.lock(resource, wait_sec=15.0, retry_sec=0.5):
-        print(f"Could not acquire lock")
-        mutex.close()
-        return
-    
+    filename = "shared_file.txt"
+    lock_acquired = False
+
     try:
-        # Critical section - do work
+        if not mutex.lock(resource, wait_sec=15.0, retry_sec=0.5):
+            print(f"[Thread {thread_id}] X Unable to lock")
+            return
+        
+        lock_acquired = True
+        time.sleep(random.uniform(0.1, 0.5))  # Variable processing time
         with open(filename, 'a') as f:
-            f.write(f"Thread {thread_id} writing\n")
+            f.write(f"Thread {thread_id} wrote this line\n")
+        print(f"[Thread {thread_id}] ✓ Done")
     finally:
-        # Always release the lock and close connection
-        mutex.unlock(resource)
+        if lock_acquired:
+            mutex.unlock(resource)
         mutex.close()
+
+def main():
+    threads = []
+    
+    for i in range(5):
+        thread = threading.Thread(target=write_to_file, args=[i + 1])
+        threads.append(thread)
+        thread.start() 
+    
+    for thread in threads:
+        thread.join()
+
+if __name__ == "__main__":
+    main()
 ```
 
 ### Example 2: Using acquire context manager (main_acquire.py)
 
 ```python
+import threading
+import time
+import random
 from mutex import RedisMutex, LockAcquisitionError
 
-def write_to_file(thread_id: int, filename: str):
-    # Each thread creates its own mutex
+def write_to_file(thread_id: int):
     mutex = RedisMutex()
-    
+    resource = "file_write_lock"
+    filename = "shared_file.txt"
+
     try:
-        # Use context manager for automatic lock/unlock
-        with mutex.acquire("file_write_lock", wait_sec=15.0, retry_sec=0.5):
-            # Critical section - do work
+        with mutex.acquire(resource, wait_sec=15.0, retry_sec=0.5):
+            time.sleep(random.uniform(0.1, 0.5))  # Variable processing time
             with open(filename, 'a') as f:
-                f.write(f"Thread {thread_id} writing\n")
-            # Lock is automatically released when exiting the context
-    except LockAcquisitionError as e:
-        print(f"Error: {e}")
+                f.write(f"Thread {thread_id} wrote this line\n")
+            print(f"[Thread {thread_id}] ✓ Done")
+    except LockAcquisitionError:
+        print(f"[Thread {thread_id}] X Unable to lock")
     finally:
         mutex.close()
+
+def main():
+    threads = []
+    
+    for i in range(5):
+        thread = threading.Thread(target=write_to_file, args=[i + 1])
+        threads.append(thread)
+        thread.start() 
+    
+    for thread in threads:
+        thread.join()
+
+if __name__ == "__main__":
+    main()
 ```
 
 ### Example 3: Using RedisMutex as context manager
