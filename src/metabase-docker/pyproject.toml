@@ -1,0 +1,11 @@
+[project]
+name = "metabase-docker"
+version = "0.1.0"
+description = "Metabase with Docker Compose and PostgreSQL data source"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "sqlalchemy",
+  "psycopg2-binary",
+  "python-dotenv",
+]

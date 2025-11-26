@@ -1,0 +1,53 @@
+services:
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase
+    hostname: metabase
+    volumes:
+      - /dev/urandom:/dev/random:ro
+    ports:
+      - 3000:3000
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: ${METABASE_DB}
+      MB_DB_PORT: 5432
+      MB_DB_USER: ${METABASE_USER}
+      MB_DB_PASS: ${METABASE_PASSWORD}
+      MB_DB_HOST: postgres
+    networks:
+      - metanet
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: curl --fail -I http://localhost:3000/api/health || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_metabase
+    hostname: postgres
+    environment:
+      POSTGRES_USER: ${METABASE_USER}
+      POSTGRES_DB: ${METABASE_DB}
+      POSTGRES_PASSWORD: ${METABASE_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - metanet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${METABASE_USER} -d ${METABASE_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  metanet:
+    driver: bridge
+
+volumes:
+  postgres_data:
