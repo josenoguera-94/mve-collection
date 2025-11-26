@@ -88,6 +88,7 @@ src/[mve-name]/
 | [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | RabbitMQ setup with Docker Compose and Python             | RabbitMQ, Docker, Python               |
 | [airflow-docker](./src/airflow-docker/)                         | Apache Airflow setup with Docker Compose and Python       | Apache Airflow, Docker, Python         |
 | [minio-docker-boto3](./src/minio-docker-boto3/)                 | MinIO setup with Docker Compose and Boto3                 | MinIO, Docker, Boto3, Python           |
+| [metabase-docker](./src/metabase-docker/)                       | Metabase setup with Docker Compose and PostgreSQL         | Metabase, PostgreSQL, Docker, Python   |
 | _More examples coming soon..._                                  |                                                           |                                        |
 
 ## 🛠️ Technology Stack

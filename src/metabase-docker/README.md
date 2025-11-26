@@ -10,6 +10,7 @@ project/
 │   └── devcontainer.json
 ├── docker-compose.yml
 ├── .env
+├── db.py
 ├── models.py
 ├── pyproject.toml
 ├── main.py
@@ -59,26 +60,10 @@ python main.py
 You should see output like:
 
 ```
-Creating tables...
-✓ Tables created successfully
-
-Inserting sample data...
-✓ Inserted 25 products successfully
-
-📊 Sales Summary by Category:
-  Electronics:
-    - Total Revenue: $147,499.55
-    - Total Units Sold: 370
-  Clothing:
-    - Total Revenue: $97,349.11
-    - Total Units Sold: 931
-  ...
-
-✓ Done! You can now:
-  1. Access Metabase at http://localhost:3000
-  2. Connect with DBeaver to see the data
-  3. Create dashboards and visualizations in Metabase
+Inserted 25 products into the database
 ```
+
+This will create the `products` table in the `metabaseappdb` database and insert 25 sample products with pre-calculated data.
 
 ### Step 4: Access Metabase
 
