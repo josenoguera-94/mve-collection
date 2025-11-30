@@ -57,7 +57,7 @@ El ejemplo crea 5 hilos que todos intentan escribir en el mismo archivo (`shared
 Dentro del terminal del dev container:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Verifica que está funcionando:
@@ -111,7 +111,7 @@ pip install uv && uv sync
 ### Paso 2: Iniciar Contenedor de Redis
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Paso 3: Ejecutar los Ejemplos de Mutex
@@ -201,19 +201,19 @@ Puedes modificar estos valores según tus necesidades. Recuerda recrear los cont
 
 ```bash
 # Iniciar contenedores
-docker-compose up -d
+docker compose up -d
 
 # Detener contenedores
-docker-compose down
+docker compose down
 
 # Detener y eliminar volúmenes (borrar todos los datos)
-docker-compose down -v
+docker compose down -v
 
 # Ver logs
-docker-compose logs -f
+docker compose logs -f
 
 # Ver solo logs de Redis
-docker-compose logs -f redis
+docker compose logs -f redis
 ```
 
 ### Comandos de Redis CLI
@@ -344,8 +344,8 @@ def write_to_file(thread_id: int, filename: str):
 Si el puerto 6379 ya está en uso, cambia `REDIS_PORT` en `.env` a otro puerto (ej. 6380) y reinicia:
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### Conexión Rechazada
@@ -359,7 +359,7 @@ docker ps
 Revisa los logs en busca de errores:
 
 ```bash
-docker-compose logs redis
+docker compose logs redis
 ```
 
 ### Módulo No Encontrado
@@ -390,7 +390,7 @@ Para eliminar todo completamente:
 
 ```bash
 # Detener y eliminar contenedores y volúmenes
-docker-compose down -v
+docker compose down -v
 
 # Eliminar la imagen de Redis (opcional)
 docker rmi redis:7-alpine

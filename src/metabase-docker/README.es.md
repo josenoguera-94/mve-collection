@@ -40,7 +40,7 @@ project/
 Dentro de la terminal del contenedor de desarrollo:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Verifica que los servicios estén corriendo:
@@ -96,7 +96,7 @@ pip3 install uv && uv sync
 ### Paso 2: Iniciar los Servicios
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Paso 3: Crear Tablas e Insertar Datos
@@ -191,22 +191,22 @@ Introduce los siguientes detalles:
 
 ```bash
 # Iniciar contenedores
-docker-compose up -d
+docker compose up -d
 
 # Detener contenedores
-docker-compose down
+docker compose down
 
 # Detener y eliminar volúmenes (elimina todos los datos)
-docker-compose down -v
+docker compose down -v
 
 # Ver logs
-docker-compose logs -f
+docker compose logs -f
 
 # Ver solo los logs de Metabase
-docker-compose logs -f metabase
+docker compose logs -f metabase
 
 # Ver solo los logs de PostgreSQL
-docker-compose logs -f postgres
+docker compose logs -f postgres
 ```
 
 ### Comandos de Metabase
@@ -253,8 +253,8 @@ Una vez que hayas conectado Metabase a PostgreSQL, puedes crear varias visualiza
 Si el puerto 3000 o 5432 ya está en uso, cambia los mapeos de puertos en `docker-compose.yml` y reinicia:
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### Metabase no Carga
@@ -262,7 +262,7 @@ docker-compose up -d
 Espera un minuto para que Metabase se inicie completamente. Verifica el estado:
 
 ```bash
-docker-compose logs -f metabase
+docker compose logs -f metabase
 ```
 
 Busca el mensaje: "Metabase Initialization COMPLETE"
@@ -278,8 +278,8 @@ docker ps
 Comprueba los logs en busca de errores:
 
 ```bash
-docker-compose logs postgres
-docker-compose logs metabase
+docker compose logs postgres
+docker compose logs metabase
 ```
 
 ### Módulo No Encontrado
@@ -302,7 +302,7 @@ Para eliminar completamente todos los contenedores y datos asociados:
 
 ```bash
 # Detener y eliminar contenedores y volúmenes
-docker-compose down -v
+docker compose down -v
 
 # Eliminar las imágenes (opcional)
 docker rmi metabase/metabase:latest postgres:15-alpine

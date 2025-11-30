@@ -37,7 +37,7 @@ project/
 Inside the dev container terminal:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Verify it's running:
@@ -82,7 +82,7 @@ pip3 install uv && uv sync
 ### Step 2: Start PostgreSQL Container
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Step 3: Create Tables and Insert Data
@@ -153,19 +153,19 @@ You can modify these values as needed. Remember to recreate the containers if yo
 
 ```bash
 # Start containers
-docker-compose up -d
+docker compose up -d
 
 # Stop containers
-docker-compose down
+docker compose down
 
 # Stop and remove volumes (delete all data)
-docker-compose down -v
+docker compose down -v
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # View only PostgreSQL logs
-docker-compose logs -f postgres
+docker compose logs -f postgres
 ```
 
 ## Troubleshooting
@@ -175,8 +175,8 @@ docker-compose logs -f postgres
 If port 5432 is already in use, change `POSTGRES_PORT` in `.env` to another port (e.g., 5433) and restart:
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### Connection Refused
@@ -190,7 +190,7 @@ docker ps
 Check the logs for errors:
 
 ```bash
-docker-compose logs postgres
+docker compose logs postgres
 ```
 
 ### Module Not Found
@@ -211,7 +211,7 @@ To completely remove everything:
 
 ```bash
 # Stop and remove containers and volumes
-docker-compose down -v
+docker compose down -v
 
 # Remove the PostgreSQL image (optional)
 docker rmi postgres:15-alpine

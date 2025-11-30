@@ -39,7 +39,7 @@ project/
 Dentro de la terminal del contenedor de desarrollo:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Verifica que esté corriendo:
@@ -86,7 +86,7 @@ pip3 install uv && uv sync
 ### Paso 2: Iniciar el Contenedor de PostgreSQL
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Paso 3: Crear Tablas e Insertar Datos
@@ -165,19 +165,19 @@ Puedes modificar estos valores según sea necesario. Recuerda **recrear los cont
 
 ```bash
 # Iniciar contenedores
-docker-compose up -d
+docker compose up -d
 
 # Detener contenedores
-docker-compose down
+docker compose down
 
 # Detener y eliminar volúmenes (elimina todos los datos)
-docker-compose down -v
+docker compose down -v
 
 # Ver logs
-docker-compose logs -f
+docker compose logs -f
 
 # Ver solo los logs de PostgreSQL
-docker-compose logs -f postgres
+docker compose logs -f postgres
 ```
 
 -----
@@ -189,8 +189,8 @@ docker-compose logs -f postgres
 Si el puerto 5432 ya está en uso, cambia `POSTGRES_PORT` en el archivo `.env` a otro puerto (ej., 5433) y reinicia:
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### Conexión Rechazada
@@ -204,7 +204,7 @@ docker ps
 Comprueba los logs en busca de errores:
 
 ```bash
-docker-compose logs postgres
+docker compose logs postgres
 ```
 
 ### Módulo No Encontrado
@@ -227,7 +227,7 @@ Para eliminar completamente todos los contenedores y datos asociados:
 
 ```bash
 # Detener y eliminar contenedores y volúmenes
-docker-compose down -v
+docker compose down -v
 
 # Eliminar la imagen de PostgreSQL (opcional)
 docker rmi postgres:15-alpine

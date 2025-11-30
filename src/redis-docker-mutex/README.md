@@ -57,7 +57,7 @@ The example creates 5 threads that all try to write to the same file (`shared_fi
 Inside the dev container terminal:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Verify it's running:
@@ -111,7 +111,7 @@ pip install uv && uv sync
 ### Step 2: Start Redis Container
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Step 3: Run the Mutex Examples
@@ -201,19 +201,19 @@ You can modify these values as needed. Remember to recreate the containers if yo
 
 ```bash
 # Start containers
-docker-compose up -d
+docker compose up -d
 
 # Stop containers
-docker-compose down
+docker compose down
 
 # Stop and remove volumes (delete all data)
-docker-compose down -v
+docker compose down -v
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # View only Redis logs
-docker-compose logs -f redis
+docker compose logs -f redis
 ```
 
 ### Redis CLI Commands
@@ -344,8 +344,8 @@ def write_to_file(thread_id: int, filename: str):
 If port 6379 is already in use, change `REDIS_PORT` in `.env` to another port (e.g., 6380) and restart:
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### Connection Refused
@@ -359,7 +359,7 @@ docker ps
 Check the logs for errors:
 
 ```bash
-docker-compose logs redis
+docker compose logs redis
 ```
 
 ### Module Not Found
@@ -390,7 +390,7 @@ To completely remove everything:
 
 ```bash
 # Stop and remove containers and volumes
-docker-compose down -v
+docker compose down -v
 
 # Remove the Redis image (optional)
 docker rmi redis:7-alpine

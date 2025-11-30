@@ -38,7 +38,7 @@ mongo-docker-mongoengine/
 Inside the dev container terminal:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Verify it's running:
@@ -83,7 +83,7 @@ pip install uv && uv sync
 ### Step 2: Start MongoDB Container
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Step 3: Create Documents and Insert Data
@@ -155,19 +155,19 @@ You can modify these values as needed. Remember to recreate the containers if yo
 
 ```bash
 # Start containers
-docker-compose up -d
+docker compose up -d
 
 # Stop containers
-docker-compose down
+docker compose down
 
 # Stop and remove volumes (delete all data)
-docker-compose down -v
+docker compose down -v
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # View only MongoDB logs
-docker-compose logs -f mongodb
+docker compose logs -f mongodb
 ```
 
 ## Troubleshooting
@@ -177,8 +177,8 @@ docker-compose logs -f mongodb
 If port 27017 is already in use, change `MONGO_PORT` in `.env` to another port (e.g., 27018) and restart:
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### Connection Refused
@@ -192,7 +192,7 @@ docker ps
 Check the logs for errors:
 
 ```bash
-docker-compose logs mongodb
+docker compose logs mongodb
 ```
 
 ### Module Not Found
@@ -213,7 +213,7 @@ To completely remove everything:
 
 ```bash
 # Stop and remove containers and volumes
-docker-compose down -v
+docker compose down -v
 
 # Remove the MongoDB image (optional)
 docker rmi mongo:7-jammy

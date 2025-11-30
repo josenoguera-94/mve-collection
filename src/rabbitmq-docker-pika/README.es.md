@@ -39,7 +39,7 @@ rabbitmq-docker-python/
 Dentro del terminal del dev container:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Verifica que está funcionando:
@@ -108,7 +108,7 @@ pip install uv && uv sync
 ### Paso 2: Iniciar Contenedor de RabbitMQ
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Paso 3: Publicar y Escuchar Eventos
@@ -186,19 +186,19 @@ RABBITMQ_MANAGEMENT_PORT=15672
 
 ```bash
 # Iniciar contenedores
-docker-compose up -d
+docker compose up -d
 
 # Detener contenedores
-docker-compose down
+docker compose down
 
 # Detener y eliminar volúmenes (borrar todos los datos)
-docker-compose down -v
+docker compose down -v
 
 # Ver logs
-docker-compose logs -f
+docker compose logs -f
 
 # Ver solo logs de RabbitMQ
-docker-compose logs -f rabbitmq
+docker compose logs -f rabbitmq
 ```
 
 ### Comandos CLI de RabbitMQ
@@ -228,8 +228,8 @@ RABBITMQ_MANAGEMENT_PORT=15673
 Luego reinicia:
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### Conexión Rechazada
@@ -243,7 +243,7 @@ docker ps
 Revisa los logs en busca de errores:
 
 ```bash
-docker-compose logs rabbitmq
+docker compose logs rabbitmq
 ```
 
 Espera unos segundos después de iniciar el contenedor para que RabbitMQ se inicialice completamente.
@@ -266,7 +266,7 @@ Para eliminar todo completamente:
 
 ```bash
 # Detener y eliminar contenedores y volúmenes
-docker-compose down -v
+docker compose down -v
 
 # Eliminar la imagen de RabbitMQ (opcional)
 docker rmi rabbitmq:3-management-alpine

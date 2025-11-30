@@ -37,7 +37,7 @@ project/
 Inside the dev container terminal:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Verify it's running:
@@ -89,7 +89,7 @@ pip3 install uv && uv sync
 ### Step 2: Start MinIO Container
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Step 3: Create Bucket and Upload Data
@@ -168,19 +168,19 @@ You can modify these values as needed. Remember to recreate the containers if yo
 
 ```bash
 # Start containers
-docker-compose up -d
+docker compose up -d
 
 # Stop containers
-docker-compose down
+docker compose down
 
 # Stop and remove volumes (delete all data)
-docker-compose down -v
+docker compose down -v
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # View only MinIO logs
-docker-compose logs -f minio
+docker compose logs -f minio
 ```
 
 ## Troubleshooting
@@ -204,8 +204,8 @@ MINIO_ENDPOINT=http://localhost:9002
 And restart:
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### Connection Refused
@@ -219,7 +219,7 @@ docker ps
 Check the logs for errors:
 
 ```bash
-docker-compose logs minio
+docker compose logs minio
 ```
 
 ### Module Not Found
@@ -239,7 +239,7 @@ If you get permission errors with Docker in the dev container, make sure the `do
 If you cannot access the console at `http://localhost:9001`:
 
 1. Check that the container is running: `docker ps`
-2. Verify the port mapping is correct: `docker-compose ps`
+2. Verify the port mapping is correct: `docker compose ps`
 3. Try accessing via `http://127.0.0.1:9001`
 4. Check firewall settings
 
@@ -249,7 +249,7 @@ To completely remove everything:
 
 ```bash
 # Stop and remove containers and volumes
-docker-compose down -v
+docker compose down -v
 
 # Remove the MinIO image (optional)
 docker rmi minio/minio

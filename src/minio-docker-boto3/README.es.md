@@ -37,7 +37,7 @@ project/
 Dentro de la terminal del dev container:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Verifica que esté ejecutándose:
@@ -89,7 +89,7 @@ pip3 install uv && uv sync
 ### Paso 2: Iniciar el Contenedor de MinIO
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Paso 3: Crear Bucket y Subir Datos
@@ -168,19 +168,19 @@ Puedes modificar estos valores según sea necesario. Recuerda recrear los conten
 
 ```bash
 # Iniciar contenedores
-docker-compose up -d
+docker compose up -d
 
 # Detener contenedores
-docker-compose down
+docker compose down
 
 # Detener y eliminar volúmenes (elimina todos los datos)
-docker-compose down -v
+docker compose down -v
 
 # Ver logs
-docker-compose logs -f
+docker compose logs -f
 
 # Ver solo logs de MinIO
-docker-compose logs -f minio
+docker compose logs -f minio
 ```
 
 ## Solución de Problemas
@@ -204,8 +204,8 @@ MINIO_ENDPOINT=http://localhost:9002
 Y reinicia:
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### Conexión Rechazada
@@ -219,7 +219,7 @@ docker ps
 Verifica los logs en busca de errores:
 
 ```bash
-docker-compose logs minio
+docker compose logs minio
 ```
 
 ### Módulo No Encontrado
@@ -239,7 +239,7 @@ Si obtienes errores de permisos con Docker en el dev container, asegúrate de qu
 Si no puedes acceder a la consola en `http://localhost:9001`:
 
 1. Verifica que el contenedor esté ejecutándose: `docker ps`
-2. Verifica que el mapeo de puertos sea correcto: `docker-compose ps`
+2. Verifica que el mapeo de puertos sea correcto: `docker compose ps`
 3. Intenta acceder vía `http://127.0.0.1:9001`
 4. Verifica la configuración del firewall
 
@@ -249,7 +249,7 @@ Para eliminar todo completamente:
 
 ```bash
 # Detener y eliminar contenedores y volúmenes
-docker-compose down -v
+docker compose down -v
 
 # Eliminar la imagen de MinIO (opcional)
 docker rmi minio/minio

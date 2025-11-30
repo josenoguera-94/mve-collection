@@ -38,7 +38,7 @@ project/
 Inside the dev container terminal:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Verify services are running:
@@ -92,7 +92,7 @@ pip3 install uv && uv sync
 ### Step 2: Start Services
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Step 3: Create Tables and Insert Data
@@ -179,22 +179,22 @@ Enter the following details:
 
 ```bash
 # Start containers
-docker-compose up -d
+docker compose up -d
 
 # Stop containers
-docker-compose down
+docker compose down
 
 # Stop and remove volumes (delete all data)
-docker-compose down -v
+docker compose down -v
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # View only Metabase logs
-docker-compose logs -f metabase
+docker compose logs -f metabase
 
 # View only PostgreSQL logs
-docker-compose logs -f postgres
+docker compose logs -f postgres
 ```
 
 ### Metabase Commands
@@ -237,8 +237,8 @@ Once you've connected Metabase to PostgreSQL, you can create various visualizati
 If port 3000 or 5432 is already in use, change the port mappings in `docker-compose.yml` and restart:
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ### Metabase Not Loading
@@ -246,7 +246,7 @@ docker-compose up -d
 Wait a minute for Metabase to fully start up. Check the health status:
 
 ```bash
-docker-compose logs -f metabase
+docker compose logs -f metabase
 ```
 
 Look for the message: "Metabase Initialization COMPLETE"
@@ -262,8 +262,8 @@ docker ps
 Check the logs for errors:
 
 ```bash
-docker-compose logs postgres
-docker-compose logs metabase
+docker compose logs postgres
+docker compose logs metabase
 ```
 
 ### Module Not Found
@@ -284,7 +284,7 @@ To completely remove everything:
 
 ```bash
 # Stop and remove containers and volumes
-docker-compose down -v
+docker compose down -v
 
 # Remove the images (optional)
 docker rmi metabase/metabase:latest postgres:15-alpine

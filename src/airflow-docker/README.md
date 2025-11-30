@@ -45,13 +45,13 @@ mkdir -p dags logs plugins
 Start all Airflow services:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Wait for all services to be healthy (this may take 1-2 minutes):
 
 ```bash
-docker-compose ps
+docker compose ps
 ```
 
 You should see all services running:
@@ -257,22 +257,22 @@ AIRFLOW_PASSWORD=airflow
 
 ```bash
 # Start all services
-docker-compose up -d
+docker compose up -d
 
 # Stop all services
-docker-compose down
+docker compose down
 
 # View logs of all services
-docker-compose logs -f
+docker compose logs -f
 
 # View logs of specific service
-docker-compose logs -f airflow-webserver
+docker compose logs -f airflow-webserver
 
 # Restart services
-docker-compose restart
+docker compose restart
 
 # Stop and remove all data
-docker-compose down -v
+docker compose down -v
 ```
 
 ### Airflow CLI Commands
@@ -327,7 +327,7 @@ ports:
 Check logs for errors:
 
 ```bash
-docker-compose logs
+docker compose logs
 ```
 
 Wait for the database to initialize (may take 30-60 seconds).
@@ -353,7 +353,7 @@ To completely remove everything:
 
 ```bash
 # Stop and remove containers and volumes
-docker-compose down -v
+docker compose down -v
 
 # Remove generated files and directories
 rm -rf logs/*
