@@ -90,6 +90,7 @@ src/[mve-name]/
 | [minio-docker-boto3](./src/minio-docker-boto3/)                 | MinIO setup with Docker Compose and Boto3                 | MinIO, Docker, Boto3, Python           |
 | [minio-docker-delta](./src/minio-docker-delta/)                 | MinIO setup with Docker Compose and Delta Lake            | MinIO, Delta Lake, Docker, Python      |
 | [metabase-docker](./src/metabase-docker/)                       | Metabase setup with Docker Compose and PostgreSQL         | Metabase, PostgreSQL, Docker, Python   |
+| [localstack-docker](./src/localstack-docker/)                   | LocalStack setup with Lambda and S3 services              | LocalStack, Lambda, S3, Docker, Python |
 | _More examples coming soon..._                                  |                                                           |                                        |
 
 ## 🛠️ Technology Stack
