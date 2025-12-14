@@ -79,19 +79,20 @@ src/[nombre-mve]/
 
 ## 📚 Ejemplos Disponibles
 
-| Ejemplo                                                         | Descripción                                                     | Tecnologías                            |
-| --------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------- |
-| [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | Configuración de PostgreSQL con Docker Compose y ORM SQLAlchemy | PostgreSQL, Docker, SQLAlchemy, Python |
-| [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/)     | Configuración de MongoDB con Docker Compose y ODM mongoengine   | MongoDB, Docker, mongoengine, Python   |
-| [redis-docker](./src/redis-docker/)                             | Configuración de Redis con Docker Compose y Python              | Redis, Docker, Python                  |
-| [redis-docker-mutex](./src/redis-docker-mutex/)                 | Mutex distribuido usando Redis con Docker Compose               | Redis, Docker, Python                  |
-| [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | Configuración de RabbitMQ con Docker Compose y Python           | Redis, Docker, Python                  |
-| [airflow-docker](./src/airflow-docker/)                         | Configuración de Apache Airflow con Docker Compose y Python     | Apache Airflow, Docker, Python         |
-| [minio-docker-boto3](./src/minio-docker-boto3/)                 | Configuración de MinIO con Docker Compose y Boto3               | MinIO, Docker, Boto3, Python           |
-| [minio-docker-delta](./src/minio-docker-delta/)                 | Configuración de MinIO con Docker Compose y Delta Lake          | MinIO, Delta Lake, Docker, Python      |
-| [metabase-docker](./src/metabase-docker/)                       | Configuración de Metabase con Docker Compose y PostgreSQL       | Metabase, PostgreSQL, Docker, Python   |
-| [localstack-docker](./src/localstack-docker/)                   | Configuración de LocalStack con servicios Lambda y S3           | LocalStack, Lambda, S3, Docker, Python |
-| _Más ejemplos próximamente..._                                  |                                                                 |                                        |
+| Ejemplo                                                         | Descripción                                                     | Tecnologías                              |
+| --------------------------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------- |
+| [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | Configuración de PostgreSQL con Docker Compose y ORM SQLAlchemy | PostgreSQL, Docker, SQLAlchemy, Python   |
+| [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/)     | Configuración de MongoDB con Docker Compose y ODM mongoengine   | MongoDB, Docker, mongoengine, Python     |
+| [redis-docker](./src/redis-docker/)                             | Configuración de Redis con Docker Compose y Python              | Redis, Docker, Python                    |
+| [redis-docker-mutex](./src/redis-docker-mutex/)                 | Mutex distribuido usando Redis con Docker Compose               | Redis, Docker, Python                    |
+| [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | Configuración de RabbitMQ con Docker Compose y Python           | Redis, Docker, Python                    |
+| [airflow-docker](./src/airflow-docker/)                         | Configuración de Apache Airflow con Docker Compose y Python     | Apache Airflow, Docker, Python           |
+| [minio-docker-boto3](./src/minio-docker-boto3/)                 | Configuración de MinIO con Docker Compose y Boto3               | MinIO, Docker, Boto3, Python             |
+| [minio-docker-delta](./src/minio-docker-delta/)                 | Configuración de MinIO con Docker Compose y Delta Lake          | MinIO, Delta Lake, Docker, Python        |
+| [metabase-docker](./src/metabase-docker/)                       | Configuración de Metabase con Docker Compose y PostgreSQL       | Metabase, PostgreSQL, Docker, Python     |
+| [localstack-docker](./src/localstack-docker/)                   | Configuración de LocalStack con servicios Lambda y S3           | LocalStack, Lambda, S3, Docker, Python   |
+| [azurite-docker](./src/azurite-docker/)                         | Configuración de Azurite con emulación de Azure Blob Storage    | Azurite, Azure, Blob Storage, Docker, Python |
+| _Más ejemplos próximamente..._                                  |                                                                 |                                          |
 
 ## 🛠️ Stack Tecnológico
 
