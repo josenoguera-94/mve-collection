@@ -33,11 +33,9 @@ azurite-docker/
 3. Escribe y selecciona: **Dev Containers: Reopen in Container**
 4. Espera a que el contenedor se construya y se instalen las dependencias
 
-El dev container incluye la **extensión de Azurite** preinstalada.
+El dev container incluye la **extensión de Azure Storage** para explorar y administrar recursos de Azure Storage.
 
 ### Paso 2: Iniciar Azurite
-
-**Opción A: Usando Docker Compose**
 
 Dentro de la terminal del dev container:
 
@@ -50,14 +48,6 @@ Verifica que esté ejecutándose:
 ```bash
 docker ps
 ```
-
-**Opción B: Usando la Extensión de Azurite en VS Code**
-
-1. Presiona `F1` o `Ctrl+Shift+P`
-2. Escribe y selecciona: **Azurite: Start**
-3. La extensión iniciará los servicios de Azurite localmente
-
-También puedes usar el icono de Azurite en la barra de estado de VS Code para iniciar/detener servicios.
 
 ### Paso 3: Ejecutar el Ejemplo
 
@@ -89,27 +79,15 @@ Content: Hello from Azurite!
 pip3 install uv && uv sync
 ```
 
-### Paso 2: Instalar la Extensión de Azurite (Opcional)
+### Paso 2: Iniciar Azurite
 
-1. Abre VS Code
-2. Ve a Extensiones (`Ctrl+Shift+X`)
-3. Busca "Azurite"
-4. Instala la extensión de Microsoft
-
-### Paso 3: Iniciar Azurite
-
-**Opción A: Usando Docker Compose**
+Usando Docker Compose:
 
 ```bash
 docker compose up -d
 ```
 
-**Opción B: Usando la Extensión de Azurite**
-
-1. Presiona `F1` o `Ctrl+Shift+P`
-2. Selecciona: **Azurite: Start**
-
-### Paso 4: Ejecutar el Ejemplo
+### Paso 3: Ejecutar el Ejemplo
 
 ```bash
 python main.py
@@ -150,21 +128,22 @@ CONTAINER_NAME=test-container
 
 **Nota**: La cadena de conexión usa las credenciales por defecto de Azurite para desarrollo local.
 
-## Características de la Extensión de Azurite
+## Extensión de Azure Storage
 
-La extensión de Azurite para VS Code proporciona:
+La extensión de **Azure Storage** para VS Code (incluida en el dev container) proporciona:
 
-- **Inicio/Detención Fácil**: Controla los servicios de Azurite desde VS Code
-- **Integración con Barra de Estado**: Ve el estado del servicio de un vistazo
-- **Múltiples Servicios**: Emulación de almacenamiento Blob, Queue y Table
-- **Sin Docker Requerido**: Puede ejecutar Azurite sin Docker
+- **Explorador de Cuentas de Almacenamiento**: Explora contenedores, blobs, colas y tablas
+- **Administración Visual**: Crea, elimina y administra recursos de almacenamiento desde VS Code
+- **Operaciones con Blobs**: Sube, descarga y elimina blobs directamente desde la interfaz
+- **Funciona con Azurite**: Conéctate a tu instancia local de Azurite para pruebas fáciles
 
-### Comandos de la Extensión
+### Usando la Extensión
 
-- `Azurite: Start` - Inicia todos los servicios de Azurite
-- `Azurite: Start Blob Service` - Inicia solo el servicio Blob
-- `Azurite: Stop` - Detiene todos los servicios
-- `Azurite: Clean` - Limpia los datos de Azurite
+1. Abre la vista de Azure en VS Code (icono de Azure en la barra lateral)
+2. En "Storage Accounts", haz clic en "Attach Storage Account"
+3. Selecciona "Attach to a local emulator"
+4. Usa la configuración de conexión por defecto de Azurite
+5. Explora tus contenedores y blobs visualmente
 
 ## Comandos Útiles
 
@@ -220,7 +199,7 @@ Asegúrate de que Azurite esté ejecutándose:
 docker ps
 ```
 
-O verifica el estado de la extensión de Azurite en la barra de estado de VS Code.
+
 
 ### Módulo No Encontrado
 

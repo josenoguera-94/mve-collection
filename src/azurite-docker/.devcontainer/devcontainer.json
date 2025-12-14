@@ -7,7 +7,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "Azurite.azurite"
+        "ms-azuretools.vscode-azurestorage"
       ]
     }
   },
