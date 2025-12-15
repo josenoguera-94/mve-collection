@@ -1,0 +1,10 @@
+[project]
+name = "devcontainers-docker"
+version = "0.1.0"
+description = "Minimal viable example to understand DevContainers with Python and pandas"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "pandas",
+    "python-dotenv",
+]
