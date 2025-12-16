@@ -81,17 +81,18 @@ src/[mve-name]/
 
 | Example                                                         | Description                                               | Technologies                            |
 | --------------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------- |
-| [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | PostgreSQL setup with Docker Compose and SQLAlchemy ORM   | PostgreSQL, Docker, SQLAlchemy, Python  |
-| [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/)     | MongoDB setup with Docker Compose and mongoengine ODM     | MongoDB, Docker, mongoengine, Python    |
-| [redis-docker](./src/redis-docker/)                             | Redis setup with Docker Compose and Python                | Redis, Docker, Python                   |
-| [redis-docker-mutex](./src/redis-docker-mutex/)                 | Distributed mutex using Redis with  Docker Compose        | Redis, Docker, Python                   |
-| [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | RabbitMQ setup with Docker Compose and Python             | RabbitMQ, Docker, Python                |
 | [airflow-docker](./src/airflow-docker/)                         | Apache Airflow setup with Docker Compose and Python       | Apache Airflow, Docker, Python          |
+| [azurite-docker](./src/azurite-docker/)                         | Azurite setup with Azure Blob Storage emulation           | Azurite, Azure, Blob Storage, Docker, Python |
+| [devcontainers-docker](./src/devcontainers-docker/)             | Understanding DevContainers with Python and pandas        | DevContainers, Docker, Python, VS Code  |
+| [localstack-docker](./src/localstack-docker/)                   | LocalStack setup with Lambda and S3 services              | LocalStack, Lambda, S3, Docker, Python  |
+| [metabase-docker](./src/metabase-docker/)                       | Metabase setup with Docker Compose and PostgreSQL         | Metabase, PostgreSQL, Docker, Python    |
 | [minio-docker-boto3](./src/minio-docker-boto3/)                 | MinIO setup with Docker Compose and Boto3                 | MinIO, Docker, Boto3, Python            |
 | [minio-docker-delta](./src/minio-docker-delta/)                 | MinIO setup with Docker Compose and Delta Lake            | MinIO, Delta Lake, Docker, Python       |
-| [metabase-docker](./src/metabase-docker/)                       | Metabase setup with Docker Compose and PostgreSQL         | Metabase, PostgreSQL, Docker, Python    |
-| [localstack-docker](./src/localstack-docker/)                   | LocalStack setup with Lambda and S3 services              | LocalStack, Lambda, S3, Docker, Python  |
-| [azurite-docker](./src/azurite-docker/)                         | Azurite setup with Azure Blob Storage emulation           | Azurite, Azure, Blob Storage, Docker, Python |
+| [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/)     | MongoDB setup with Docker Compose and mongoengine ODM     | MongoDB, Docker, mongoengine, Python    |
+| [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | PostgreSQL setup with Docker Compose and SQLAlchemy ORM   | PostgreSQL, Docker, SQLAlchemy, Python  |
+| [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | RabbitMQ setup with Docker Compose and Python             | RabbitMQ, Docker, Python                |
+| [redis-docker](./src/redis-docker/)                             | Redis setup with Docker Compose and Python                | Redis, Docker, Python                   |
+| [redis-docker-mutex](./src/redis-docker-mutex/)                 | Distributed mutex using Redis with  Docker Compose        | Redis, Docker, Python                   |
 | _More examples coming soon..._                                  |                                                           |                                         |
 
 ## 🛠️ Technology Stack
