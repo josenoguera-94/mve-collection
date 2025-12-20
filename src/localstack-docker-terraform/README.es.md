@@ -127,6 +127,44 @@ File logs from file-logs:
 - document.pdf | 18 bytes | 2025-12-20T08:41:50.037275
 ```
 
+## Visualización de Recursos
+
+Puedes visualizar los recursos creados en LocalStack utilizando varios métodos:
+
+### 1. Terraform (CLI)
+La forma más rápida de ver qué está gestionando Terraform:
+```bash
+terraform state list
+terraform show
+```
+
+### 2. Aplicación Web de LocalStack (Recomendado)
+LocalStack ofrece una interfaz web para visualizar tus recursos locales:
+1. Ve a [app.localstack.cloud](https://app.localstack.cloud/inst/default/resources)
+2. El dashboard se conectará automáticamente a tu instancia local en `http://localhost:4566`.
+3. Podrás navegar por los buckets de S3, funciones Lambda y tablas de DynamoDB de forma visual.
+
+### 3. AWS CLI (Terminal)
+Usa el AWS CLI estándar apuntando al endpoint local.
+> [!NOTE]
+> Si recibes el error "Unable to locate credentials", ejecuta lo siguiente una vez:
+> ```bash
+> aws configure set aws_access_key_id test
+> aws configure set aws_secret_access_key test
+> aws configure set region us-east-1
+> ```
+
+```bash
+# S3
+aws --endpoint-url=http://localhost:4566 s3 ls s3://file-uploads-bucket
+
+# DynamoDB
+aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name file-logs
+
+# Lambda
+aws --endpoint-url=http://localhost:4566 lambda list-functions
+```
+
 ## Opción 2: Configuración Local (Sin Dev Container)
 
 ### Paso 1: Instalar Dependencias
