@@ -5,7 +5,7 @@ services:
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=s3,lambda,dynamodb
+      - SERVICES=s3,lambda,dynamodb,iam
       - DEBUG=0
     volumes:
       - localstack_terraform_data:/var/lib/localstack
