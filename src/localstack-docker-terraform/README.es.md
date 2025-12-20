@@ -116,45 +116,15 @@ python main.py
 Deberías ver una salida como:
 
 ```
-============================================================
-LocalStack + Terraform Demo
-S3 → Lambda → DynamoDB Pipeline
-============================================================
+Uploading files to file-uploads-bucket...
+✓ Uploaded: document.pdf
+✓ Uploaded: image.jpg
+✓ Uploaded: data.json
 
-============================================================
-Uploading Sample Files to S3
-============================================================
-
-✓ Uploaded: document.pdf (18 bytes)
-✓ Uploaded: image.jpg (17 bytes)
-✓ Uploaded: archive.zip (18 bytes)
-✓ Uploaded: data.json (16 bytes)
-
-============================================================
-Waiting for Lambda to process files...
-============================================================
-
-============================================================
-File Logs from DynamoDB
-============================================================
-
-File ID: file-uploads-bucket/data.json
-  Name: data.json
-  Size: 16 bytes
-  Type: application/json
-  Uploaded: 2025-12-16T08:36:45.123456
-
-File ID: file-uploads-bucket/archive.zip
-  Name: archive.zip
-  Size: 18 bytes
-  Type: application/zip
-  Uploaded: 2025-12-16T08:36:45.098765
-
-...
-
-============================================================
-Demo completed successfully!
-============================================================
+File logs from file-logs:
+- image.jpg | 17 bytes | 2025-12-20T08:41:50.038208
+- data.json | 16 bytes | 2025-12-20T08:41:50.038003
+- document.pdf | 18 bytes | 2025-12-20T08:41:50.037275
 ```
 
 ## Opción 2: Configuración Local (Sin Dev Container)
@@ -203,7 +173,7 @@ python main.py
 Define la infraestructura completa:
 
 - **Proveedor AWS**: Configurado para usar endpoints de LocalStack
-- **Bucket S3**: `file-uploads-bucket` para almacenamiento de archivos
+- **Bucket S3**: `file-uploads-bucket` con `force_destroy = true` para una limpieza fácil
 - **Tabla DynamoDB**: `file-logs` con `file_id` como clave hash
 - **Rol IAM**: Para ejecución de Lambda con los permisos necesarios
 - **Función Lambda**: Procesa eventos de S3 y registra en DynamoDB

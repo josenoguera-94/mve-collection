@@ -116,45 +116,15 @@ python main.py
 You should see output like:
 
 ```
-============================================================
-LocalStack + Terraform Demo
-S3 → Lambda → DynamoDB Pipeline
-============================================================
+Uploading files to file-uploads-bucket...
+✓ Uploaded: document.pdf
+✓ Uploaded: image.jpg
+✓ Uploaded: data.json
 
-============================================================
-Uploading Sample Files to S3
-============================================================
-
-✓ Uploaded: document.pdf (18 bytes)
-✓ Uploaded: image.jpg (17 bytes)
-✓ Uploaded: archive.zip (18 bytes)
-✓ Uploaded: data.json (16 bytes)
-
-============================================================
-Waiting for Lambda to process files...
-============================================================
-
-============================================================
-File Logs from DynamoDB
-============================================================
-
-File ID: file-uploads-bucket/data.json
-  Name: data.json
-  Size: 16 bytes
-  Type: application/json
-  Uploaded: 2025-12-16T08:36:45.123456
-
-File ID: file-uploads-bucket/archive.zip
-  Name: archive.zip
-  Size: 18 bytes
-  Type: application/zip
-  Uploaded: 2025-12-16T08:36:45.098765
-
-...
-
-============================================================
-Demo completed successfully!
-============================================================
+File logs from file-logs:
+- image.jpg | 17 bytes | 2025-12-20T08:41:50.038208
+- data.json | 16 bytes | 2025-12-20T08:41:50.038003
+- document.pdf | 18 bytes | 2025-12-20T08:41:50.037275
 ```
 
 ## Option 2: Local Setup (Without Dev Container)
@@ -203,7 +173,7 @@ python main.py
 Defines the complete infrastructure:
 
 - **AWS Provider**: Configured to use LocalStack endpoints
-- **S3 Bucket**: `file-uploads-bucket` for file storage
+- **S3 Bucket**: `file-uploads-bucket` with `force_destroy = true` for easy cleanup
 - **DynamoDB Table**: `file-logs` with `file_id` as hash key
 - **IAM Role**: For Lambda execution with necessary permissions
 - **Lambda Function**: Processes S3 events and logs to DynamoDB

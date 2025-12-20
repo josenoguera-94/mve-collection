@@ -1,9 +1,6 @@
 terraform {
   required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
+    aws = { source = "hashicorp/aws", version = "~> 5.0" }
   }
 }
 
@@ -24,112 +21,79 @@ provider "aws" {
   }
 }
 
-# S3 Bucket for file uploads
 resource "aws_s3_bucket" "file_uploads" {
   bucket        = "file-uploads-bucket"
   force_destroy = true
 }
 
-# DynamoDB Table for file logs
 resource "aws_dynamodb_table" "file_logs" {
-  name           = "file-logs"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "file_id"
-
+  name         = "file-logs"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "file_id"
   attribute {
     name = "file_id"
     type = "S"
   }
 }
 
-# IAM Role for Lambda
 resource "aws_iam_role" "lambda_role" {
   name = "lambda_s3_processor_role"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-      }
-    ]
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = { Service = "lambda.amazonaws.com" }
+    }]
   })
 }
 
-# IAM Policy for Lambda to access S3 and DynamoDB
 resource "aws_iam_role_policy" "lambda_policy" {
   name = "lambda_s3_dynamodb_policy"
   role = aws_iam_role.lambda_role.id
-
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
         Effect = "Allow"
-        Action = [
-          "s3:GetObject",
-          "s3:ListBucket"
-        ]
-        Resource = [
-          "${aws_s3_bucket.file_uploads.arn}",
-          "${aws_s3_bucket.file_uploads.arn}/*"
-        ]
+        Action = ["s3:GetObject", "s3:ListBucket"]
+        Resource = [aws_s3_bucket.file_uploads.arn, "${aws_s3_bucket.file_uploads.arn}/*"]
       },
       {
         Effect = "Allow"
-        Action = [
-          "dynamodb:PutItem",
-          "dynamodb:GetItem"
-        ]
+        Action = ["dynamodb:PutItem", "dynamodb:GetItem"]
         Resource = aws_dynamodb_table.file_logs.arn
       },
       {
         Effect = "Allow"
-        Action = [
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ]
+        Action = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
         Resource = "arn:aws:logs:*:*:*"
       }
     ]
   })
 }
 
-# Lambda Function
 resource "aws_lambda_function" "s3_processor" {
   filename      = "lambda_function.zip"
   function_name = "s3-file-processor"
   role          = aws_iam_role.lambda_role.arn
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.12"
-
   environment {
-    variables = {
-      DYNAMODB_TABLE = aws_dynamodb_table.file_logs.name
-    }
+    variables = { DYNAMODB_TABLE = aws_dynamodb_table.file_logs.name }
   }
-
   depends_on = [aws_iam_role_policy.lambda_policy]
 }
 
-# S3 Bucket Notification to trigger Lambda
 resource "aws_s3_bucket_notification" "bucket_notification" {
   bucket = aws_s3_bucket.file_uploads.id
-
   lambda_function {
     lambda_function_arn = aws_lambda_function.s3_processor.arn
     events              = ["s3:ObjectCreated:*"]
   }
-
   depends_on = [aws_lambda_permission.allow_s3]
 }
 
-# Lambda Permission for S3 to invoke the function
 resource "aws_lambda_permission" "allow_s3" {
   statement_id  = "AllowExecutionFromS3"
   action        = "lambda:InvokeFunction"
@@ -138,15 +102,6 @@ resource "aws_lambda_permission" "allow_s3" {
   source_arn    = aws_s3_bucket.file_uploads.arn
 }
 
-# Outputs
-output "bucket_name" {
-  value = aws_s3_bucket.file_uploads.bucket
-}
-
-output "dynamodb_table_name" {
-  value = aws_dynamodb_table.file_logs.name
-}
-
-output "lambda_function_name" {
-  value = aws_lambda_function.s3_processor.function_name
-}
+output "bucket_name" { value = aws_s3_bucket.file_uploads.bucket }
+output "dynamodb_table_name" { value = aws_dynamodb_table.file_logs.name }
+output "lambda_function_name" { value = aws_lambda_function.s3_processor.function_name }
