@@ -1,0 +1,10 @@
+[project]
+name = "localstack-docker-terraform"
+version = "0.1.0"
+description = "LocalStack example with Terraform, S3, Lambda, and DynamoDB"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "boto3",
+    "python-dotenv",
+]
