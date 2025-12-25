@@ -82,6 +82,7 @@ src/[mve-name]/
 | Example                                                         | Description                                               | Technologies                            |
 | --------------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------- |
 | [airflow-docker](./src/airflow-docker/)                         | Apache Airflow setup with Docker Compose and Python       | Apache Airflow, Docker, Python          |
+| [azure-functions](./src/azure-functions/)                       | Azure Functions local development with Azurite            | Azure Functions, Azurite, Blob Storage, Docker, Python |
 | [azurite-docker](./src/azurite-docker/)                         | Azurite setup with Azure Blob Storage emulation           | Azurite, Azure, Blob Storage, Docker, Python |
 | [devcontainers-docker](./src/devcontainers-docker/)             | Understanding DevContainers with Python and pandas        | DevContainers, Docker, Python, VS Code  |
 | [localstack-docker](./src/localstack-docker/)                   | LocalStack setup with Lambda and S3 services              | LocalStack, Lambda, S3, Docker, Python  |
