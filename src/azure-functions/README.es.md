@@ -10,17 +10,17 @@ azure-functions/
 │   ├── azurite_client.py
 │   ├── function_app.py
 │   ├── host.json
-│   ├── local.settings.json.example
+│   ├── local.settings.json
 │   └── requirements.txt
 ├── .devcontainer/
 │   └── devcontainer.json
 ├── .vscode/
-│   └── settings.json.example
+│   └── settings.json
 ├── docker-compose.yml
 ├── .env
 ├── main.py
 ├── pyproject.toml
-├── .gitignore
+├── README.es.md
 └── README.md
 ```
 
@@ -44,16 +44,7 @@ El dev container incluye:
 - **Extensión de Azure Storage** para explorar el almacenamiento de blobs
 - **Azure CLI** para operaciones adicionales de Azure
 
-### Paso 2: Configurar Ajustes Locales
-
-Copia los archivos de configuración de ejemplo:
-
-```bash
-cp upload-function/local.settings.json.example upload-function/local.settings.json
-cp .vscode/settings.json.example .vscode/settings.json
-```
-
-### Paso 3: Iniciar Azurite
+### Paso 2: Iniciar Azurite
 
 Dentro del terminal del dev container:
 
@@ -67,7 +58,7 @@ Verifica que esté ejecutándose:
 docker ps
 ```
 
-### Paso 4: Iniciar Azure Functions
+### Paso 3: Iniciar Azure Functions
 
 ```bash
 cd upload-function
@@ -88,7 +79,7 @@ Functions:
 For detailed output, run func with --verbose flag.
 ```
 
-### Paso 5: Probar la Función
+### Paso 4: Probar la Función
 
 Abre una nueva terminal y ejecuta:
 
@@ -121,14 +112,7 @@ Sigue la guía de instalación oficial:
 pip3 install uv && uv sync
 ```
 
-### Paso 3: Configurar Ajustes Locales
-
-```bash
-cp upload-function/local.settings.json.example upload-function/local.settings.json
-cp .vscode/settings.json.example .vscode/settings.json
-```
-
-### Paso 4: Iniciar Azurite
+### Paso 3: Iniciar Azurite
 
 Usando Docker Compose:
 
@@ -136,14 +120,14 @@ Usando Docker Compose:
 docker compose up -d
 ```
 
-### Paso 5: Iniciar Azure Functions
+### Paso 4: Iniciar Azure Functions
 
 ```bash
 cd upload-function
 func start
 ```
 
-### Paso 6: Probar la Función
+### Paso 5: Probar la Función
 
 ```bash
 python main.py
@@ -171,8 +155,8 @@ Configuración global para el host de Functions:
 - Configuración de logging
 - Configuración del bundle de extensiones
 
-#### `local.settings.json.example`
-Plantilla para configuración de desarrollo local:
+#### `local.settings.json`
+Ajustes de desarrollo local:
 - **AzureWebJobsStorage**: Conexión a Azurite para el runtime de Functions
 - **AZURE_STORAGE_CONNECTION_STRING**: Conexión para operaciones de blobs
 - **CONTAINER_NAME**: Contenedor destino para las subidas

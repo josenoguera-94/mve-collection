@@ -10,17 +10,17 @@ azure-functions/
 │   ├── azurite_client.py
 │   ├── function_app.py
 │   ├── host.json
-│   ├── local.settings.json.example
+│   ├── local.settings.json
 │   └── requirements.txt
 ├── .devcontainer/
 │   └── devcontainer.json
 ├── .vscode/
-│   └── settings.json.example
+│   └── settings.json
 ├── docker-compose.yml
 ├── .env
 ├── main.py
 ├── pyproject.toml
-├── .gitignore
+├── README.es.md
 └── README.md
 ```
 
@@ -44,16 +44,7 @@ The dev container includes:
 - **Azure Storage extension** for browsing blob storage
 - **Azure CLI** for additional Azure operations
 
-### Step 2: Configure Local Settings
-
-Copy the example configuration files:
-
-```bash
-cp upload-function/local.settings.json.example upload-function/local.settings.json
-cp .vscode/settings.json.example .vscode/settings.json
-```
-
-### Step 3: Start Azurite
+### Step 2: Start Azurite
 
 Inside the dev container terminal:
 
@@ -67,7 +58,7 @@ Verify it's running:
 docker ps
 ```
 
-### Step 4: Start Azure Functions
+### Step 3: Start Azure Functions
 
 ```bash
 cd upload-function
@@ -88,7 +79,7 @@ Functions:
 For detailed output, run func with --verbose flag.
 ```
 
-### Step 5: Test the Function
+### Step 4: Test the Function
 
 Open a new terminal and run:
 
@@ -121,14 +112,7 @@ Follow the official installation guide:
 pip3 install uv && uv sync
 ```
 
-### Step 3: Configure Local Settings
-
-```bash
-cp upload-function/local.settings.json.example upload-function/local.settings.json
-cp .vscode/settings.json.example .vscode/settings.json
-```
-
-### Step 4: Start Azurite
+### Step 3: Start Azurite
 
 Using Docker Compose:
 
@@ -136,14 +120,14 @@ Using Docker Compose:
 docker compose up -d
 ```
 
-### Step 5: Start Azure Functions
+### Step 4: Start Azure Functions
 
 ```bash
 cd upload-function
 func start
 ```
 
-### Step 6: Test the Function
+### Step 5: Test the Function
 
 ```bash
 python main.py
@@ -171,8 +155,8 @@ Global configuration for the Functions host:
 - Logging settings
 - Extension bundle configuration
 
-#### `local.settings.json.example`
-Template for local development settings:
+#### `local.settings.json`
+Local development settings:
 - **AzureWebJobsStorage**: Connection to Azurite for Functions runtime
 - **AZURE_STORAGE_CONNECTION_STRING**: Connection for blob operations
 - **CONTAINER_NAME**: Target container for uploads
