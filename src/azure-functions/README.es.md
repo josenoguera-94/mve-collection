@@ -40,6 +40,7 @@ azure-functions/
 4. Espera a que el contenedor se construya y las dependencias se instalen
 
 El dev container incluye:
+
 - **Extensión de Azure Functions** para desarrollo y depuración local
 - **Extensión de Azure Storage** para explorar el almacenamiento de blobs
 - **Azure CLI** para operaciones adicionales de Azure
@@ -61,8 +62,7 @@ docker ps
 ### Paso 3: Iniciar Azure Functions
 
 ```bash
-cd upload-function
-func start
+func start --prefix ./upload-function/
 ```
 
 Deberías ver una salida como:
@@ -102,6 +102,7 @@ Response: File 'test.txt' uploaded to 'uploads'.
 ### Paso 1: Instalar Azure Functions Core Tools
 
 Sigue la guía de instalación oficial:
+
 - **Windows**: `npm install -g azure-functions-core-tools@4 --unsafe-perm true`
 - **macOS**: `brew tap azure/functions && brew install azure-functions-core-tools@4`
 - **Linux**: Sigue la [documentación oficial](https://learn.microsoft.com/es-es/azure/azure-functions/functions-run-local)
@@ -123,8 +124,7 @@ docker compose up -d
 ### Paso 4: Iniciar Azure Functions
 
 ```bash
-cd upload-function
-func start
+func start --prefix ./upload-function/
 ```
 
 ### Paso 5: Probar la Función
@@ -140,33 +140,43 @@ python main.py
 Contiene todos los archivos específicos de Azure Functions:
 
 #### `azurite_client.py`
+
 Cliente reutilizable para operaciones de almacenamiento de blobs de Azurite:
+
 - **`create_container(container_name)`**: Crea el contenedor si no existe
 - **`upload_blob(container_name, blob_name, data)`**: Sube datos a un blob
 
 #### `function_app.py`
+
 Aplicación de Azure Functions con activador HTTP:
+
 - **`@app.route`**: Define el endpoint HTTP `/api/upload` que acepta peticiones POST
 - **`upload_file(req)`**: Maneja la subida de archivos usando AzuriteClient
 - **Manejo de Errores**: Devuelve códigos de estado HTTP apropiados
 
 #### `host.json`
+
 Configuración global para el host de Functions:
+
 - Configuración de logging
 - Configuración del bundle de extensiones
 
 #### `local.settings.json`
+
 Ajustes de desarrollo local:
+
 - **AzureWebJobsStorage**: Conexión a Azurite para el runtime de Functions
 - **AZURE_STORAGE_CONNECTION_STRING**: Conexión para operaciones de blobs
-- **CONTAINER_NAME**: Contenedor destino para las subidas
+- **BLOB_CONTAINER_NAME**: Contenedor destino para las subidas
 
 #### `requirements.txt`
+
 Dependencias de Python para el runtime de Azure Functions
 
 ### Script Principal (`main.py`)
 
 Script de demostración que invoca la Azure Function desplegada:
+
 - Hace una petición HTTP POST al endpoint de la función
 - Sube un archivo de prueba
 - Muestra la respuesta
@@ -174,6 +184,7 @@ Script de demostración que invoca la Azure Function desplegada:
 ### Docker Compose (`docker-compose.yml`)
 
 Configuración del servicio Azurite:
+
 - Servicio de blobs en el puerto 10000
 - Servicio de colas en el puerto 10001
 - Servicio de tablas en el puerto 10002
@@ -185,7 +196,7 @@ El archivo `.env` contiene:
 ```
 AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;
 
-CONTAINER_NAME=uploads
+BLOB_CONTAINER_NAME=uploads
 ```
 
 **Nota**: La cadena de conexión usa las credenciales predeterminadas de Azurite para desarrollo local.

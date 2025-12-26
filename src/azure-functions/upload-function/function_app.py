@@ -16,7 +16,7 @@ def upload_file(req: func.HttpRequest) -> func.HttpResponse:
             "Please provide a filename parameter.", status_code=400
         )
     file_data = req.get_body()
-    container_name = os.getenv("CONTAINER_NAME", "uploads")
+    container_name = os.getenv("BLOB_CONTAINER_NAME", "uploads")
     client = AzuriteClient()
     client.create_container(container_name)
     client.upload_blob(container_name, filename, file_data)

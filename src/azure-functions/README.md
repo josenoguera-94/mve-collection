@@ -61,8 +61,7 @@ docker ps
 ### Step 3: Start Azure Functions
 
 ```bash
-cd upload-function
-func start
+func start --prefix ./upload-function/
 ```
 
 You should see output like:
@@ -123,8 +122,7 @@ docker compose up -d
 ### Step 4: Start Azure Functions
 
 ```bash
-cd upload-function
-func start
+func start --prefix ./upload-function/
 ```
 
 ### Step 5: Test the Function
@@ -159,7 +157,7 @@ Global configuration for the Functions host:
 Local development settings:
 - **AzureWebJobsStorage**: Connection to Azurite for Functions runtime
 - **AZURE_STORAGE_CONNECTION_STRING**: Connection for blob operations
-- **CONTAINER_NAME**: Target container for uploads
+- **BLOB_CONTAINER_NAME**: Target container for uploads
 
 #### `requirements.txt`
 Python dependencies for Azure Functions runtime
@@ -185,7 +183,7 @@ The `.env` file contains:
 ```
 AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;
 
-CONTAINER_NAME=uploads
+BLOB_CONTAINER_NAME=uploads
 ```
 
 **Note**: The connection string uses Azurite's default credentials for local development.
