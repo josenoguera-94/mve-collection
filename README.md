@@ -87,6 +87,7 @@ src/[mve-name]/
 | [devcontainers-docker](./src/devcontainers-docker/)             | Understanding DevContainers with Python and pandas        | DevContainers, Docker, Python, VS Code  |
 | [localstack-docker](./src/localstack-docker/)                   | LocalStack setup with Lambda and S3 services              | LocalStack, Lambda, S3, Docker, Python  |
 | [localstack-docker-terraform](./src/localstack-docker-terraform/) | LocalStack with Terraform for S3, Lambda, and DynamoDB infrastructure | LocalStack, Terraform, S3, Lambda, DynamoDB, Docker, Python |
+| [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Hybrid cloud scenario with LocalStack and external Postgres | LocalStack, Terraform, Secrets Manager, PostgreSQL, Docker, Python |
 | [metabase-docker](./src/metabase-docker/)                       | Metabase setup with Docker Compose and PostgreSQL         | Metabase, PostgreSQL, Docker, Python    |
 | [minio-docker-boto3](./src/minio-docker-boto3/)                 | MinIO setup with Docker Compose and Boto3                 | MinIO, Docker, Boto3, Python            |
 | [minio-docker-delta](./src/minio-docker-delta/)                 | MinIO setup with Docker Compose and Delta Lake            | MinIO, Delta Lake, Docker, Python       |

@@ -1,0 +1,27 @@
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack_hybrid
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=lambda,secretsmanager
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  postgres:
+    image: postgres:15
+    container_name: postgres_hybrid
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB=mydb
+    volumes:
+      - postgres_hybrid_data:/var/var/lib/postgresql/data
+
+volumes:
+  postgres_hybrid_data:
