@@ -133,38 +133,44 @@ python main.py
 
 ## Project Components
 
-### Upload Function Directory (`upload-function/`)
+### AzuriteClient (`upload-function/azurite_client.py`)
 
-Contains all Azure Functions-specific files:
-
-#### `azurite_client.py`
 Reusable client for Azurite blob storage operations:
+
 - **`create_container(container_name)`**: Creates container if it doesn't exist
 - **`upload_blob(container_name, blob_name, data)`**: Uploads data to blob
 
-#### `function_app.py`
+### Function App (`upload-function/function_app.py`)
+
 Azure Functions application with HTTP trigger:
+
 - **`@app.route`**: Defines HTTP endpoint `/api/upload` accepting POST requests
 - **`upload_file(req)`**: Handles file upload using AzuriteClient
 - **Error Handling**: Returns appropriate HTTP status codes
 
-#### `host.json`
+### Host Configuration (`upload-function/host.json`)
+
 Global configuration for the Functions host:
+
 - Logging settings
 - Extension bundle configuration
 
-#### `local.settings.json`
+### Local Settings (`upload-function/local.settings.json`)
+
 Local development settings:
+
 - **AzureWebJobsStorage**: Connection to Azurite for Functions runtime
 - **AZURE_STORAGE_CONNECTION_STRING**: Connection for blob operations
 - **BLOB_CONTAINER_NAME**: Target container for uploads
 
-#### `requirements.txt`
-Python dependencies for Azure Functions runtime
+### Function Dependencies (`upload-function/requirements.txt`)
+
+Python dependencies for Azure Functions runtime.
 
 ### Main Script (`main.py`)
 
 Demonstration script that invokes the deployed Azure Function:
+
 - Makes HTTP POST request to the function endpoint
 - Uploads a test file
 - Displays the response
@@ -172,6 +178,7 @@ Demonstration script that invokes the deployed Azure Function:
 ### Docker Compose (`docker-compose.yml`)
 
 Azurite service configuration:
+
 - Blob service on port 10000
 - Queue service on port 10001
 - Table service on port 10002

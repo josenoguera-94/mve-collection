@@ -135,18 +135,14 @@ python main.py
 
 ## Componentes del Proyecto
 
-### Directorio Upload Function (`upload-function/`)
-
-Contiene todos los archivos específicos de Azure Functions:
-
-#### `azurite_client.py`
+### AzuriteClient (`upload-function/azurite_client.py`)
 
 Cliente reutilizable para operaciones de almacenamiento de blobs de Azurite:
 
 - **`create_container(container_name)`**: Crea el contenedor si no existe
 - **`upload_blob(container_name, blob_name, data)`**: Sube datos a un blob
 
-#### `function_app.py`
+### Function App (`upload-function/function_app.py`)
 
 Aplicación de Azure Functions con activador HTTP:
 
@@ -154,14 +150,14 @@ Aplicación de Azure Functions con activador HTTP:
 - **`upload_file(req)`**: Maneja la subida de archivos usando AzuriteClient
 - **Manejo de Errores**: Devuelve códigos de estado HTTP apropiados
 
-#### `host.json`
+### Configuración del Host (`upload-function/host.json`)
 
 Configuración global para el host de Functions:
 
 - Configuración de logging
 - Configuración del bundle de extensiones
 
-#### `local.settings.json`
+### Ajustes Locales (`upload-function/local.settings.json`)
 
 Ajustes de desarrollo local:
 
@@ -169,9 +165,9 @@ Ajustes de desarrollo local:
 - **AZURE_STORAGE_CONNECTION_STRING**: Conexión para operaciones de blobs
 - **BLOB_CONTAINER_NAME**: Contenedor destino para las subidas
 
-#### `requirements.txt`
+### Dependencias de la Función (`upload-function/requirements.txt`)
 
-Dependencias de Python para el runtime de Azure Functions
+Dependencias de Python para el runtime de Azure Functions.
 
 ### Script Principal (`main.py`)
 
