@@ -14,11 +14,11 @@ localstack-hybrid-cloud/
 │   ├── lambda_handler.py
 │   └── models.py
 ├── docker-compose.yml        # LocalStack + Postgres
-├── .env
-├── main.py                   # Run and verify script
-├── main_create_lambda.py     # Deploy lambda script
-├── main.tf                   # Infrastructure (Terraform)
+├── package_lambda.py         # ZIP builder script
+├── main.tf                   # Infrastructure (Secrets + Lambda)
+├── terraform.tfvars          # Terraform variables
 ├── pyproject.toml
+├── uv.lock
 └── README.md
 ```
 
@@ -26,9 +26,45 @@ localstack-hybrid-cloud/
 
 - Docker and Docker Compose installed
 - Terraform installed
-- VS Code with Dev Containers extension (optional)
+- AWS CLI installed
+- DBeaver or any SQL client (to verify results)
 
-## Deployment Steps
+## Option 1: Using Dev Container (Recommended)
+
+### Step 1: Open Project in Dev Container
+
+1. Open VS Code in the project folder
+2. Press `F1` or `Ctrl+Shift+P`
+3. Select: **Dev Containers: Reopen in Container**
+
+### Step 2: Configure AWS CLI
+
+If you haven't configured the CLI yet, run:
+
+```bash
+aws configure set aws_access_key_id test
+aws configure set aws_secret_access_key test
+aws configure set region us-east-1
+```
+
+### Step 3: Prepare and Deploy
+
+```bash
+docker compose up -d
+python package_lambda.py
+terraform init && terraform apply -auto-approve
+```
+
+### Step 4: Invoke the Lambda via CLI
+
+```bash
+aws --endpoint-url=http://localhost:4566 lambda invoke \
+    --function-name AddUserFunction \
+    --payload '{}' \
+    response.json
+```
+
+## Option 2: Local Setup (Without Dev Container)
 
 ### Step 1: Start Infrastructure
 
@@ -36,56 +72,96 @@ localstack-hybrid-cloud/
 docker compose up -d
 ```
 
-Wait until services are ready.
-
-### Step 2: Initialize Database and Secrets
+### Step 2: Build and Deploy
 
 ```bash
-terraform init
-terraform apply -auto-approve
+python package_lambda.py
+terraform init && terraform apply -auto-approve
 ```
 
-### Step 3: Deploy Lambda Function
+### Step 3: Run Application (Invoke Lambda)
 
 ```bash
-pip3 install uv && uv sync
-python main_create_lambda.py
+aws --endpoint-url=http://localhost:4566 lambda invoke \
+    --function-name AddUserFunction \
+    --payload '{}' \
+    response.json
+
+cat response.json
 ```
 
-### Step 4: Run the Example
+## Verifying Results
 
-```bash
-python main.py
+Since the Lambda interacts with a local PostgreSQL database, you can verify the results using **DBeaver** or any other database client:
+
+1. **Host**: `localhost`
+2. **Port**: `5432`
+3. **Database**: `mydb`
+4. **User**: `myuser`
+5. **Password**: `mypassword`
+
+Run the following query:
+```sql
+SELECT * FROM users ORDER BY created_at DESC;
 ```
-
-You should see output indicating that the Lambda was invoked and the user was successfully found in the PostgreSQL database.
 
 ## Project Components
 
 ### `main.tf`
-Defines the infrastructure:
-- **AW SSecrets Manager**: Stores the Postgres connection URI.
-- **PostgreSQL Provider**: Creates the `users` table in the database container.
+
+Defines the infrastructure using Terraform:
+- **AWS Secrets Manager**: Stores the Postgres credentials as a single JSON object.
+- **AWS Lambda**: Deploys the function using the `lambda.zip` file.
+- **IAM**: Creates the necessary roles for the Lambda.
 
 ### `add_user_lambda/`
+
 Contains the Lambda function logic:
-- `models.py`: SQLAlchemy ORM models.
-- `lambda_handler.py`: Handler that retrieves secrets and inserts a random user.
+- `models.py`: SQLAlchemy ORM models and secret retrieval logic.
+- `lambda_handler.py`: Handler that retrieves secrets, **initializes the table**, and inserts a random user.
 
-### `main_create_lambda.py`
-Automates the process of zipping the lambda folder and deploying it to LocalStack using `boto3`.
+### `package_lambda.py`
 
-## Environment Variables
+A helper script that uses **Docker** to build a compatible Linux environment and package the `add_user_lambda/` folder along with its dependencies (SQLAlchemy, psycopg2) into a `lambda.zip` file.
 
-The `.env` file contains:
+## Configuration
 
+Database credentials and LocalStack configuration for Terraform are managed in `terraform.tfvars`. Service configuration for Docker is managed directly in `docker-compose.yml`.
+
+## Useful Commands
+
+### Docker Commands
+
+```bash
+# Start container
+docker compose up -d
+
+# Stop container
+docker compose down
+
+# View logs
+docker compose logs -f
 ```
-ENDPOINT_URL=http://localhost:4566
-AWS_DEFAULT_REGION=us-east-1
-POSTGRES_USER=myuser
-POSTGRES_PASSWORD=mypassword
-DATABASE_URL=postgresql://myuser:mypassword@host.docker.internal:5432/mydb
+
+### AWS CLI (LocalStack)
+
+```bash
+# List Lambda Functions
+aws --endpoint-url=http://localhost:4566 lambda list-functions
+
+# Check Secrets
+aws --endpoint-url=http://localhost:4566 secretsmanager list-secrets
 ```
+
+## Troubleshooting
+
+### Connection Refused
+
+If the Lambda cannot connect to Postgres, ensure `host.docker.internal` is reachable from within the LocalStack container. For older Docker versions on Linux, you might need to add it to `extra_hosts` in `docker-compose.yml`.
+
+### Port Already in Use
+
+If port 4566 or 5432 is already in use, modify the `docker-compose.yml` port mappings.
 
 ## Clean Up
 
@@ -94,6 +170,7 @@ To remove everything:
 ```bash
 terraform destroy -auto-approve
 docker compose down -v
+rm lambda.zip response.json
 ```
 
 ## License

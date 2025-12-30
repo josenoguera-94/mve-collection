@@ -1,6 +1,6 @@
 # Ejemplo de Nube Híbrida con LocalStack
 
-Ejemplo mínimo viable para demostrar un escenario de nube híbrida utilizando LocalStack y una instancia externa de PostgreSQL. Este ejemplo muestra cómo una Lambda de AWS (simulada en LocalStack) puede recuperar secretos de Secrets Manager e interactuar con una base de datos fuera del entorno de AWS.
+Ejemplo mínimo viable para demostrar un escenario de nube híbrida utilizando LocalStack y una instancia externa de PostgreSQL. Este ejemplo muestra cómo una Lambda de AWS (simulada en LocalStack) puede obtener secretos de Secrets Manager e interactuar con una base de datos fuera del entorno de AWS.
 
 ## Estructura del Proyecto
 
@@ -14,11 +14,11 @@ localstack-hybrid-cloud/
 │   ├── lambda_handler.py
 │   └── models.py
 ├── docker-compose.yml        # LocalStack + Postgres
-├── .env
-├── main.py                   # Script de ejecución y verificación
-├── main_create_lambda.py     # Script para desplegar la lambda
-├── main.tf                   # Infraestructura (Terraform)
+├── package_lambda.py         # Script para crear el ZIP
+├── main.tf                   # Infraestructura (Secretos + Lambda)
+├── terraform.tfvars          # Variables de Terraform
 ├── pyproject.toml
+├── uv.lock
 └── README.md
 ```
 
@@ -26,66 +26,142 @@ localstack-hybrid-cloud/
 
 - Docker y Docker Compose instalados
 - Terraform instalado
-- VS Code con extensión Dev Containers (opcional)
+- AWS CLI instalado
+- DBeaver o cualquier cliente SQL (para verificar resultados)
 
-## Pasos de Despliegue
+## Opción 1: Usando Dev Container (Recomendado)
 
-### Paso 1: Levantar la Infraestructura
+### Paso 1: Abrir el Proyecto en el Dev Container
+
+1. Abre VS Code en la carpeta del proyecto
+2. Presiona `F1` o `Ctrl+Shift+P`
+3. Selecciona: **Dev Containers: Reopen in Container**
+
+### Paso 2: Configurar AWS CLI
+
+Si no has configurado el CLI aún, ejecuta:
+
+```bash
+aws configure set aws_access_key_id test
+aws configure set aws_secret_access_key test
+aws configure set region us-east-1
+```
+
+### Paso 3: Preparar y Desplegar
+
+```bash
+docker compose up -d
+python package_lambda.py
+terraform init && terraform apply -auto-approve
+```
+
+### Paso 4: Invocar la Lambda vía CLI
+
+```bash
+aws --endpoint-url=http://localhost:4566 lambda invoke \
+    --function-name AddUserFunction \
+    --payload '{}' \
+    response.json
+```
+
+## Opción 2: Configuración Local (Sin Dev Container)
+
+### Paso 1: Iniciar Infraestructura
 
 ```bash
 docker compose up -d
 ```
 
-Espera a que los servicios estén listos.
-
-### Paso 2: Inicializar Base de Datos y Secretos
+### Paso 2: Construir y Desplegar
 
 ```bash
-terraform init
-terraform apply -auto-approve
+python package_lambda.py
+terraform init && terraform apply -auto-approve
 ```
 
-### Paso 3: Desplegar la Función Lambda
+### Paso 3: Ejecutar Aplicación (Invocar Lambda)
 
 ```bash
-pip3 install uv && uv sync
-python main_create_lambda.py
+aws --endpoint-url=http://localhost:4566 lambda invoke \
+    --function-name AddUserFunction \
+    --payload '{}' \
+    response.json
+
+cat response.json
 ```
 
-### Paso 4: Ejecutar el Ejemplo
+## Verificación de Resultados
 
-```bash
-python main.py
+Dado que la Lambda interactúa con una base de datos PostgreSQL local, puedes verificar los resultados usando **DBeaver** o cualquier otro cliente de base de datos:
+
+1. **Host**: `localhost`
+2. **Port**: `5432`
+3. **Database**: `mydb`
+4. **User**: `myuser`
+5. **Password**: `mypassword`
+
+Ejecuta la siguiente consulta:
+```sql
+SELECT * FROM users ORDER BY created_at DESC;
 ```
-
-Deberías ver una salida indicando que la Lambda fue invocada y que el usuario fue encontrado correctamente en la base de datos PostgreSQL.
 
 ## Componentes del Proyecto
 
 ### `main.tf`
-Define la infraestructura:
-- **AWS Secrets Manager**: Almacena la URI de conexión de Postgres.
-- **Provider de PostgreSQL**: Crea la tabla `users` en el contenedor de la base de datos.
+
+Define la infraestructura usando Terraform:
+- **AWS Secrets Manager**: Almacena las credenciales de Postgres como un único objeto JSON.
+- **AWS Lambda**: Despliega la función utilizando el archivo `lambda.zip`.
+- **IAM**: Crea los roles necesarios para la Lambda.
 
 ### `add_user_lambda/`
+
 Contiene la lógica de la función Lambda:
-- `models.py`: Modelos ORM de SQLAlchemy.
-- `lambda_handler.py`: Handler que recupera el secreto e inserta un usuario aleatorio.
+- `models.py`: Modelos ORM de SQLAlchemy y lógica de recuperación de secretos.
+- `lambda_handler.py`: Manejador que recupera secretos, **inicializa la tabla** e inserta un usuario aleatorio.
 
-### `main_create_lambda.py`
-Automatiza el proceso de comprimir la carpeta de la lambda y desplegarla en LocalStack usando `boto3`.
+### `package_lambda.py`
 
-## Variables de Entorno
+Un script de ayuda que utiliza **Docker** para construir un entorno Linux compatible y empaquetar la carpeta `add_user_lambda/` junto con sus dependencias (SQLAlchemy, psycopg2) en un archivo `lambda.zip`.
 
-El archivo `.env` contiene:
+## Configuración
 
+Las credenciales de la base de datos y la configuración de LocalStack para Terraform se gestionan en `terraform.tfvars`. La configuración de los servicios para Docker se gestiona directamente en el archivo `docker-compose.yml`.
+
+## Comandos Útiles
+
+### Comandos Docker
+
+```bash
+# Iniciar contenedor
+docker compose up -d
+
+# Detener contenedor
+docker compose down
+
+# Ver logs
+docker compose logs -f
 ```
-ENDPOINT_URL=http://localhost:4566
-AWS_DEFAULT_REGION=us-east-1
-POSTGRES_USER=myuser
-POSTGRES_PASSWORD=mypassword
-DATABASE_URL=postgresql://myuser:mypassword@host.docker.internal:5432/mydb
+
+### AWS CLI (LocalStack)
+
+```bash
+# Listar funciones Lambda
+aws --endpoint-url=http://localhost:4566 lambda list-functions
+
+# Consultar Secretos
+aws --endpoint-url=http://localhost:4566 secretsmanager list-secrets
 ```
+
+## Resolución de Problemas
+
+### Conexión Rechazada (Connection Refused)
+
+Si la Lambda no puede conectarse a Postgres, asegúrate de que `host.docker.internal` sea accesible desde dentro del contenedor de LocalStack.
+
+### Puerto ya en uso
+
+Si los puertos 4566 o 5432 ya están en uso, modifica los mapeos de puertos en `docker-compose.yml`.
 
 ## Limpieza
 
@@ -94,8 +170,9 @@ Para eliminar todo:
 ```bash
 terraform destroy -auto-approve
 docker compose down -v
+rm lambda.zip response.json
 ```
 
 ## Licencia
 
-Este es un ejemplo mínimo para fines educativos. Siéntete libre de usarlo y modificarlo según sea necesario.
+Este es un ejemplo mínimo con fines educativos. Siéntete libre de usarlo y modificarlo según sea necesario.

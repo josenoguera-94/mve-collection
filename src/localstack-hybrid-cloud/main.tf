@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
 provider "aws" {
   region                      = "us-east-1"
   access_key                  = "test"
@@ -7,53 +16,54 @@ provider "aws" {
   skip_requesting_account_id  = true
   endpoints {
     secretsmanager = "http://localhost:4566"
+    lambda         = "http://localhost:4566"
+    iam            = "http://localhost:4566"
   }
 }
 
-provider "postgresql" {
-  host     = "localhost"
-  port     = 5432
-  database = "mydb"
-  username = "myuser"
-  password = "mypassword"
-  sslmode  = "disable"
+variable "postgres_user" {}
+variable "postgres_password" {}
+variable "postgres_host" {}
+variable "postgres_port" {}
+variable "postgres_db" {}
+
+# Secret for DB Credentials in JSON format
+resource "aws_secretsmanager_secret" "db_credentials" {
+  name = "postgres-credentials"
 }
 
-# Create Postgres Table
-resource "postgresql_table" "users" {
-  name     = "users"
-  database = "mydb"
-  schema   = "public"
-  column {
-    name = "id"
-    type = "integer"
-    nullable = false
-  }
-  column {
-    name = "name"
-    type = "character varying(100)"
-  }
-  column {
-    name = "email"
-    type = "character varying(100)"
-  }
-  column {
-    name = "created_at"
-    type = "timestamp without time zone"
-  }
+resource "aws_secretsmanager_secret_version" "db_credentials_val" {
+  secret_id     = aws_secretsmanager_secret.db_credentials.id
+  secret_string = jsonencode({
+    user     = var.postgres_user
+    password = var.postgres_password
+    host     = "host.docker.internal" # Accessing host from Lambda container
+    port     = var.postgres_port
+    dbname   = var.postgres_db
+  })
 }
 
-# Add Primary Key (Terraform postgresql provider trick)
-resource "postgresql_extension" "uuid" {
-  name = "uuid-ossp"
+# IAM Role for Lambda
+resource "aws_iam_role" "lambda_role" {
+  name = "lambda-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = { Service = "lambda.amazonaws.com" }
+    }]
+  })
 }
 
-# Secret for the DB URI
-resource "aws_secretsmanager_secret" "db_secret" {
-  name = "postgres-connection-uri"
-}
+# Lambda Function
+resource "aws_lambda_function" "add_user" {
+  filename      = "lambda.zip"
+  function_name = "AddUserFunction"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "lambda_handler.lambda_handler"
+  runtime       = "python3.11"
+  timeout       = 30
 
-resource "aws_secretsmanager_secret_version" "db_secret_val" {
-  secret_id     = aws_secretsmanager_secret.db_secret.id
-  secret_string = "postgresql://myuser:mypassword@host.docker.internal:5432/mydb"
+  source_code_hash = fileexists("lambda.zip") ? filebase64sha256("lambda.zip") : null
 }
