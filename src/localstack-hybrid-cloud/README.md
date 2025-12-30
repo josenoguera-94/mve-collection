@@ -126,7 +126,7 @@ A helper script that uses **Docker** to build a compatible Linux environment and
 
 ## Configuration
 
-Database credentials and LocalStack configuration for Terraform are managed in `terraform.tfvars`. Service configuration for Docker is managed directly in `docker-compose.yml`.
+All configuration, including database credentials and LocalStack endpoints, is managed in `terraform.tfvars`. Service configuration for Docker is managed directly in `docker-compose.yml`.
 
 ## Useful Commands
 

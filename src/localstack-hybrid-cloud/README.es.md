@@ -126,7 +126,7 @@ Un script de ayuda que utiliza **Docker** para construir un entorno Linux compat
 
 ## Configuración
 
-Las credenciales de la base de datos y la configuración de LocalStack para Terraform se gestionan en `terraform.tfvars`. La configuración de los servicios para Docker se gestiona directamente en el archivo `docker-compose.yml`.
+Toda la configuración, incluyendo las credenciales de la base de datos y los endpoints de LocalStack, se gestiona en `terraform.tfvars`. La configuración de los servicios para Docker se gestiona directamente en el archivo `docker-compose.yml`.
 
 ## Comandos Útiles
 

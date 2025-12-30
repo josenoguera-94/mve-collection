@@ -15,9 +15,9 @@ provider "aws" {
   skip_metadata_api_check     = true
   skip_requesting_account_id  = true
   endpoints {
-    secretsmanager = "http://localhost:4566"
-    lambda         = "http://localhost:4566"
-    iam            = "http://localhost:4566"
+    secretsmanager = var.aws_endpoint
+    lambda         = var.aws_endpoint
+    iam            = var.aws_endpoint
   }
 }
 
@@ -26,6 +26,7 @@ variable "postgres_password" {}
 variable "postgres_host" {}
 variable "postgres_port" {}
 variable "postgres_db" {}
+variable "aws_endpoint" {}
 
 # Secret for DB Credentials in JSON format
 resource "aws_secretsmanager_secret" "db_credentials" {
@@ -66,4 +67,10 @@ resource "aws_lambda_function" "add_user" {
   timeout       = 30
 
   source_code_hash = fileexists("lambda.zip") ? filebase64sha256("lambda.zip") : null
+
+  environment {
+    variables = {
+      AWS_ENDPOINT_URL = var.aws_endpoint
+    }
+  }
 }

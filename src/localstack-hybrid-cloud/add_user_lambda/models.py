@@ -17,13 +17,10 @@ class User(Base):
 def get_db_config():
     """Fetch credentials from AWS Secrets Manager."""
     # LocalStack provides LOCALSTACK_HOSTNAME inside the Lambda container
-    ls_host = os.getenv("LOCALSTACK_HOSTNAME")
-    
-    if ls_host:
+    if ls_host := os.getenv("LOCALSTACK_HOSTNAME"):
         endpoint = f"http://{ls_host}:4566"
     else:
-        # Fallback for local execution outside Lambda
-        endpoint = os.getenv("AWS_ENDPOINT_URL") or os.getenv("ENDPOINT_URL") or "http://localhost:4566"
+        endpoint = os.getenv("AWS_ENDPOINT_URL", "http://localhost:4566")
     
     client = boto3.session.Session().client(
         service_name='secretsmanager',
