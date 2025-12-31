@@ -43,7 +43,18 @@ El dev container incluye:
 - **Firebase Tools** (instalado automáticamente)
 - **Extensión VSFire** para integración con Firebase
 
-### Paso 2: Iniciar los Emuladores de Firebase
+### Paso 2: Configurar el Entorno Virtual de Functions
+
+Firebase requiere un entorno virtual llamado `venv` dentro del directorio `functions` para cargar tu código:
+
+```bash
+cd functions
+python3.12 -m venv venv
+./venv/bin/pip install -r requirements.txt
+cd ..
+```
+
+### Paso 3: Iniciar los Emuladores de Firebase
 
 Dentro del terminal del dev container:
 
@@ -67,7 +78,7 @@ Deberías ver una salida como:
 └───────────┴────────────────┴─────────────────────────────────┘
 ```
 
-### Paso 3: Ver la UI del Emulador
+### Paso 4: Ver la UI del Emulador
 
 Abre tu navegador y navega a:
 
@@ -80,7 +91,7 @@ La UI del Emulador de Firebase proporciona:
 - **Pestaña Storage**: Navegar archivos subidos
 - **Pestaña Logs**: Logs de ejecución de funciones en tiempo real
 
-### Paso 4: Probar la Función
+### Paso 5: Probar la Función
 
 Abre un nuevo terminal (mantén el emulador ejecutándose) y ejecuta:
 
@@ -101,14 +112,14 @@ Response: File 'test.txt' uploaded to 'demo-bucket'
 Check the Firebase Emulator UI at http://localhost:4000
 ```
 
-### Paso 5: Verificar la Subida en la UI del Emulador
+### Paso 6: Verificar la Subida en la UI del Emulador
 
 1. Ve a `http://localhost:4000`
 2. Haz clic en la pestaña **Storage**
 3. Deberías ver `demo-bucket` con `test.txt` dentro
 4. Haz clic en la pestaña **Functions** para ver los logs de ejecución
 
-### Paso 6: Probar con curl
+### Paso 7: Probar con curl
 
 También puedes probar la función directamente con curl:
 
@@ -149,13 +160,20 @@ npm install -g firebase-tools
 pip3 install uv && uv sync
 ```
 
-### Paso 2: Iniciar los Emuladores de Firebase
+### Paso 2: Configurar el Entorno Virtual de Functions
+
+Firebase requiere un entorno virtual llamado `venv` dentro del directorio `functions`:
 
 ```bash
-firebase emulators:start
+cd functions
+python3.12 -m venv venv
+./venv/bin/pip install -r requirements.txt
+cd ..
 ```
 
-### Paso 3: Probar la Función
+### Paso 3: Iniciar los Emuladores de Firebase
+
+### Paso 4: Probar la Función
 
 Abre un nuevo terminal y ejecuta:
 

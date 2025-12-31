@@ -43,7 +43,18 @@ The dev container includes:
 - **Firebase Tools** (installed automatically)
 - **VSFire extension** for Firebase integration
 
-### Step 2: Start Firebase Emulators
+### Step 2: Set up Functions Virtual Environment
+
+Firebase requires a virtual environment named `venv` inside the `functions` directory to load your code:
+
+```bash
+cd functions
+python3.12 -m venv venv
+./venv/bin/pip install -r requirements.txt
+cd ..
+```
+
+### Step 3: Start Firebase Emulators
 
 Inside the dev container terminal:
 
@@ -67,7 +78,7 @@ You should see output like:
 └───────────┴────────────────┴─────────────────────────────────┘
 ```
 
-### Step 3: View Emulator UI
+### Step 4: View Emulator UI
 
 Open your browser and navigate to:
 
@@ -80,7 +91,7 @@ The Firebase Emulator UI provides:
 - **Storage tab**: Browse uploaded files
 - **Logs tab**: Real-time function execution logs
 
-### Step 4: Test the Function
+### Step 5: Test the Function
 
 Open a new terminal (keep the emulator running) and execute:
 
@@ -101,14 +112,14 @@ Response: File 'test.txt' uploaded to 'demo-bucket'
 Check the Firebase Emulator UI at http://localhost:4000
 ```
 
-### Step 5: Verify Upload in Emulator UI
+### Step 6: Verify Upload in Emulator UI
 
 1. Go to `http://localhost:4000`
 2. Click on the **Storage** tab
 3. You should see `demo-bucket` with `test.txt` inside
 4. Click on **Functions** tab to see execution logs
 
-### Step 6: Test with curl
+### Step 7: Test with curl
 
 You can also test the function directly with curl:
 
@@ -149,13 +160,20 @@ npm install -g firebase-tools
 pip3 install uv && uv sync
 ```
 
-### Step 2: Start Firebase Emulators
+### Step 2: Set up Functions Virtual Environment
+
+Firebase requires a virtual environment named `venv` inside the `functions` directory:
 
 ```bash
-firebase emulators:start
+cd functions
+python3.12 -m venv venv
+./venv/bin/pip install -r requirements.txt
+cd ..
 ```
 
-### Step 3: Test the Function
+### Step 3: Start Firebase Emulators
+
+### Step 4: Test the Function
 
 Open a new terminal and run:
 
