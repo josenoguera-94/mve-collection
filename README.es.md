@@ -85,6 +85,7 @@ src/[nombre-mve]/
 | [azure-functions](./src/azure-functions/)                       | Desarrollo local de Azure Functions con Azurite                 | Azure Functions, Azurite, Blob Storage, Docker, Python |
 | [azurite-docker](./src/azurite-docker/)                         | Configuración de Azurite con emulación de Azure Blob Storage    | Azurite, Azure, Blob Storage, Docker, Python |
 | [devcontainers-docker](./src/devcontainers-docker/)             | Entendiendo DevContainers con Python y pandas                   | DevContainers, Docker, Python, VS Code   |
+| [gcp-functions](./src/gcp-functions/)                           | Desarrollo local de Google Cloud Functions con Firebase Emulator Suite | Google Cloud Functions, Firebase, Cloud Storage, Python |
 | [localstack-docker](./src/localstack-docker/)                   | Configuración de LocalStack con servicios Lambda y S3           | LocalStack, Lambda, S3, Docker, Python   |
 | [localstack-docker-terraform](./src/localstack-docker-terraform/) | LocalStack con Terraform para infraestructura S3, Lambda y DynamoDB | LocalStack, Terraform, S3, Lambda, DynamoDB, Docker, Python |
 | [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Escenario de nube híbrida con LocalStack y Postgres externo | LocalStack, Terraform, Secrets Manager, PostgreSQL, Docker, Python |

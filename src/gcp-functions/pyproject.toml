@@ -1,0 +1,10 @@
+[project]
+name = "gcp-functions"
+version = "0.1.0"
+description = "Minimal viable example for Google Cloud Functions with Firebase Emulator Suite"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "python-dotenv",
+    "requests",
+]
