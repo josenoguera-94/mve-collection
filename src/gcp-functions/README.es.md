@@ -48,10 +48,7 @@ El dev container incluye:
 Firebase requiere un entorno virtual llamado `venv` dentro del directorio `functions` para cargar tu código:
 
 ```bash
-cd functions
-python3.12 -m venv venv
-./venv/bin/pip install -r requirements.txt
-cd ..
+python3.12 -m venv functions/venv && functions/venv/bin/pip install -r functions/requirements.txt
 ```
 
 ### Paso 3: Iniciar los Emuladores de Firebase
@@ -165,10 +162,7 @@ pip3 install uv && uv sync
 Firebase requiere un entorno virtual llamado `venv` dentro del directorio `functions`:
 
 ```bash
-cd functions
-python3.12 -m venv venv
-./venv/bin/pip install -r requirements.txt
-cd ..
+python3.12 -m venv functions/venv && functions/venv/bin/pip install -r functions/requirements.txt
 ```
 
 ### Paso 3: Iniciar los Emuladores de Firebase
