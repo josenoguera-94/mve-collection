@@ -186,7 +186,7 @@ HTTP-triggered Cloud Function that uploads files to Cloud Storage:
   - Validates the request method (POST only)
   - Extracts `filename` and `content` from JSON body
   - Uploads the content to Cloud Storage using `google-cloud-storage` client
-  - Returns success or error response
+  - Returns a success response (errors are handled by the framework)
 
 ### Function Dependencies (`functions/requirements.txt`)
 
@@ -234,6 +234,9 @@ The `.env` file contains:
 ```
 FIREBASE_PROJECT_ID=demo-project
 STORAGE_BUCKET=demo-bucket
+REGION=us-central1
+
+# Emulator Endpoints
 FUNCTIONS_EMULATOR_HOST=localhost:5001
 STORAGE_EMULATOR_HOST=localhost:9199
 FIRESTORE_EMULATOR_HOST=localhost:8080
@@ -269,9 +272,6 @@ python test_function.py
 curl -X POST http://localhost:5001/demo-project/us-central1/upload_file \
   -H "Content-Type: application/json" \
   -d '{"filename": "test.txt", "content": "Hello!"}'
-
-# List all functions
-curl http://localhost:5001/demo-project/us-central1
 ```
 
 ## Troubleshooting

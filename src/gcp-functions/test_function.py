@@ -5,7 +5,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 PROJECT_ID = os.getenv("FIREBASE_PROJECT_ID", "demo-project")
-FUNCTION_URL = f"http://localhost:5001/{PROJECT_ID}/us-central1/upload_file"
+EMULATOR_HOST = os.getenv("FUNCTIONS_EMULATOR_HOST", "localhost:5001")
+REGION = os.getenv("REGION", "us-central1")
+FUNCTION_URL = f"http://{EMULATOR_HOST}/{PROJECT_ID}/{REGION}/upload_file"
 
 def main():
     print("Testing Firebase Cloud Function...")
