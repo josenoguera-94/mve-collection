@@ -167,6 +167,26 @@ python3.12 -m venv functions/venv && functions/venv/bin/pip install -r functions
 
 ### Paso 3: Iniciar los Emuladores de Firebase
 
+```bash
+firebase emulators:start
+```
+
+Deberías ver una salida como:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://localhost:4000                │
+└─────────────────────────────────────────────────────────────┘
+
+┌───────────┬────────────────┬─────────────────────────────────┐
+│ Emulator  │ Host:Port      │ View in Emulator UI             │
+├───────────┼────────────────┼─────────────────────────────────┤
+│ Functions │ localhost:5001 │ http://localhost:4000/functions │
+│ Storage   │ localhost:9199 │ http://localhost:4000/storage   │
+└───────────┴────────────────┴─────────────────────────────────┘
+```
+
 ### Paso 4: Probar la Función
 
 Abre un nuevo terminal y ejecuta:
