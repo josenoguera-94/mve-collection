@@ -84,6 +84,7 @@ src/[nombre-mve]/
 | [airflow-docker](./src/airflow-docker/)                         | Configuración de Apache Airflow con Docker Compose y Python     | Apache Airflow, Docker, Python           |
 | [azure-functions](./src/azure-functions/)                       | Desarrollo local de Azure Functions con Azurite                 | Azure Functions, Azurite, Blob Storage, Docker, Python |
 | [azurite-docker](./src/azurite-docker/)                         | Configuración de Azurite con emulación de Azure Blob Storage    | Azurite, Azure, Blob Storage, Docker, Python |
+| [databricks-docker](./src/databricks-docker/)                       | Emulación local de Databricks con Docker, Spark y Delta Lake | Databricks, Spark, Delta Lake, Docker, Python |
 | [devcontainers-docker](./src/devcontainers-docker/)             | Entendiendo DevContainers con Python y pandas                   | DevContainers, Docker, Python, VS Code   |
 | [gcp-functions](./src/gcp-functions/)                           | Desarrollo local de Google Cloud Functions con Firebase Emulator Suite | Google Cloud Functions, Firebase, Cloud Storage, Python |
 | [localstack-docker](./src/localstack-docker/)                   | Configuración de LocalStack con servicios Lambda y S3           | LocalStack, Lambda, S3, Docker, Python   |
