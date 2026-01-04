@@ -50,5 +50,8 @@ def run_etl():
     print("\n📊 Verification Query:")
     spark.sql(f"SELECT * FROM sales.{table_name}").show()
 
+    # 6. Cleanup
+    spark.stop()
+
 if __name__ == "__main__":
     run_etl()

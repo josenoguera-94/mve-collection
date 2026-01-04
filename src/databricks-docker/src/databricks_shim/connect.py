@@ -18,6 +18,7 @@ def get_spark_session(app_name="DatabricksLocal"):
         .appName(app_name) \
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog") \
+        .config("spark.sql.catalogImplementation", "hive") \
         .config("spark.hadoop.fs.s3a.endpoint", os.getenv("AWS_ENDPOINT_URL")) \
         .config("spark.hadoop.fs.s3a.access.key", os.getenv("AWS_ACCESS_KEY_ID")) \
         .config("spark.hadoop.fs.s3a.secret.key", os.getenv("AWS_SECRET_ACCESS_KEY")) \
@@ -39,7 +40,9 @@ def get_spark_session(app_name="DatabricksLocal"):
         .config("spark.hadoop.javax.jdo.option.ConnectionDriverName", "org.postgresql.Driver") \
         .config("spark.hadoop.javax.jdo.option.ConnectionUserName", os.getenv("POSTGRES_USER")) \
         .config("spark.hadoop.javax.jdo.option.ConnectionPassword", os.getenv("POSTGRES_PASSWORD")) \
+        .config("spark.hadoop.datanucleus.schema.autoCreateTables", "true") \
         .config("spark.hadoop.datanucleus.autoCreateSchema", "true") \
-        .config("spark.hadoop.datanucleus.fixedDatastore", "false")
+        .config("spark.hadoop.datanucleus.fixedDatastore", "false") \
+        .config("spark.hadoop.hive.metastore.schema.verification", "false")
 
     return builder.getOrCreate()
