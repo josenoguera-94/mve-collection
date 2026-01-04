@@ -30,7 +30,14 @@ Esto construirá la imagen personalizada de Spark e iniciará MinIO y Postgres.
 docker compose up -d --build
 ```
 
-### Paso 2: Ejecutar el Job ETL
+### Paso 2: Crear el Bucket de Almacenamiento
+
+1. Abre la consola de MinIO: http://localhost:9001
+2. Inicia sesión: Usuario: `minioadmin` / Password: `minioadmin`
+3. Ve a **Buckets** -> **Create Bucket**.
+4. Crea un bucket llamado: `demo-bucket` (**CRÍTICO**: El ETL fallará si este bucket no existe).
+
+### Paso 3: Ejecutar el Job ETL
 
 Ejecuta el ETL de ejemplo que:
 1. Genera datos y los escribe en Bronze (MinIO)
@@ -38,7 +45,7 @@ Ejecuta el ETL de ejemplo que:
 3. Registra la tabla en el Hive Metastore persistente
 
 ```bash
-docker compose exec spark python src/jobs/etl_sample.py
+docker compose exec spark python3 src/jobs/etl_sample.py
 ```
 
 Deberías ver:

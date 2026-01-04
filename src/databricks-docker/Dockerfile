@@ -8,6 +8,7 @@ RUN apt-get update && \
     procps \
     wget \
     tar \
+    python3-pip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set JAVA_HOME
@@ -19,6 +20,7 @@ ENV SPARK_VERSION=3.5.2
 ENV HADOOP_VERSION=3
 ENV SPARK_HOME=/opt/spark
 ENV PATH=$SPARK_HOME/bin:$PATH
+ENV PYTHONPATH=/app
 
 RUN wget -q "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" && \
     tar xzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz -C /opt/ && \
@@ -39,7 +41,7 @@ WORKDIR /app
 
 # Install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python3 -m pip install --no-cache-dir -r requirements.txt
 
 # Copy source code
 COPY . .
