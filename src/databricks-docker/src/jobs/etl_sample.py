@@ -1,5 +1,6 @@
 from src.databricks_shim.connect import get_spark_session
 from src.databricks_shim.utils import get_dbutils
+from pyspark.sql.types import StructType, StructField, IntegerType, StringType, DoubleType
 from pyspark.sql.functions import col, current_timestamp
 
 def run_etl():
@@ -8,15 +9,21 @@ def run_etl():
 
     print("🚀 Starting ETL Job...")
 
-    # 1. Generate Raw Data (Simulation)
+    # 1. Generate Raw Data (Simulation) with Explicit Schema
+    schema = StructType([
+        StructField("id", IntegerType(), True),
+        StructField("name", StringType(), True),
+        StructField("price", DoubleType(), True),
+        StructField("date", StringType(), True)
+    ])
+    
     data = [
         (1, "Product A", 100.0, "2024-01-01"),
         (2, "Product B", 200.0, "2024-01-02"),
         (3, "Product C", 150.0, "2024-01-03")
     ]
-    columns = ["id", "name", "price", "date"]
     
-    df_raw = spark.createDataFrame(data, columns)
+    df_raw = spark.createDataFrame(data, schema)
     
     # 2. Write to Bronze (Delta)
     bronze_path = "s3a://demo-bucket/bronze/products"
@@ -40,7 +47,7 @@ def run_etl():
     
     # Save as Table (Registers in Hive Metastore backed by Postgres)
     df_silver.write.format("delta") \
-        .mode("overwrite") \
+        .mode("append") \
         .option("path", "s3a://demo-bucket/silver/products") \
         .saveAsTable(f"sales.{table_name}")
         
