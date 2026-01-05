@@ -8,8 +8,8 @@ def get_spark_session(app_name="DatabricksLocal"):
     """
     env = os.getenv("APP_ENV", "cloud")
     
-    # if env != "local":
-    #     return SparkSession.builder.appName(app_name).getOrCreate()
+    if env != "local":
+        return SparkSession.builder.appName(app_name).getOrCreate()
 
     print(f"⚡ Initializing Local Spark Session...")
     print(f"DEBUG: Endpoint={os.getenv('AWS_ENDPOINT_URL')}, Region={os.getenv('AWS_REGION', 'us-east-1')}")
