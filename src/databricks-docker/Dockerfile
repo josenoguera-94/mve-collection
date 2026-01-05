@@ -39,11 +39,6 @@ RUN cd $SPARK_HOME/jars && \
 # Set working directory
 WORKDIR /app
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN python3 -m pip install --no-cache-dir -r requirements.txt
-
-# Copy source code
 COPY . .
 
 CMD ["/bin/bash"]
