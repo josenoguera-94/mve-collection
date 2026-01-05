@@ -23,6 +23,11 @@ class FSMock:
         return []
 
 class DBUtilsShim:
+    """
+    Shim to mock Databricks DBUtils in local environments.
+    This is a partial mock and should be extended with additional methods 
+    (from fs, secrets, notebooks, etc.) based on specific project needs.
+    """
     def __init__(self, spark=None):
         self.secrets = SecretsMock()
         self.widgets = WidgetsMock()

@@ -1,108 +1,160 @@
-# Databricks Local with Docker (Spark + Delta + Unity Catalog Sim)
+# Databricks Local Environment with Docker
 
-High-fidelity local Databricks environment using Docker. It emulates Databricks 14.3/15.x LTS Runtime (Apache Spark 3.5.2 + Delta Lake 3.2.0) with local Cloud Storage (MinIO) and persistent Metastore (PostgreSQL for Unity Catalog simulation).
+Minimal viable example to simulate a Databricks environment locally using Docker, **MinIO as S3 compatible storage, and PostgreSQL as a persistent Hive Metastore**. This example demonstrates how to develop and test Spark/Delta Lake ETLs locally with a high degree of fidelity to the cloud environment.
 
 ## Project Structure
 
 ```
 databricks-docker/
+├── .devcontainer/
+│   └── devcontainer.json
+├── .vscode/
+│   └── settings.json
 ├── src/
-│   ├── databricks_shim/   # Abstraction layer (Local vs Cloud)
-│   └── jobs/              # ETL Logic
-├── Dockerfile             # Custom DBR-like image
-├── docker-compose.yml     # Orchestration (Spark, MinIO, Postgres)
-├── .env                   # Environment config
-├── requirements.txt       # Python dependencies
+│   ├── databricks_shim/
+│   │   ├── connect.py
+│   │   └── utils.py
+│   └── notebooks/
+│       └── analysis.ipynb
+├── Dockerfile
+├── docker-compose.yml
+├── .env
+├── main.py
+├── pyproject.toml
+├── uv.lock
 └── README.md
 ```
 
 ## Prerequisites
 
 - Docker and Docker Compose installed
+- VS Code with Dev Containers extension (optional, for dev container setup)
 
-## Option 1: Using Docker Compose
+## Option 1: Using Dev Container (Recommended)
 
-### Step 1: Build and Start
+### Step 1: Open Project in Dev Container
 
-This will build the custom Spark image and start MinIO and Postgres.
+1. Open VS Code in the project folder
+2. Press `F1` or `Ctrl+Shift+P` (Windows/Linux) / `Cmd+Shift+P` (Mac)
+3. Type and select: **Dev Containers: Reopen in Container**
+4. Wait for the container to build and dependencies to install
 
-```bash
-docker compose up -d --build
-```
-
-### Step 2: Create Storage Bucket
-
-1. Open the MinIO Console: http://localhost:9001
-2. Login with: User: `minioadmin` / Pass: `minioadmin`
-3. Go to **Buckets** -> **Create Bucket**.
-4. Create a bucket named: `demo-bucket` (**CRITICAL**: The ETL job will fail if this bucket doesn't exist).
-
-### Step 3: Run the ETL Job
-
-Execute the sample ETL which:
-1. Generates data and writes to Bronze (MinIO)
-2. Transforms and writes to Silver (Delta Table in Metastore)
-3. Registers the table in the persistent Hive Metastore
+### Step 2: Run the Example
 
 ```bash
-docker compose exec spark python3 src/jobs/etl_sample.py
+python main.py
 ```
 
-You should see:
-```text
-🚀 Starting ETL Job...
-💾 Writing Bronze Layer...
-💾 Writing Silver Layer...
-✅ ETL Job Completed Successfully!
-📊 Verification Query:
-+---+---------+-----+----------+...
-| id|     name|price|      date|...
-+---+---------+-----+----------+...
+You should see output indicating the transformation from Bronze to Silver layers and a final verification query.
+
+### Step 3: Interactive Analysis
+
+Open `src/notebooks/analysis.ipynb` and run the cells to analyze the data registered in the Hive Metastore.
+> **Note**: This interactive feature is only available when using the **Dev Container** as it provides the pre-configured Jupyter environment.
+
+## Option 2: Local Setup (Without Dev Container)
+
+### Step 1: Start Infrastructure
+
+```bash
+docker compose up -d
 ```
 
-### Step 3: Verify Persistence
+This will start:
+- **Spark**: Standalone Spark instance.
+- **MinIO**: S3-compatible storage.
+- **Postgres**: Backend for the Hive Metastore.
+- **mc**: Utility to automatically create the `BUCKET_NAME` defined in `.env`.
 
-1. **MinIO Console**: http://localhost:9001 (User/Pass: `minioadmin`)
-   - Check `demo-bucket` for `bronze/` and `silver/` folders.
-2. **Spark output**: The `SELECT` query confirms the Metastore is working.
+### Step 2: Run the Example
+
+Execute the script directly inside the Spark container:
+
+```bash
+docker compose exec spark python3 main.py
+```
 
 ## Project Components
 
-### Custom Image (`Dockerfile`)
+### Spark Client (`src/databricks_shim/connect.py`)
 
-We build a custom image FROM `databricksruntime/python:latest` and manually install:
-- **OpenJDK 17**: Required for Spark 3.5+
-- **Apache Spark 3.5.2**: Matches DBR 15.x LTS
-- **Delta Lake 3.2.0**: For ACID transactions
-- **Hadoop AWS**: For S3A file system support
+Function `get_spark_session(app_name)`:
 
-### Shim Layer (`src/databricks_shim/`)
+- **Environment Detection**: Uses the `APP_ENV` variable to switch between Local and Cloud modes.
+- **Emulation**: Configures S3A connectors, Delta Lake extensions, and Hive Metastore JDBC connection when `APP_ENV=local`.
 
-Allows writing portable code:
-- **`connect.py`**: Detects `APP_ENV`. If `local`, injects MinIO, Delta, and Postgres configurations into `SparkSession`.
-- **`utils.py`**: Mocks `dbutils` (Secrets, Widgets) using environment variables when running locally.
+### Databricks Shim (`src/databricks_shim/utils.py`)
 
-### Infrastructure
+Partial mock for `dbutils`:
 
-- **MinIO**: Emulates S3 / ADLS Gen2.
-- **PostgreSQL**: Acts as the persistent Hive Metastore (simulating Unity Catalog tables).
+- **Secrets**: `dbutils.secrets.get()` maps to environment variables.
+- **Widgets**: `dbutils.widgets.get()` maps to environment variables.
+- **Extensibility**: Designed to be expanded with more `fs` or `notebook` methods as needed.
+
+### Main Script (`main.py`)
+
+ETL Demonstration:
+
+- 1. Generates raw data with an explicit schema.
+- 2. Saves data to the **Bronze** layer (Delta Lake in MinIO).
+- 3. Reads Bronze, transforms it, and saves it to the **Silver** layer as a **Managed Table** in the Hive Metastore.
 
 ## Environment Variables
 
-The `.env` file configures credentials and endpoints:
+The `.env` file contains critical configurations:
 
 ```
+BUCKET_NAME=demo-bucket
+STORAGE_PREFIX=s3a
 AWS_ENDPOINT_URL=http://minio:9000
 POSTGRES_HOST=postgres
-APP_ENV=local
 ```
 
+**Note**: `STORAGE_PREFIX` allows high portability. You can change it to `abfss` when moving to Azure without changing the logic.
+
+## Useful Commands
+
+### Docker Commands
+
+```bash
+# Start environment
+docker compose up -d
+
+# View Spark/Metastore logs
+docker compose logs -f
+
+# Completely stop and clean
+docker compose down -v
+```
+
+## Troubleshooting
+
+### Connection Refused
+
+Ensure all services are running:
+
+```bash
+docker compose ps
+```
+
+### Table already exists
+
+If you run the ETL multiple times with different schemas, you may encounter Metastore conflicts. Use `spark.sql("DROP TABLE IF EXISTS sales.products_silver")` or clean the volumes.
+
 ## Clean Up
+
+To remove containers and persistent data:
 
 ```bash
 docker compose down -v
 ```
 
+## Next Steps
+
+- Implement Delta Lake Time Travel tests.
+- Add more `dbutils.fs` mock methods.
+- Integrate with local BI tools connecting to the Hive Metastore.
+
 ## License
 
-Minimal viable example for educational purposes.
+This is a minimal example for educational purposes. Feel free to use and modify as needed.
