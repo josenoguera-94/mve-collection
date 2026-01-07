@@ -1,4 +1,4 @@
-FROM databricksruntime/python:latest
+FROM databricksruntime/python:15.4-LTS
 
 # Install OpenJDK 17 and other system dependencies
 USER root
@@ -8,19 +8,24 @@ RUN apt-get update && \
     procps \
     wget \
     tar \
-    python3-pip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Fix python3 and pip3 to use Databricks environment
+RUN ln -sf /databricks/python3/bin/python3 /usr/bin/python3 && \
+    ln -sf /databricks/python3/bin/pip3 /usr/bin/pip3
 
 # Set JAVA_HOME
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV PATH=$JAVA_HOME/bin:$PATH
 
-# Install Apache Spark 3.5.2
-ENV SPARK_VERSION=3.5.2
+# Install Apache Spark 3.5.0
+ENV SPARK_VERSION=3.5.0
 ENV HADOOP_VERSION=3
 ENV SPARK_HOME=/opt/spark
 ENV PATH=$SPARK_HOME/bin:$PATH
 ENV PYTHONPATH=/app
+ENV PYSPARK_PYTHON=/databricks/python3/bin/python3
+ENV PYSPARK_DRIVER_PYTHON=/databricks/python3/bin/python3
 
 RUN wget -q "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" && \
     tar xzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz -C /opt/ && \
