@@ -1,6 +1,6 @@
 # Databricks Local Environment with Docker
 
-Minimal viable example to simulate a Databricks environment locally using Docker, **MinIO as S3 compatible storage, and PostgreSQL as a persistent Hive Metastore**. This example demonstrates how to develop and test Spark/Delta Lake ETLs locally with a high degree of fidelity to the cloud environment.
+Minimal viable example to simulate a Databricks environment locally using Docker, **MinIO as S3 compatible storage, and PostgreSQL as a persistent Hive Metastore**. This example demonstrates how to develop and test Spark/Delta Lake ETLs locally with a high degree of fidelity to the cloud environment by using **Databricks Runtime 15.4 LTS (Spark 3.5.0)**.
 
 ## Project Structure
 
@@ -49,7 +49,7 @@ You should see output indicating the transformation from Bronze to Silver layers
 
 ### Step 3: Interactive Analysis
 
-Open `src/notebooks/analysis.ipynb` and run the cells to analyze the data registered in the Hive Metastore.
+Open `src/notebooks/analysis.ipynb` and run the cells to analyze the data registered in the Hive Metastore and **test the DBUtils Shim** (secrets and widgets).
 > **Note**: This interactive feature is only available when using the **Dev Container** as it provides the pre-configured Jupyter environment.
 
 ## Option 2: Local Setup (Without Dev Container)
@@ -89,6 +89,7 @@ Partial mock for `dbutils`:
 
 - **Secrets**: `dbutils.secrets.get()` maps to environment variables.
 - **Widgets**: `dbutils.widgets.get()` maps to environment variables.
+- **Testing**: The `analysis.ipynb` notebook includes a section to verify these mocks.
 - **Extensibility**: Designed to be expanded with more `fs` or `notebook` methods as needed.
 
 ### Main Script (`main.py`)
