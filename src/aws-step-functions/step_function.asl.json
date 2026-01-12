@@ -1,0 +1,39 @@
+{
+  "StartAt": "ProcessUserOnboarding",
+  "States": {
+    "ProcessUserOnboarding": {
+      "Type": "Parallel",
+      "Next": "CreateIAMUser",
+      "Branches": [
+        {
+          "StartAt": "LogUser",
+          "States": {
+            "LogUser": {
+              "Type": "Task",
+              "Resource": "${LogUserLambdaArn}",
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "ValidateEmail",
+          "States": {
+            "ValidateEmail": {
+              "Type": "Task",
+              "Resource": "${ValidateEmailLambdaArn}",
+              "End": true
+            }
+          }
+        }
+      ]
+    },
+    "CreateIAMUser": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:iam:createUser",
+      "Parameters": {
+        "UserName.$": "$.[0].username"
+      },
+      "End": true
+    }
+  }
+}

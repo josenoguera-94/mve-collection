@@ -82,6 +82,7 @@ src/[nombre-mve]/
 | Ejemplo                                                         | Descripción                                                     | Tecnologías                              |
 | --------------------------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------- |
 | [airflow-docker](./src/airflow-docker/)                         | Configuración de Apache Airflow con Docker Compose y Python     | Apache Airflow, Docker, Python           |
+| [aws-step-functions](./src/aws-step-functions/)           | Desarrollo local de AWS Step Functions con LocalStack      | Step Functions, Lambda, DynamoDB, LocalStack, Python |
 | [azure-functions](./src/azure-functions/)                       | Desarrollo local de Azure Functions con Azurite                 | Azure Functions, Azurite, Blob Storage, Docker, Python |
 | [azurite-docker](./src/azurite-docker/)                         | Configuración de Azurite con emulación de Azure Blob Storage    | Azurite, Azure, Blob Storage, Docker, Python |
 | [databricks-docker](./src/databricks-docker/)                       | Emulación local de Databricks con Docker, Spark y Delta Lake | Databricks, Spark, Delta Lake, Docker, Python |

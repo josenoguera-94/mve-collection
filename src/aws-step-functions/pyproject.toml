@@ -1,0 +1,10 @@
+[project]
+name = "aws-step-functions"
+version = "0.1.0"
+description = "AWS Step Functions local development with LocalStack"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "boto3",
+    "python-dotenv",
+]
