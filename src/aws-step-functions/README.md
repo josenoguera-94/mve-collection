@@ -48,7 +48,11 @@ docker compose up -d
 python deploy.py
 ```
 
-### Step 4: Run the Workflow
+### Step 4: Wait for Lambda Initialization
+
+Wait **5-10 seconds** for LocalStack to finish initializing the Lambda environment.
+
+### Step 5: Run the Workflow
 
 ```bash
 python main.py
@@ -111,6 +115,23 @@ AWS_REGION=us-east-1
 LOCALSTACK_ENDPOINT=http://localhost:4566
 DYNAMODB_TABLE=UserLogs
 STEP_FUNCTION_NAME=UserOnboardingWorkflow
+```
+
+## Troubleshooting
+
+### Lambda Function is in 'Pending' State
+
+If you run `main.py` immediately after `deploy.py`, you might see this error:
+`The operation cannot be performed at this time. The function is currently in the following state: Pending`
+
+**Solution**: Wait 5-10 seconds for LocalStack to finish initializing the Lambda environment and run `main.py` again.
+
+## Clean Up
+
+To completely remove everything:
+
+```bash
+docker compose down -v
 ```
 
 ## License

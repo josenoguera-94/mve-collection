@@ -2,7 +2,11 @@ import boto3
 import os
 from datetime import datetime
 
-dynamodb = boto3.resource("dynamodb", endpoint_url=os.getenv("LOCALSTACK_ENDPOINT", "http://localhost:4566"))
+# Use LOCALSTACK_HOSTNAME if running inside LocalStack, otherwise fallback to localhost
+hostname = os.getenv("LOCALSTACK_HOSTNAME", "localhost")
+endpoint_url = f"http://{hostname}:4566"
+
+dynamodb = boto3.resource("dynamodb", endpoint_url=endpoint_url)
 table = dynamodb.Table(os.getenv("DYNAMODB_TABLE", "UserLogs"))
 
 def handler(event, context):

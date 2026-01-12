@@ -37,10 +37,13 @@ def deploy():
                 Runtime="python3.12",
                 Role=role_arn,
                 Handler=f"{name}.handler",
-                Code={"ZipFile": zip_content}
+                Code={"ZipFile": zip_content},
+                Timeout=30
             )
             arns[f"{func_name}Arn"] = res["FunctionArn"]
         except lambda_client.exceptions.ResourceConflictException:
+            lambda_client.update_function_code(FunctionName=func_name, ZipFile=zip_content)
+            lambda_client.update_function_configuration(FunctionName=func_name, Timeout=30)
             arns[f"{func_name}Arn"] = f"arn:aws:lambda:{config['region_name']}:000000000000:function:{func_name}"
 
     # 3. Step Function
@@ -57,7 +60,10 @@ def deploy():
             roleArn=role_arn
         )
         print("Step Function created.")
-    except sfn.exceptions.StateMachineAlreadyExists: pass
+    except sfn.exceptions.StateMachineAlreadyExists:
+        sm_arn = f"arn:aws:states:{config['region_name']}:000000000000:stateMachine:{os.getenv('STEP_FUNCTION_NAME')}"
+        sfn.update_state_machine(stateMachineArn=sm_arn, definition=asl)
+        print("Step Function updated.")
 
 if __name__ == "__main__":
     deploy()
