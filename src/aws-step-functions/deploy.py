@@ -43,6 +43,8 @@ def deploy():
             arns[f"{func_name}Arn"] = res["FunctionArn"]
         except lambda_client.exceptions.ResourceConflictException:
             lambda_client.update_function_code(FunctionName=func_name, ZipFile=zip_content)
+            # Wait for the update to complete before changing configuration
+            lambda_client.get_waiter("function_updated").wait(FunctionName=func_name)
             lambda_client.update_function_configuration(FunctionName=func_name, Timeout=30)
             arns[f"{func_name}Arn"] = f"arn:aws:lambda:{config['region_name']}:000000000000:function:{func_name}"
 

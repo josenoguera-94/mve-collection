@@ -27,6 +27,7 @@ aws-step-functions/
 - Docker and Docker Compose installed
 - VS Code with Dev Containers extension (Recommended)
 - [AWS Toolkit for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-aws-us.aws-toolkit-vscode) (Included in Dev Container)
+- [AWS CLI](https://aws.amazon.com/cli/) (Included in Dev Container)
 
 ## Option 1: Using Dev Container (Recommended)
 
@@ -66,13 +67,53 @@ python main.py
 pip3 install uv && uv sync
 ```
 
-### Step 2: Install AWS Toolkit
-
 Manually install the **AWS Toolkit** from the VS Code Marketplace.
 
-### Step 3: Run Example
+### Step 3: Install AWS CLI
+
+If you don't have it, install the [AWS CLI](https://aws.amazon.com/cli/).
+
+### Step 4: Run Example
 
 Follow the same steps as the Dev Container (Start LocalStack, Deploy, Run).
+
+---
+
+## Setup LocalStack Profile
+
+Before running the example, configure a dedicated AWS profile for LocalStack. This ensures the CLI and the AWS Toolkit point to your local environment:
+
+```bash
+aws configure set aws_access_key_id test --profile localstack
+aws configure set aws_secret_access_key test --profile localstack
+aws configure set region us-east-1 --profile localstack
+aws configure set output json --profile localstack
+aws configure set endpoint_url http://localhost:4566 --profile localstack
+```
+
+> **Note**: This profile will redirect all traffic to `localhost:4566`.
+
+## Validation Steps
+
+After running `main.py`, you can verify that all resources were created and correctly populated using the AWS CLI:
+
+### 1. Verify IAM User Creation
+Check if the IAM user was created by the Step Function (IAM is not visible in AWS Toolkit Explorer):
+```bash
+aws iam list-users --profile localstack
+```
+
+### 2. Verify DynamoDB Logs
+Check the entries in the `UserLogs` table:
+```bash
+aws dynamodb scan --table-name UserLogs --profile localstack
+```
+
+### 3. Verify Lambda Functions
+List the deployed functions:
+```bash
+aws lambda list-functions --profile localstack
+```
 
 ---
 
@@ -90,9 +131,47 @@ This MVE is designed to showcase the ASL editor provided by the AWS Toolkit.
 
 LocalStack supports Step Functions execution. While the AWS Toolkit usually connects to a real AWS account, you can use `main.py` to trigger executions locally and see the logs in the terminal.
 
-To debug a specific state:
-1. Modify the input in `main.py`.
-2. Check the LocalStack logs: `docker compose logs -f localstack`.
+#### Debugging Lambda Functions Separately
+To isolate issues, you can invoke the Lambdas independently using the CLI:
+
+**Test Email Validation:**
+```bash
+aws lambda invoke \
+  --function-name ValidateEmailLambda \
+  --payload '{"email": "valid@example.com"}' \
+  --cli-binary-format raw-in-base64-out \
+  --profile localstack \
+  response.json
+```
+
+**Test User Logging:**
+```bash
+aws lambda invoke \
+  --function-name LogUserLambda \
+  --payload '{"username": "debug_user", "email": "debug@example.com"}' \
+  --cli-binary-format raw-in-base64-out \
+  --profile localstack \
+  response.json
+```
+
+If a Lambda fails, check the LocalStack logs: `docker compose logs -f localstack`.
+
+### 3. Visualizing & Executing from VS Code
+
+The **AWS Toolkit** allows you to render the workflow graph and trigger executions directly from the IDE:
+
+1.  **Open Command Palette**: Press `F1` or `Ctrl+Shift+P`.
+2.  **Connect to AWS**: Type and select **AWS: Connect to AWS**.
+3.  **Select Profile**: Select the `localstack` profile you created in the first step.
+4.  **Explore**: In the **AWS Explorer** sidebar, you should now see the emulated services.
+5.  **Render Graph**:
+    *   Open `step_function.asl.json`.
+    *   Click the **Visual Graph** icon (top-right of the editor) to see the logic.
+6.  **Execute**:
+    *   In the **AWS Explorer**, expand **Step Functions** and find `UserOnboardingWorkflow`.
+    *   Right-click and select **Start Execution** to trigger it.
+
+> **Note**: While the IDE allows starting executions and viewing the ASL graph, the monitoring of the execution state is done through the terminal output of `main.py` or by inspecting LocalStack logs.
 
 ## Project Components
 

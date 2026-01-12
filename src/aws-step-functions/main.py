@@ -2,6 +2,7 @@ import boto3
 import json
 import os
 import time
+import random
 from dotenv import load_dotenv
 from utils import get_boto_config
 
@@ -31,4 +32,7 @@ def run_workflow(username, email):
         time.sleep(1)
 
 if __name__ == "__main__":
-    run_workflow("antigravity_user", "test@example.com")
+    num = random.randint(0, 10000)
+    username = f"user_{num}"
+    email = f"user_{num}@example.com"
+    run_workflow(username, email)
