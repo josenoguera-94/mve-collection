@@ -1,6 +1,6 @@
-# AWS Step Functions Local Development
+# AWS Step Functions + LocalStack Example
 
-Minimal viable example to work with **AWS Step Functions** locally using **LocalStack** and **VS Code AWS Toolkit**. This example demonstrates a user onboarding workflow with parallel Lambda execution and IAM user creation.
+Minimal viable example to work with **AWS Step Functions** locally using **LocalStack**, **Python**, and **VS Code AWS Toolkit**. This example demonstrates a user onboarding workflow with parallel Lambda execution and IAM user creation.
 
 ## Project Structure
 
@@ -25,7 +25,7 @@ aws-step-functions/
 ## Prerequisites
 
 - Docker and Docker Compose installed
-- VS Code with Dev Containers extension (Recommended)
+- VS Code with Dev Containers extension (optional, for dev container setup)
 - [AWS Toolkit for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-aws-us.aws-toolkit-vscode) (Included in Dev Container)
 - [AWS CLI](https://aws.amazon.com/cli/) (Included in Dev Container)
 
@@ -33,55 +33,14 @@ aws-step-functions/
 
 ### Step 1: Open Project in Dev Container
 
-1. Open VS Code in the project folder.
-2. Press `F1` and select: **Dev Containers: Reopen in Container**.
-3. Wait for the build to finish.
+1. Open VS Code in the project folder
+2. Press `F1` or `Ctrl+Shift+P` (Windows/Linux) / `Cmd+Shift+P` (Mac)
+3. Type and select: **Dev Containers: Reopen in Container**
+4. Wait for the container to build and dependencies to install
 
-### Step 2: Start LocalStack
+### Step 2: Setup LocalStack Profile
 
-```bash
-docker compose up -d
-```
-
-### Step 3: Deploy Infrastructure
-
-```bash
-python deploy.py
-```
-
-### Step 4: Wait for Lambda Initialization
-
-Wait **5-10 seconds** for LocalStack to finish initializing the Lambda environment.
-
-### Step 5: Run the Workflow
-
-```bash
-python main.py
-```
-
-## Option 2: Local Setup (Without Dev Container)
-
-### Step 1: Install Dependencies
-
-```bash
-pip3 install uv && uv sync
-```
-
-Manually install the **AWS Toolkit** from the VS Code Marketplace.
-
-### Step 3: Install AWS CLI
-
-If you don't have it, install the [AWS CLI](https://aws.amazon.com/cli/).
-
-### Step 4: Run Example
-
-Follow the same steps as the Dev Container (Start LocalStack, Deploy, Run).
-
----
-
-## Setup LocalStack Profile
-
-Before running the example, configure a dedicated AWS profile for LocalStack. This ensures the CLI and the AWS Toolkit point to your local environment:
+Before running the example, configure a dedicated AWS profile for LocalStack:
 
 ```bash
 aws configure set aws_access_key_id test --profile localstack
@@ -91,48 +50,132 @@ aws configure set output json --profile localstack
 aws configure set endpoint_url http://localhost:4566 --profile localstack
 ```
 
-> **Note**: This profile will redirect all traffic to `localhost:4566`.
+### Step 3: Run the Example
+
+1. Start LocalStack:
+   ```bash
+   docker compose up -d
+   ```
+2. Deploy infrastructure:
+   ```bash
+   python deploy.py
+   ```
+3. Run the workflow:
+   ```bash
+   python main.py
+   ```
+
+> **Note**: Wait **5-10 seconds** after `deploy.py` for LocalStack to finish initializing the Lambda environment before running `main.py`.
+
+## Option 2: Local Setup (Without Dev Container)
+
+### Step 1: Install Python Dependencies
+
+```bash
+pip3 install uv && uv sync
+```
+
+### Step 2: Setup LocalStack Profile
+
+Configure the `localstack` profile as described in Option 1.
+
+### Step 3: Run the Example
+
+Follow the same steps as the Dev Container setup:
+1. `docker compose up -d`
+2. `python deploy.py`
+3. `python main.py`
+
+> **Note**: Wait **5-10 seconds** after `deploy.py` for LocalStack to finish initializing the Lambda environment.
+
+## Project Components
+
+### Infrastructure Script (`deploy.py`)
+
+Handles the creation of all AWS resources:
+- Creates the DynamoDB table for logging.
+- Deploys Lambda functions using the `deploy_lambda` helper.
+- Creates/Updates the Step Function state machine.
+
+### Utilities (`utils.py`)
+
+Shared helper functions:
+- **`create_lambda_zip(path)`**: Generates a ZIP in memory for Lambda deployment.
+- **`get_boto_config()`**: Returns the standard Boto3 configuration for LocalStack.
+- **`deploy_lambda(client, name, ...)`**: Centralized logic to create/update Lambdas and inject environment variables.
+
+### Main Script (`main.py`)
+
+Demonstrates how to trigger and monitor the workflow:
+1. Connects to Step Functions using the `localstack` endpoint.
+2. Generates random user data.
+3. Starts the execution and polls for completion.
+4. Prints the final status and output.
+
+### Step Function (`step_function.asl.json`)
+
+The state machine definition using Amazon States Language (ASL):
+- **ProcessUserOnboarding**: A `Parallel` state that runs both Lambdas simultaneously.
+- **CreateIAMUser**: A `Task` using the AWS SDK integration to create a local IAM user if the previous steps succeed.
 
 ## Validation Steps
 
-After running `main.py`, you can verify that all resources were created and correctly populated using the AWS CLI:
+After running `main.py`, you can verify the results:
 
 ### 1. Verify IAM User Creation
-Check if the IAM user was created by the Step Function (IAM is not visible in AWS Toolkit Explorer):
 ```bash
 aws iam list-users --profile localstack
 ```
 
 ### 2. Verify DynamoDB Logs
-Check the entries in the `UserLogs` table:
 ```bash
 aws dynamodb scan --table-name UserLogs --profile localstack
 ```
 
 ### 3. Verify Lambda Functions
-List the deployed functions:
 ```bash
 aws lambda list-functions --profile localstack
 ```
 
----
+## Working with AWS Toolkit
 
-## Working with AWS Toolkit (Step Functions Editor)
+This MVE is designed to showcase the ASL editor provided by the AWS Toolkit:
 
-This MVE is designed to showcase the ASL editor provided by the AWS Toolkit.
+1. **Open Command Palette**: Press `F1` or `Ctrl+Shift+P`.
+2. **Connect to AWS**: Type and select **AWS: Connect to AWS**.
+3. **Select Profile**: Select the `localstack` profile.
+4. **Render Graph**: Open `step_function.asl.json` and click the **Visual Graph** icon (top-right).
+5. **Execute**: In the **AWS Explorer**, right-click `UserOnboardingWorkflow` and select **Start Execution**.
 
-### 1. View/Edit the Step Function
+## Environment Variables
 
-1. Open `step_function.asl.json`.
-2. Click the **"Render Graph"** icon (top right corner of the editor) to see a visual representation of the workflow.
-3. You can modify the states and the graph will update in real-time.
+The `.env` file contains:
 
-### 2. Execute and Debug
+```
+AWS_REGION=us-east-1
+LOCALSTACK_ENDPOINT=http://localhost:4566
+DYNAMODB_TABLE=UserLogs
+STEP_FUNCTION_NAME=UserOnboardingWorkflow
+```
 
-LocalStack supports Step Functions execution. While the AWS Toolkit usually connects to a real AWS account, you can use `main.py` to trigger executions locally and see the logs in the terminal.
+## Useful Commands
 
-#### Debugging Lambda Functions Separately
-To isolate issues, you can invoke the Lambdas independently using the CLI:
+### Docker Commands
+
+```bash
+# Start LocalStack
+docker compose up -d
+
+# Stop LocalStack
+docker compose down
+
+# View logs
+docker compose logs -f localstack
+```
+
+### Manual Lambda Invocation (Testing)
+
+You can invoke the Lambdas independently to test them:
 
 **Test Email Validation:**
 ```bash
@@ -154,56 +197,21 @@ aws lambda invoke \
   response.json
 ```
 
-If a Lambda fails, check the LocalStack logs: `docker compose logs -f localstack`.
-
-### 3. Visualizing & Executing from VS Code
-
-The **AWS Toolkit** allows you to render the workflow graph and trigger executions directly from the IDE:
-
-1.  **Open Command Palette**: Press `F1` or `Ctrl+Shift+P`.
-2.  **Connect to AWS**: Type and select **AWS: Connect to AWS**.
-3.  **Select Profile**: Select the `localstack` profile you created in the first step.
-4.  **Explore**: In the **AWS Explorer** sidebar, you should now see the emulated services.
-5.  **Render Graph**:
-    *   Open `step_function.asl.json`.
-    *   Click the **Visual Graph** icon (top-right of the editor) to see the logic.
-6.  **Execute**:
-    *   In the **AWS Explorer**, expand **Step Functions** and find `UserOnboardingWorkflow`.
-    *   Right-click and select **Start Execution** to trigger it.
-
-> **Note**: While the IDE allows starting executions and viewing the ASL graph, the monitoring of the execution state is done through the terminal output of `main.py` or by inspecting LocalStack logs.
-
-## Project Components
-
-### Lambdas (`lambdas/`)
-
-- **LogUserLambda**: Saves user data and timestamp to a DynamoDB table named `UserLogs`.
-- **ValidateEmailLambda**: Checks if the provided email follows a valid regex pattern.
-
-### Step Function (`step_function.asl.json`)
-
-- **ProcessUserOnboarding**: A `Parallel` state that runs both Lambdas simultaneously.
-- **CreateIAMUser**: A `Task` using the AWS SDK integration to create a local IAM user if the previous steps succeed.
-
-## Environment Variables
-
-The `.env` file contains:
-
-```
-AWS_REGION=us-east-1
-LOCALSTACK_ENDPOINT=http://localhost:4566
-DYNAMODB_TABLE=UserLogs
-STEP_FUNCTION_NAME=UserOnboardingWorkflow
-```
-
 ## Troubleshooting
 
-### Lambda Function is in 'Pending' State
+### Lambda Function is 'Pending'
 
-If you run `main.py` immediately after `deploy.py`, you might see this error:
-`The operation cannot be performed at this time. The function is currently in the following state: Pending`
+If you run `main.py` immediately after `deploy.py`, LocalStack might still be initializing the environment.
 
-**Solution**: Wait 5-10 seconds for LocalStack to finish initializing the Lambda environment and run `main.py` again.
+**Solution**: Wait 5-10 seconds and try again.
+
+### Connection Refused
+
+Make sure LocalStack is running:
+
+```bash
+docker ps
+```
 
 ## Clean Up
 
@@ -212,6 +220,12 @@ To completely remove everything:
 ```bash
 docker compose down -v
 ```
+
+## Next Steps
+
+- Add error handling to the Step Function (Catch/Retry).
+- Implement a `Choice` state to branch logic based on email validation.
+- Add unit tests for Lambda functions.
 
 ## License
 

@@ -1,6 +1,6 @@
-# Desarrollo Local de AWS Step Functions
+# Ejemplo de AWS Step Functions + LocalStack
 
-Ejemplo mínimo viable para trabajar con **AWS Step Functions** de forma local utilizando **LocalStack** y el **AWS Toolkit de VS Code**. Este ejemplo demuestra un flujo de alta de usuario con ejecución paralela de Lambdas y creación de un usuario de IAM.
+Ejemplo mínimo viable para trabajar con **AWS Step Functions** de forma local utilizando **LocalStack**, **Python** y el **AWS Toolkit de VS Code**. Este ejemplo demuestra un flujo de alta de usuario con ejecución paralela de Lambdas y creación de un usuario de IAM.
 
 ## Estructura del Proyecto
 
@@ -25,7 +25,7 @@ aws-step-functions/
 ## Prerrequisitos
 
 - Docker y Docker Compose instalados
-- VS Code con la extensión Dev Containers (Recomendado)
+- VS Code con la extensión Dev Containers (opcional, para configuración de contenedores)
 - [AWS Toolkit for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-aws-us.aws-toolkit-vscode) (Incluido en el Dev Container)
 - [AWS CLI](https://aws.amazon.com/cli/) (Incluido en el Dev Container)
 
@@ -33,55 +33,14 @@ aws-step-functions/
 
 ### Paso 1: Abrir el Proyecto en el Dev Container
 
-1. Abre VS Code en la carpeta del proyecto.
-2. Presiona `F1` y selecciona: **Dev Containers: Reopen in Container**.
-3. Espera a que finalice la construcción.
+1. Abre VS Code en la carpeta del proyecto
+2. Presiona `F1` o `Ctrl+Shift+P` (Windows/Linux) / `Cmd+Shift+P` (Mac)
+3. Escribe y selecciona: **Dev Containers: Reopen in Container**
+4. Espera a que el contenedor se construya y las dependencias se instalen
 
-### Paso 2: Levantar LocalStack
+### Paso 2: Configurar Perfil de LocalStack
 
-```bash
-docker compose up -d
-```
-
-### Paso 3: Desplegar la Infraestructura
-
-```bash
-python deploy.py
-```
-
-### Paso 4: Esperar la inicialización de la Lambda
-
-Espera **5-10 segundos** para que LocalStack termine de inicializar el entorno de la Lambda.
-
-### Paso 5: Ejecutar el Flujo de Trabajo
-
-```bash
-python main.py
-```
-
-## Opción 2: Configuración Local (Sin Dev Container)
-
-### Paso 1: Instalar Dependencias
-
-```bash
-pip3 install uv && uv sync
-```
-
-Instala manualmente el **AWS Toolkit** desde el Marketplace de VS Code.
-
-### Paso 3: Instalar AWS CLI
-
-Si no lo tienes, instala el [AWS CLI](https://aws.amazon.com/cli/).
-
-### Paso 4: Ejecutar el Ejemplo
-
-Sigue los mismos pasos que en el Dev Container (Levantar LocalStack, Desplegar, Ejecutar).
-
----
-
-## Configurar Perfil de LocalStack
-
-Antes de ejecutar el ejemplo, configura un perfil de AWS dedicado para LocalStack. Esto asegura que tanto la CLI como el AWS Toolkit apunten a tu entorno local:
+Antes de ejecutar el ejemplo, configura un perfil de AWS dedicado para LocalStack:
 
 ```bash
 aws configure set aws_access_key_id test --profile localstack
@@ -91,48 +50,132 @@ aws configure set output json --profile localstack
 aws configure set endpoint_url http://localhost:4566 --profile localstack
 ```
 
-> **Nota**: Este perfil redirigirá todo el tráfico a `localhost:4566`.
+### Paso 3: Ejecutar el Ejemplo
+
+1. Levantar LocalStack:
+   ```bash
+   docker compose up -d
+   ```
+2. Desplegar la infraestructura:
+   ```bash
+   python deploy.py
+   ```
+3. Ejecutar el flujo de trabajo:
+   ```bash
+   python main.py
+   ```
+
+> **Nota**: Espera **5-10 segundos** después de `deploy.py` para que LocalStack termine de inicializar el entorno de las Lambdas antes de ejecutar `main.py`.
+
+## Opción 2: Configuración Local (Sin Dev Container)
+
+### Paso 1: Instalar Dependencias de Python
+
+```bash
+pip3 install uv && uv sync
+```
+
+### Paso 2: Configurar Perfil de LocalStack
+
+Configura el perfil `localstack` como se describe en la Opción 1.
+
+### Paso 3: Ejecutar el Ejemplo
+
+Sigue los mismos pasos que en la configuración del Dev Container:
+1. `docker compose up -d`
+2. `python deploy.py`
+3. `python main.py`
+
+> **Nota**: Espera **5-10 segundos** después de `deploy.py` para que LocalStack termine de inicializar el entorno de las Lambdas.
+
+## Componentes del Proyecto
+
+### Script de Infraestructura (`deploy.py`)
+
+Gestiona la creación de todos los recursos de AWS:
+- Crea la tabla de DynamoDB para logs.
+- Despliega las funciones Lambda usando la utilidad `deploy_lambda`.
+- Crea/Actualiza la máquina de estados de Step Functions.
+
+### Utilidades (`utils.py`)
+
+Funciones auxiliares compartidas:
+- **`create_lambda_zip(path)`**: Genera un ZIP en memoria para el despliegue de Lambdas.
+- **`get_boto_config()`**: Devuelve la configuración estándar de Boto3 para LocalStack.
+- **`deploy_lambda(client, name, ...)`**: Lógica centralizada para crear/actualizar Lambdas e inyectar variables de entorno.
+
+### Script Principal (`main.py`)
+
+Demuestra cómo lanzar y monitorizar el flujo de trabajo:
+1. Se conecta a Step Functions usando el endpoint de `localstack`.
+2. Genera datos de usuario aleatorios.
+3. Inicia la ejecución y consulta el estado hasta que finaliza.
+4. Imprime el estado final y la salida.
+
+### Step Function (`step_function.asl.json`)
+
+La definición de la máquina de estados usando Amazon States Language (ASL):
+- **ProcessUserOnboarding**: Un estado `Parallel` que ejecuta ambas Lambdas simultáneamente.
+- **CreateIAMUser**: Un `Task` que usa la integración con el SDK de AWS para crear un usuario IAM local si los pasos anteriores tienen éxito.
 
 ## Pasos de Validación
 
-Después de ejecutar `main.py`, puedes verificar que todos los recursos se crearon y poblaron correctamente usando AWS CLI:
+Después de ejecutar `main.py`, puedes verificar los resultados:
 
 ### 1. Verificar Creación de Usuario IAM
-Comprueba si el usuario IAM fue creado por la Step Function (IAM no es visible en el AWS Explorer del Toolkit):
 ```bash
 aws iam list-users --profile localstack
 ```
 
-### 2. Verificar Logs en DynamoDB
-Revisa las entradas en la tabla `UserLogs`:
+### 2. Verificar Logs de DynamoDB
 ```bash
 aws dynamodb scan --table-name UserLogs --profile localstack
 ```
 
 ### 3. Verificar Funciones Lambda
-Lista las funciones desplegadas:
 ```bash
 aws lambda list-functions --profile localstack
 ```
 
----
+## Trabajando con AWS Toolkit
 
-## Trabajando con el AWS Toolkit (Editor de Step Functions)
+Este MVE está diseñado para mostrar el editor ASL proporcionado por AWS Toolkit:
 
-Este MVE está diseñado para aprovechar el editor ASL que proporciona el AWS Toolkit.
+1. **Abrir Paleta de Comandos**: Presiona `F1` o `Ctrl+Shift+P`.
+2. **Conectar a AWS**: Escribe y selecciona **AWS: Connect to AWS**.
+3. **Seleccionar Perfil**: Selecciona el perfil `localstack`.
+4. **Renderizar Grafo**: Abre `step_function.asl.json` y haz clic en el icono de **Visual Graph** (arriba a la derecha).
+5. **Ejecutar**: En el **AWS Explorer**, haz clic derecho en `UserOnboardingWorkflow` y selecciona **Start Execution**.
 
-### 1. Ver/Editar la Step Function
+## Variables de Entorno
 
-1. Abre `step_function.asl.json`.
-2. Haz clic en el icono **"Render Graph"** (esquina superior derecha del editor) para ver una representación visual del flujo.
-3. Puedes modificar los estados y el gráfico se actualizará en tiempo real.
+El archivo `.env` contiene:
 
-### 2. Ejecución y Debugging
+```
+AWS_REGION=us-east-1
+LOCALSTACK_ENDPOINT=http://localhost:4566
+DYNAMODB_TABLE=UserLogs
+STEP_FUNCTION_NAME=UserOnboardingWorkflow
+```
 
-LocalStack soporta la ejecución de Step Functions. Aunque el AWS Toolkit suele conectarse a una cuenta real de AWS, puedes usar `main.py` para lanzar ejecuciones localmente y ver los logs en la terminal.
+## Comandos Útiles
 
-#### Depuración de Funciones Lambda por Separado
-Para aislar problemas, puedes invocar las Lambdas de forma independiente usando la CLI:
+### Comandos de Docker
+
+```bash
+# Levantar LocalStack
+docker compose up -d
+
+# Detener LocalStack
+docker compose down
+
+# Ver logs
+docker compose logs -f localstack
+```
+
+### Invocación Manual de Lambdas (Pruebas)
+
+Puedes invocar las Lambdas de forma independiente para probarlas:
 
 **Probar Validación de Email:**
 ```bash
@@ -154,64 +197,35 @@ aws lambda invoke \
   response.json
 ```
 
-Si una Lambda falla, revisa los logs de LocalStack: `docker compose logs -f localstack`.
-
-### 3. Visualización y Ejecución desde VS Code
-
-El **AWS Toolkit** te permite renderizar el grafo del flujo de trabajo y disparar ejecuciones directamente desde el IDE:
-
-1.  **Abrir Paleta de Comandos**: Presiona `F1` o `Ctrl+Shift+P`.
-2.  **Conectar a AWS**: Escribe y selecciona **AWS: Connect to AWS**.
-3.  **Seleccionar Perfil**: Elige el perfil `localstack` que creaste en el primer paso.
-4.  **Explorar**: En la barra lateral del **AWS Explorer**, ahora deberías ver los servicios emulados.
-5.  **Renderizar Grafo**:
-    *   Abre `step_function.asl.json`.
-    *   Haz clic en el icono de **Visual Graph** (arriba a la derecha del editor) para ver la lógica.
-6.  **Ejecutar**:
-    *   En el **AWS Explorer**, despliega **Step Functions** y busca `UserOnboardingWorkflow`.
-    *   Haz clic derecho y selecciona **Start Execution** para dispararlo.
-
-> **Nota**: Aunque el IDE permite lanzar ejecuciones y ver el grafo ASL, el seguimiento del estado de la ejecución se realiza a través de la salida de terminal de `main.py` o inspeccionando los logs de LocalStack.
-
-## Componentes del Proyecto
-
-### Lambdas (`lambdas/`)
-
-- **LogUserLambda**: Guarda los datos del usuario y la fecha en una tabla de DynamoDB llamada `UserLogs`.
-- **ValidateEmailLambda**: Valida si el email proporcionado cumple con un formato regex estándar.
-
-### Step Function (`step_function.asl.json`)
-
-- **ProcessUserOnboarding**: Un estado tipo `Parallel` que lanza ambas Lambdas simultáneamente.
-- **CreateIAMUser**: Un `Task` que utiliza la integración directa con el SDK de AWS para crear un usuario de IAM local si los pasos anteriores tienen éxito.
-
-## Variables de Entorno
-
-El archivo `.env` contiene:
-
-```
-AWS_REGION=us-east-1
-LOCALSTACK_ENDPOINT=http://localhost:4566
-DYNAMODB_TABLE=UserLogs
-STEP_FUNCTION_NAME=UserOnboardingWorkflow
-```
-
 ## Resolución de Problemas
 
 ### La función Lambda está en estado 'Pending'
 
-Si ejecutas `main.py` inmediatamente después de `deploy.py`, podrías ver este error:
-`The operation cannot be performed at this time. The function is currently in the following state: Pending`
+Si ejecutas `main.py` inmediatamente después de `deploy.py`, es posible que LocalStack aún esté inicializando el entorno.
 
-**Solución**: Espera de 5 a 10 segundos para que LocalStack termine de inicializar el entorno de la Lambda y vuelve a ejecutar `main.py`.
+**Solución**: Espera de 5 a 10 segundos y vuelve a intentarlo.
+
+### Conexión Rechazada (Connection Refused)
+
+Asegúrate de que LocalStack esté funcionando:
+
+```bash
+docker ps
+```
 
 ## Limpieza
 
-Para eliminar completamente todo:
+Para eliminar todo completamente:
 
 ```bash
 docker compose down -v
 ```
+
+## Siguientes Pasos
+
+- Añadir manejo de errores a la Step Function (Catch/Retry).
+- Implementar un estado `Choice` para ramificar la lógica según la validación del email.
+- Añadir pruebas unitarias para las funciones Lambda.
 
 ## Licencia
 
