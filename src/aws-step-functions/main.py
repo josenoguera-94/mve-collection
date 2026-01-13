@@ -11,7 +11,9 @@ config = get_boto_config()
 
 def run_workflow(username, email):
     sfn = boto3.client("stepfunctions", **config)
-    workflow_arn = f"arn:aws:states:{config['region_name']}:000000000000:stateMachine:{os.getenv('STEP_FUNCTION_NAME')}"
+    name = os.getenv('STEP_FUNCTION_NAME')
+    region = config['region_name']
+    workflow_arn = f"arn:aws:states:{region}:000000000000:stateMachine:{name}"
     
     print(f"🚀 Starting workflow for user: {username} ({email})")
     response = sfn.start_execution(
