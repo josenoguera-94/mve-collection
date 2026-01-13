@@ -2,7 +2,7 @@ import boto3
 import json
 import os
 from dotenv import load_dotenv
-from utils import create_lambda_zip, get_boto_config
+from utils import create_lambda_zip, get_boto_config, deploy_lambda
 
 load_dotenv()
 config = get_boto_config()
@@ -22,31 +22,22 @@ def deploy():
 
     # 2. Lambdas
     lambda_client = boto3.client("lambda", **config)
-    lambdas = ["log_user", "validate_email"]
+    role_arn = "arn:aws:iam::000000000000:role/lambda-role"
     arns = {}
-    
-    role_arn = "arn:aws:iam::000000000000:role/lambda-role" # Mock role for LocalStack
+    env = {"DYNAMODB_TABLE": os.getenv("DYNAMODB_TABLE", "UserLogs")}
 
-    for name in lambdas:
+    for name in ["log_user", "validate_email"]:
         func_name = f"{name.replace('_', '-').title().replace('-', '')}Lambda"
         zip_content = create_lambda_zip(f"lambdas/{name}.py")
         
-        try:
-            res = lambda_client.create_function(
-                FunctionName=func_name,
-                Runtime="python3.12",
-                Role=role_arn,
-                Handler=f"{name}.handler",
-                Code={"ZipFile": zip_content},
-                Timeout=30
-            )
-            arns[f"{func_name}Arn"] = res["FunctionArn"]
-        except lambda_client.exceptions.ResourceConflictException:
-            lambda_client.update_function_code(FunctionName=func_name, ZipFile=zip_content)
-            # Wait for the update to complete before changing configuration
-            lambda_client.get_waiter("function_updated").wait(FunctionName=func_name)
-            lambda_client.update_function_configuration(FunctionName=func_name, Timeout=30)
-            arns[f"{func_name}Arn"] = f"arn:aws:lambda:{config['region_name']}:000000000000:function:{func_name}"
+        arns[f"{func_name}Arn"] = deploy_lambda(
+            client=lambda_client,
+            name=func_name,
+            handler=f"{name}.handler",
+            zip_data=zip_content,
+            role=role_arn,
+            env_vars=env
+        )
 
     # 3. Step Function
     sfn = boto3.client("stepfunctions", **config)
