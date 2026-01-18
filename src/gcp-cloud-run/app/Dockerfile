@@ -15,4 +15,4 @@ COPY main.py .
 EXPOSE 8080
 
 # Run with Gunicorn for production-grade performance
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "main:app"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${SERVICE_PORT:-8080} main:app"]

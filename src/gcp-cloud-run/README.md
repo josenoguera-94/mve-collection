@@ -233,9 +233,9 @@ The `.env` file contains:
 
 ```
 GCP_PROJECT_ID=demo-project
-SERVICE_URL=http://localhost:8080
+SERVICE_URL=http://localhost
 FIRESTORE_EMULATOR_HOST=localhost:8081
-PORT=8080
+SERVICE_PORT=8080
 ```
 
 ## Useful Commands
