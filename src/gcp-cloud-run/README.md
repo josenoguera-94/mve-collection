@@ -79,7 +79,7 @@ python main.py
 ```bash
 curl -v -X POST http://localhost:8080 \
      -H "Content-Type: application/json" \
-     -d '{"name": "Test", "surname": "User", "dni": "12345678X", "age": 30, "gender": "Female"}'
+     -d '{"name": "Test", "surname": "User", "dni": "12345678X"}'
 ```
 
 ---
@@ -189,11 +189,12 @@ firebase emulators:start
 
 ### Step 4: Run with Cloud Code
 
-> **Note**: This project pre-configures `cloudcode.useGcloudAuthSkaffold: false` in `.vscode/settings.json` to avoid mandatory Google Cloud login prompts and ensure a 100% offline experience. If prompted for Google authentication anyway, select **No/Cancel**; this MVE can be run 100% locally.
+This project pre-configures `cloudcode.useGcloudAuthSkaffold: false` in `.vscode/settings.json` to avoid mandatory Google Cloud login prompts and ensure a 100% offline experience. If prompted for Google authentication anyway, select **No/Cancel**; this MVE can be run 100% locally.
 
 1. Click on the **Cloud Code** icon in VS Code activity bar.
 2. Expand **Cloud Run**.
 3. Click the **Run on Cloud Run Emulator** (play icon).
+   - > **Initialization**: The first time you run this, Cloud Code needs to download and set up **Minikube**. This can take **10-15 minutes** (one-time process).
    - Cloud Code will use `skaffold` to build and deploy to your local Minikube.
    - **Hot Reload** is active: save a file, and it updates automatically.
 
@@ -204,7 +205,7 @@ firebase emulators:start
 **Option A: Using Python script**
 
 ```bash
-python3 main.py
+python main.py
 ```
 
 **Option B: Using curl**
@@ -212,7 +213,7 @@ python3 main.py
 ```bash
 curl -v -X POST http://localhost:8080 \
      -H "Content-Type: application/json" \
-     -d '{"name": "Test", "surname": "User", "dni": "12345678X", "age": 30, "gender": "Female"}'
+     -d '{"name": "Test", "surname": "User", "dni": "12345678X"}'
 ```
 
 ## Project Components

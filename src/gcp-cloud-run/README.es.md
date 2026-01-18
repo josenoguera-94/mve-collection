@@ -79,7 +79,7 @@ python main.py
 ```bash
 curl -v -X POST http://localhost:8080 \
      -H "Content-Type: application/json" \
-     -d '{"name": "Test", "surname": "User", "dni": "12345678X", "age": 30, "gender": "Female"}'
+     -d '{"name": "Test", "surname": "User", "dni": "12345678X"}'
 ```
 
 ---
@@ -187,11 +187,12 @@ firebase emulators:start
 
 ### Paso 4: Ejecutar con Cloud Code
 
-> **Nota**: Este proyecto pre-configura `cloudcode.useGcloudAuthSkaffold: false` en `.vscode/settings.json` para evitar peticiones obligatorias de inicio de sesión en Google Cloud y garantizar una experiencia 100% offline. Si se te solicita autenticación de Google de todas formas, selecciona **No/Cancelar**; este MVE se puede ejecutar 100% localmente.
+Este proyecto pre-configura `cloudcode.useGcloudAuthSkaffold: false` en `.vscode/settings.json` para evitar peticiones obligatorias de inicio de sesión en Google Cloud y garantizar una experiencia 100% offline. Si se te solicita autenticación de Google de todas formas, selecciona **No/Cancelar**; este MVE se puede ejecutar 100% localmente.
 
 1. Haz clic en el icono de **Cloud Code** en la barra de actividad.
 2. Expande **Cloud Run**.
 3. Haz clic en **Run on Cloud Run Emulator** (icono de play).
+   - > **Inicialización**: La primera vez que lo ejecutes, Cloud Code necesita descargar y configurar **Minikube**. Esto puede tardar entre **10-15 minutos** (ocurre solo la primera vez).
    - Cloud Code usará `skaffold` para construir y desplegar en tu Minikube local.
    - **Hot Reload** está activo: guarda un archivo y se actualiza automáticamente.
 
@@ -202,7 +203,7 @@ firebase emulators:start
 **Opción A: Usando el script de Python**
 
 ```bash
-python3 main.py
+python main.py
 ```
 
 **Opción B: Usando curl**
@@ -210,7 +211,7 @@ python3 main.py
 ```bash
 curl -v -X POST http://localhost:8080 \
      -H "Content-Type: application/json" \
-     -d '{"name": "Test", "surname": "User", "dni": "12345678X", "age": 30, "gender": "Female"}'
+     -d '{"name": "Test", "surname": "User", "dni": "12345678X"}'
 ```
 
 ## Componentes del Proyecto
