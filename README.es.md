@@ -87,6 +87,7 @@ src/[nombre-mve]/
 | [azurite-docker](./src/azurite-docker/)                         | Configuración de Azurite con emulación de Azure Blob Storage    | Azurite, Azure, Blob Storage, Docker, Python |
 | [databricks-docker](./src/databricks-docker/)                       | Emulación local de Databricks con Docker, Spark y Delta Lake | Databricks, Spark, Delta Lake, Docker, Python |
 | [devcontainers-docker](./src/devcontainers-docker/)             | Entendiendo DevContainers con Python y pandas                   | DevContainers, Docker, Python, VS Code   |
+| [gcp-cloud-run](./src/gcp-cloud-run/)               | Desarrollo local de Google Cloud Run con Firebase Emulator Suite | Cloud Run, Firebase, Firestore, Docker, Python |
 | [gcp-functions](./src/gcp-functions/)                           | Desarrollo local de Google Cloud Functions con Firebase Emulator Suite | Google Cloud Functions, Firebase, Cloud Storage, Python |
 | [localstack-docker](./src/localstack-docker/)                   | Configuración de LocalStack con servicios Lambda y S3           | LocalStack, Lambda, S3, Docker, Python   |
 | [localstack-docker-terraform](./src/localstack-docker-terraform/) | LocalStack con Terraform para infraestructura S3, Lambda y DynamoDB | LocalStack, Terraform, S3, Lambda, DynamoDB, Docker, Python |
