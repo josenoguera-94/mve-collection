@@ -68,11 +68,15 @@ docker run --rm -p 8080:8080 --net=host -e FIRESTORE_EMULATOR_HOST=localhost:808
 
 Abre una **tercera terminal**:
 
-```bash
-# Opción A: usando script de python
-python main.py
+**Opción A: Usando el script de Python**
 
-# Opción B: usando curl
+```bash
+python main.py
+```
+
+**Opción B: Usando curl**
+
+```bash
 curl -v -X POST http://localhost:8080 \
      -H "Content-Type: application/json" \
      -d '{"name": "Test", "surname": "User", "dni": "12345678X", "age": 30, "gender": "Female"}'
@@ -183,21 +187,27 @@ firebase emulators:start
 
 ### Paso 4: Ejecutar con Cloud Code
 
+> **Nota**: Este proyecto pre-configura `cloudcode.useGcloudAuthSkaffold: false` en `.vscode/settings.json` para evitar peticiones obligatorias de inicio de sesión en Google Cloud y garantizar una experiencia 100% offline. Si se te solicita autenticación de Google de todas formas, selecciona **No/Cancelar**; este MVE se puede ejecutar 100% localmente.
+
 1. Haz clic en el icono de **Cloud Code** en la barra de actividad.
 2. Expande **Cloud Run**.
 3. Haz clic en **Run on Cloud Run Emulator** (icono de play).
-   - > **Nota**: Si te pregunta para habilitar **minikube gcp-auth addon**, selecciona **Yes**. Si te pide **Iniciar Sesión** en Google Cloud, puedes **Cancelar** para mantenerlo 100% local.
-   - > **Usuarios Linux**: Si falla la conexión, cambia `FIRESTORE_EMULATOR_HOST` en `.vscode/launch.json` a `host.minikube.internal:8081` o `172.17.0.1:8081`. El valor por defecto `host.docker.internal` está optimizado para Windows/WSL/macOS.
    - Cloud Code usará `skaffold` para construir y desplegar en tu Minikube local.
    - **Hot Reload** está activo: guarda un archivo y se actualiza automáticamente.
 
 ### Paso 5: Probar
 
-```bash
-# Opción A: usando script de python
-python3 main.py
+> **Usuarios Linux**: Si falla la conexión con `Connection refused`, cambia `FIRESTORE_EMULATOR_HOST` en `.vscode/launch.json` a `host.minikube.internal:8081`. El valor por defecto `host.docker.internal` está optimizado para Windows/WSL/macOS.
 
-# Opción B: usando curl
+**Opción A: Usando el script de Python**
+
+```bash
+python3 main.py
+```
+
+**Opción B: Usando curl**
+
+```bash
 curl -v -X POST http://localhost:8080 \
      -H "Content-Type: application/json" \
      -d '{"name": "Test", "surname": "User", "dni": "12345678X", "age": 30, "gender": "Female"}'
@@ -234,6 +244,70 @@ docker system prune
 # Detener Minikube
 minikube stop
 ```
+
+## Solución de Problemas (Troubleshooting)
+
+### Connection Refused (111)
+
+Si el servicio de Cloud Run no puede conectar con Firestore y muestra un error `Connection refused`:
+- Asegúrate de que el Emulador de Firebase esté funcionando (`firebase emulators:start`).
+- Revisa que Firestore esté configurado para escuchar en `0.0.0.0` en el archivo `firebase.json`.
+- En `.vscode/launch.json`, intenta cambiar `FIRESTORE_EMULATOR_HOST` a `host.minikube.internal:8081` (Linux nativo) o a tu IP local.
+
+### Peticiones constantes de Login en Google Cloud
+
+Si VS Code te pide constantemente iniciar sesión en Google Cloud:
+- Asegúrate de que `.vscode/settings.json` incluye `"cloudcode.useGcloudAuthSkaffold": false`.
+- Selecciona "No" o "Cancelar" cuando aparezca el aviso; el MVE funciona 100% localmente.
+
+### El Emulador de Firebase no arranca
+
+- Asegúrate de tener **Node.js** y **Java (JDK)** instalados.
+- Comprueba si otro proceso está usando los puertos `8081` o `4000`.
+
+## Limpieza (Clean Up)
+
+### Detener Servicios Locales
+
+Para detener los recursos utilizados en este MVE:
+
+```bash
+# Opción 1: Detener el contenedor Docker específico
+docker stop patient-service 2>/dev/null || true
+
+# Opción 2: El despliegue de Cloud Code se detiene haciendo clic en "Stop" (Cuadrado Rojo) en VS Code.
+# Alternativamente, puedes detener Minikube:
+minikube stop
+
+# Detener los Emuladores de Firebase
+pkill -f firebase
+```
+
+### Desinstalar Prerrequisitos (Opcional)
+
+Si deseas eliminar por completo las herramientas instaladas:
+
+#### Linux (Debian/Ubuntu)
+```bash
+# Eliminar Node.js
+sudo apt-get purge -y nodejs && sudo apt-get autoremove -y
+
+# Eliminar Java (JDK 21)
+sudo apt-get purge -y openjdk-21-jdk && sudo apt-get autoremove -y
+
+# Eliminar Minikube
+sudo rm /usr/local/bin/minikube
+```
+
+#### Windows / macOS
+1.  **Google Cloud CLI / Firebase**: Usa la opción "Desinstalar un programa" del sistema o la carpeta de "Aplicaciones".
+2.  **Minikube / Node / Java**: Usa el desinstalador oficial de cada herramienta o la sección de "Agregar o quitar programas" en la Configuración de Windows.
+
+## Siguientes Pasos
+
+- Añadir más endpoints
+- Implementar Autenticación usando Firebase Auth Emulator
+- Añadir tests unitarios para la aplicación Flask
 
 ## Licencia
 

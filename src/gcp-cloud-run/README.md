@@ -68,11 +68,15 @@ docker run --rm -p 8080:8080 --net=host -e FIRESTORE_EMULATOR_HOST=localhost:808
 
 Open a **third terminal**:
 
-```bash
-# Option A: using python script
-python main.py
+**Option A: Using Python script**
 
-# Option B: using curl
+```bash
+python main.py
+```
+
+**Option B: Using curl**
+
+```bash
 curl -v -X POST http://localhost:8080 \
      -H "Content-Type: application/json" \
      -d '{"name": "Test", "surname": "User", "dni": "12345678X", "age": 30, "gender": "Female"}'
@@ -185,21 +189,27 @@ firebase emulators:start
 
 ### Step 4: Run with Cloud Code
 
+> **Note**: This project pre-configures `cloudcode.useGcloudAuthSkaffold: false` in `.vscode/settings.json` to avoid mandatory Google Cloud login prompts and ensure a 100% offline experience. If prompted for Google authentication anyway, select **No/Cancel**; this MVE can be run 100% locally.
+
 1. Click on the **Cloud Code** icon in VS Code activity bar.
 2. Expand **Cloud Run**.
 3. Click the **Run on Cloud Run Emulator** (play icon).
-   - > **Note**: If asked to enable **minikube gcp-auth addon**, select **Yes**. If prompted to **Sign in** to Google Cloud, you can **Cancel** to keep it 100% local.
-   - > **Linux Users**: If connection fails, change `FIRESTORE_EMULATOR_HOST` in `.vscode/launch.json` to `host.minikube.internal:8081` or `172.17.0.1:8081`. The default `host.docker.internal` is optimized for Windows/WSL/macOS.
    - Cloud Code will use `skaffold` to build and deploy to your local Minikube.
    - **Hot Reload** is active: save a file, and it updates automatically.
 
 ### Step 5: Test
 
-```bash
-# Option A: using python script
-python3 main.py
+> **Linux Users**: If connection fails with `Connection refused`, change `FIRESTORE_EMULATOR_HOST` in `.vscode/launch.json` to `host.minikube.internal:8081`. The default `host.docker.internal` is optimized for Windows/WSL/macOS.
 
-# Option B: using curl
+**Option A: Using Python script**
+
+```bash
+python3 main.py
+```
+
+**Option B: Using curl**
+
+```bash
 curl -v -X POST http://localhost:8080 \
      -H "Content-Type: application/json" \
      -d '{"name": "Test", "surname": "User", "dni": "12345678X", "age": 30, "gender": "Female"}'
@@ -236,6 +246,69 @@ docker system prune
 # Stop Minikube
 minikube stop
 ```
+
+## Troubleshooting
+
+### Connection Refused (111)
+
+If the Cloud Run service fails to connect to Firestore with a `Connection refused` error:
+- Ensure the Firebase Emulator is running (`firebase emulators:start`).
+- Check if Firestore is listening on `0.0.0.0` in `firebase.json`.
+- In `.vscode/launch.json`, try changing `FIRESTORE_EMULATOR_HOST` to `host.minikube.internal:8081` (Native Linux) or your local IP.
+
+### Persistent Google Cloud Login Prompts
+
+If VS Code keeps asking you to log in to Google Cloud:
+- Ensure `.vscode/settings.json` includes `"cloudcode.useGcloudAuthSkaffold": false`.
+- Select "No" or "Cancel" when prompted; the MVE works 100% locally.
+
+### Firebase Emulator Fails to Start
+
+- Ensure **Node.js** and **Java (JDK)** are installed.
+- Check if another process is using ports `8081` or `4000`.
+
+## Clean Up
+
+### Stopping Local Services
+
+To stop the resources used in this MVE:
+
+```bash
+# Option 1: Stop the specific Docker container
+docker stop patient-service 2>/dev/null || true
+
+# Option 2: Cloud Code deployment is stopped by clicking "Stop" (Red Square) in VS Code.
+# Alternatively, you can stop Minikube:
+minikube stop
+
+# Stop Firebase Emulators
+pkill -f firebase
+```
+### Uninstalling Prerequisites (Optional)
+
+If you wish to completely remove the installed tools:
+
+#### Linux (Debian/Ubuntu)
+```bash
+# Remove Node.js
+sudo apt-get purge -y nodejs && sudo apt-get autoremove -y
+
+# Remove Java (JDK 21)
+sudo apt-get purge -y openjdk-21-jdk && sudo apt-get autoremove -y
+
+# Remove Minikube
+sudo rm /usr/local/bin/minikube
+```
+
+#### Windows / macOS
+1.  **Google Cloud CLI / Firebase**: Use the system's "Uninstall a program" or "Applications" folder.
+2.  **Minikube / Node / Java**: Use the official uninstaller for each tool or the "Add/Remove Programs" section in Windows Settings.
+
+## Next Steps
+
+- Add more endpoints
+- Implement Authentication using Firebase Auth Emulator
+- Add unit tests for the Flask application
 
 ## License
 
