@@ -1,0 +1,38 @@
+{
+  "configurations": [
+    {
+      "name": "Cloud Run: Run/Debug Locally",
+      "type": "cloudcode.cloudrun",
+      "request": "launch",
+      "build": {
+        "docker": {
+          "path": "app/Dockerfile"
+        }
+      },
+      "image": "gcp-cloud-run",
+      "service": {
+        "name": "gcp-cloud-run",
+        "containerPort": 8080,
+        "env": [
+          {
+            "name": "FIRESTORE_EMULATOR_HOST",
+            "value": "host.docker.internal:8081"
+          },
+          {
+            "name": "GCP_PROJECT_ID",
+            "value": "demo-project"
+          }
+        ],
+        "resources": {
+          "limits": {
+            "memory": "256Mi"
+          }
+        }
+      },
+      "target": {
+        "minikube": {}
+      },
+      "watch": true
+    }
+  ]
+}

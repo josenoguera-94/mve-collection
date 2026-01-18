@@ -14,8 +14,7 @@
     "vscode": {
       "extensions": [
         "ms-python.python",
-        "toba.vsfire",
-        "googlecloudtools.cloudcode"
+        "toba.vsfire"
       ]
     }
   },

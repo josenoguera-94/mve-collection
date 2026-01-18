@@ -25,130 +25,194 @@ gcp-cloud-run/
 
 ## Prerrequisitos
 
-- Docker y Docker Compose instalados
-- VS Code con la extensión Dev Containers (opcional, para configuración con contenedores)
-- Extensión Cloud Code para VS Code (opcional, pero recomendada)
+- **Docker y Docker Compose** instalados
+- **VS Code**
 
-## Opción 1: Usando Dev Container (Recomendado)
+## Opción 1: Usando Dev Container (Rápido y Simple)
+
+> **⚠️ LIMITACIONES:** Esta opción usa **Docker** directamente para ejecutar el servicio. **NO** usa Cloud Code ni Minikube.
+> - **Pros**: Configuración rápida, sin complejidad, funciona de inmediato.
+> - **Contras**: Sin "Hot Reload" (requiere reconstruir al cambiar código), sin simulación real de infraestructura (YAML, comportamiento Knative), sin depuración integrada.
+> - **Recomendado para**: Pruebas rápidas de lógica de código e integración con Firestore.
+> 
+> **Para un entorno profesional completo con Minikube/Cloud Code, ver Opción 2.**
 
 ### Paso 1: Abrir el Proyecto en Dev Container
 
-1. Abre VS Code en la carpeta del proyecto
-2. Presiona `F1` o `Ctrl+Shift+P` (Windows/Linux) / `Cmd+Shift+P` (Mac)
-3. Escribe y selecciona: **Dev Containers: Reopen in Container**
-4. Espera a que el contenedor se construya y se instalen las dependencias
+1. Abre VS Code en la carpeta del proyecto.
+2. Presiona `F1` -> **Dev Containers: Reopen in Container**.
 
-El dev container incluye:
-- **Python 3.12**
-- **Node.js 18** y **Java 17** (para Firebase Emulator)
-- **Firebase Tools**
-- **Extensión Google Cloud Code** preinstalada
+El contenedor incluye Python, Node.js, Java y Firebase Tools.
 
 ### Paso 2: Iniciar Emuladores de Firebase
 
-Dentro de la terminal del dev container, inicia Firestore:
+Dentro de la terminal del dev container:
 
 ```bash
 firebase emulators:start
 ```
 
-Deberías ver:
+### Paso 3: Ejecutar el Servicio (Docker)
 
-```
-┌───────────┬────────────────┬─────────────────────────────────┐
-│ Emulator  │ Host:Port      │ View in Emulator UI             │
-├───────────┼────────────────┼─────────────────────────────────┤
-│ Firestore │ localhost:8081 │ http://localhost:4000/firestore │
-└───────────┴────────────────┴─────────────────────────────────┘
-```
-
-### Paso 3: Ejecutar el Servicio Cloud Run Localmente
-
-Abre una **nueva terminal** y ejecuta el servicio principal directamente (Inner Loop):
+Abre una **nueva terminal** dentro de VS Code:
 
 ```bash
-cd app && pip install -r requirements.txt
-export PORT=8080
-export FIRESTORE_EMULATOR_HOST=localhost:8081
-python main.py
+# Construir la imagen
+docker build -t patient-service ./app
+
+# Ejecutar el contenedor (network=host para acceder al Emulador Firebase)
+docker run --rm -p 8080:8080 --net=host -e FIRESTORE_EMULATOR_HOST=localhost:8081 patient-service
 ```
 
 ### Paso 4: Probar el Servicio
 
-Abre una **tercera terminal** y ejecuta el script cliente:
+Abre una **tercera terminal**:
 
 ```bash
+# Opción A: usando script de python
 python main.py
+
+# Opción B: usando curl
+curl -v -X POST http://localhost:8080 \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Test", "surname": "User", "dni": "12345678X", "age": 30, "gender": "Female"}'
 ```
 
-Deberías ver:
+---
 
-```
-Connecting to Cloud Run Service at http://localhost:8080...
-Admitting patient: Jane Doe...
-Success! Patient admitted.
-```
+## Opción 2: Configuración Local (Profesional / Cloud Code)
 
-## Opción 2: Configuración Local (Sin Dev Container)
+Esta opción imita el entorno real de Cloud usando **Minikube** y **Cloud Code**. Ideal para desarrollo profundo.
 
 ### Paso 1: Instalar Prerrequisitos
 
-1. **Instalar Node.js 18+ y Java 17+**
-2. **Instalar Firebase CLI**: `npm install -g firebase-tools`
-3. **Instalar Dependencias de Python**:
+Aunque Cloud Code puede intentar instalar dependencias, **se recomienda la instalación manual** para mayor estabilidad.
 
-```bash
-pip3 install uv && uv sync
-```
+#### Linux (Debian/Ubuntu)
+1. **Python (Mín v3.12)**:
+   ```bash
+   sudo apt-get update && sudo apt-get install -y python3 python3-pip python3-venv
+   ```
+2. Asegúrate de tener `curl` instalado:
+   ```bash
+   sudo apt-get install -y curl
+   ```
+3. **Node.js v24**: [Guía de Instalación](https://nodesource.com/products/distributions)
+   ```bash
+   curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+   sudo apt-get install -y nodejs
+   ```
 
-### Paso 2: Iniciar Emuladores
+4. **Java JDK v21**: [Descargar (Oracle)](https://www.oracle.com/es/java/technologies/downloads/)
+   ```bash
+   sudo apt-get update && sudo apt-get install -y openjdk-21-jdk
+   ```
+
+5. **Google Cloud CLI**: [Guía de Instalación](https://cloud.google.com/sdk/docs/install)
+   ```bash
+   sudo apt-get install -y apt-transport-https ca-certificates gnupg curl
+   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+   echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+   sudo apt-get update && sudo apt-get install -y google-cloud-cli google-cloud-cli-skaffold
+   ```
+
+6. **Minikube**: [Guía de Instalación](https://minikube.sigs.k8s.io/docs/start/)
+   ```bash
+   curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
+   sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+   ```
+
+7. **Firebase CLI**:
+   ```bash
+   sudo npm install -g firebase-tools
+   ```
+
+#### Windows
+1. **Python (Mín v3.12)**: [Descargar](https://www.python.org/downloads/)
+2. **Node.js (Mín v18)**: [Descargar](https://nodejs.org/en/download/)
+3. **Java JDK (Mín v17)**: [Descargar (Oracle)](https://www.oracle.com/es/java/technologies/downloads/)
+4. **Google Cloud CLI**: [Guía de Instalación](https://cloud.google.com/sdk/docs/install)
+5. **Minikube**:
+   ```powershell
+   winget install Kubernetes.minikube
+   ```
+6. **Firebase CLI**:
+   ```powershell
+   npm install -g firebase-tools
+   ```
+
+#### macOS
+1. **Python (Mín v3.12)**: [Descargar](https://www.python.org/downloads/)
+2. **Node.js (Mín v18)**: [Descargar](https://nodejs.org/en/download/)
+3. **Java JDK (Mín v17)**: [Descargar (Oracle)](https://www.oracle.com/es/java/technologies/downloads/)
+4. **Google Cloud CLI**: [Guía de Instalación](https://cloud.google.com/sdk/docs/install)
+5. **Minikube**:
+   ```bash
+   brew install minikube
+   ```
+6. **Firebase CLI**:
+   ```bash
+   sudo npm install -g firebase-tools
+   ```
+
+7. **Instalar Extensión VS Code**: Busca "Google Cloud Code" en VS Code e instálala.
+
+### Paso 2: Configurar Proyecto
+
+1. **Instalar Dependencias de Python**:
+   Se recomienda usar el instalador independiente de `uv` para evitar conflictos con el sistema.
+
+   **Linux/macOS**:
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   source $HOME/.local/bin/env
+   uv sync
+   ```
+
+   **Windows**:
+   ```powershell
+   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+   uv sync
+   ```
+
+### Paso 3: Iniciar Emuladores
 
 ```bash
 firebase emulators:start
 ```
 
-### Paso 3: Ejecutar Servicio
+### Paso 4: Ejecutar con Cloud Code
 
-En una nueva terminal:
+1. Haz clic en el icono de **Cloud Code** en la barra de actividad.
+2. Expande **Cloud Run**.
+3. Haz clic en **Run on Cloud Run Emulator** (icono de play).
+   - > **Nota**: Si te pregunta para habilitar **minikube gcp-auth addon**, selecciona **Yes**. Si te pide **Iniciar Sesión** en Google Cloud, puedes **Cancelar** para mantenerlo 100% local.
+   - > **Usuarios Linux**: Si falla la conexión, cambia `FIRESTORE_EMULATOR_HOST` en `.vscode/launch.json` a `host.minikube.internal:8081` o `172.17.0.1:8081`. El valor por defecto `host.docker.internal` está optimizado para Windows/WSL/macOS.
+   - Cloud Code usará `skaffold` para construir y desplegar en tu Minikube local.
+   - **Hot Reload** está activo: guarda un archivo y se actualiza automáticamente.
 
-```bash
-cd app
-pip3 install -r requirements.txt
-export FIRESTORE_EMULATOR_HOST=localhost:8081
-python3 main.py
-```
-
-### Paso 4: Ejecutar el Cliente
-
-En otra terminal:
+### Paso 5: Probar
 
 ```bash
+# Opción A: usando script de python
 python3 main.py
+
+# Opción B: usando curl
+curl -v -X POST http://localhost:8080 \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Test", "surname": "User", "dni": "12345678X", "age": 30, "gender": "Female"}'
 ```
 
 ## Componentes del Proyecto
 
 ### Servicio Cloud Run (`app/main.py`)
-
-Una aplicación Flask que actúa como microservicio:
-
-- **`admit_patient`**: Endpoint que recibe peticiones POST con datos del paciente.
-- **Integración Firestore**: Conecta a Firestore para guardar los datos.
-- **Detección Automática de Entorno**: Usa `FIRESTORE_EMULATOR_HOST` para conectar al emulador automáticamente.
+App Flask que recibe datos de pacientes y escribe en Firestore. Autodetecta el emulador vía `FIRESTORE_EMULATOR_HOST`.
 
 ### Dockerfile (`app/Dockerfile`)
+Contenedor de producción usando `gunicorn`.
 
-Define la imagen del contenedor para Cloud Run:
-
-- Usa imagen base `python:3.12-slim`.
-- Instala dependencias desde `requirements.txt`.
-- Usa `gunicorn` como servidor WSGI de producción.
-- Expone el puerto 8080.
-
-### Reglas de Firestore (`firestore.rules`)
-
-Reglas de seguridad simples para desarrollo local:
-- Permite acceso de lectura/escritura a todos los documentos.
+### Reglas Firestore (`firestore.rules`)
+Reglas permisivas para desarrollo local.
 
 ## Variables de Entorno
 
@@ -161,49 +225,15 @@ FIRESTORE_EMULATOR_HOST=localhost:8081
 PORT=8080
 ```
 
-**Nota**: `FIRESTORE_EMULATOR_HOST` es crucial para que el cliente Python encuentre el emulador local.
-
 ## Comandos Útiles
 
-### Comandos Docker
-
 ```bash
-# Construir el contenedor
-docker build -t patient-service ./app
-
-# Ejecutar el contenedor (conectar al emulador host requiere config de red)
-docker run -p 8080:8080 --net=host -e FIRESTORE_EMULATOR_HOST=localhost:8081 patient-service
-```
-
-### Comandos Firebase
-
-```bash
-# Iniciar solo Firestore
-firebase emulators:start --only firestore
-```
-
-## Solución de Problemas
-
-### Conflicto de Puertos del Emulador
-
-Si el puerto 8081 está en uso, cámbialo en `firebase.json` y actualiza `.env`.
-
-### El Servicio no Conecta a Firestore
-
-Asegúrate de que `FIRESTORE_EMULATOR_HOST` esté configurado en la terminal que ejecuta el servicio.
-
-## Limpieza
-
-```bash
-# Detener emuladores (Ctrl+C)
+# Detener contenedores
 docker system prune
+
+# Detener Minikube
+minikube stop
 ```
-
-## Siguientes Pasos
-
-- Desplegar en Google Cloud Run
-- Añadir autenticación
-- Añadir validación de datos
 
 ## Licencia
 

@@ -25,130 +25,196 @@ gcp-cloud-run/
 
 ## Prerequisites
 
-- Docker and Docker Compose installed
-- VS Code with Dev Containers extension (optional, for dev container setup)
-- Cloud Code extension for VS Code (optional, but recommended)
+- **Docker and Docker Compose** installed
+- **VS Code**
 
-## Option 1: Using Dev Container (Recommended)
+## Option 1: Using Dev Container (Fast & Simple)
+
+> **⚠️ LIMITATIONS:** This option uses **Docker** directly to run the service. It does **NOT** use Cloud Code or Minikube.
+> - **Pros**: Fast setup, no complex configuration, works immediately.
+> - **Cons**: No "Hot Reload" (requires rebuild on change), no real infrastructure simulation (YAML configuration, Knative behavior), no integrated debugging.
+> - **Recommended for**: Quick testing of code logic and Firestore integration.
+> 
+> **For a full professional environment with Minikube/Cloud Code, see Option 2.**
 
 ### Step 1: Open Project in Dev Container
 
-1. Open VS Code in the project folder
-2. Press `F1` or `Ctrl+Shift+P` (Windows/Linux) / `Cmd+Shift+P` (Mac)
-3. Type and select: **Dev Containers: Reopen in Container**
-4. Wait for the container to build and dependencies to install
+1. Open VS Code in the project folder.
+2. Press `F1` -> **Dev Containers: Reopen in Container**.
 
-The dev container includes:
-- **Python 3.12**
-- **Node.js 18** and **Java 17** (for Firebase Emulator)
-- **Firebase Tools**
-- **Google Cloud Code Extension** pre-installed
+The container includes Python, Node.js, Java, and Firebase Tools.
 
 ### Step 2: Start Firebase Emulators
 
-Inside the dev container terminal, start Firestore:
+Inside the dev container terminal:
 
 ```bash
 firebase emulators:start
 ```
 
-You should see:
+### Step 3: Run the Service (Docker)
 
-```
-┌───────────┬────────────────┬─────────────────────────────────┐
-│ Emulator  │ Host:Port      │ View in Emulator UI             │
-├───────────┼────────────────┼─────────────────────────────────┤
-│ Firestore │ localhost:8081 │ http://localhost:4000/firestore │
-└───────────┴────────────────┴─────────────────────────────────┘
-```
-
-### Step 3: Run the Cloud Run Service Locally
-
-Open a **new terminal** and run main service directly (Inner Loop):
+Open a **new terminal** inside VS Code:
 
 ```bash
-cd app && pip install -r requirements.txt
-export PORT=8080
-export FIRESTORE_EMULATOR_HOST=localhost:8081
-python main.py
+# Build the image
+docker build -t patient-service ./app
+
+# Run the container (network=host to access Firebase Emulator)
+docker run --rm -p 8080:8080 --net=host -e FIRESTORE_EMULATOR_HOST=localhost:8081 patient-service
 ```
 
 ### Step 4: Test the Service
 
-Open a **third terminal** and run the client script:
+Open a **third terminal**:
 
 ```bash
+# Option A: using python script
 python main.py
+
+# Option B: using curl
+curl -v -X POST http://localhost:8080 \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Test", "surname": "User", "dni": "12345678X", "age": 30, "gender": "Female"}'
 ```
 
-You should see:
+---
 
-```
-Connecting to Cloud Run Service at http://localhost:8080...
-Admitting patient: Jane Doe...
-Success! Patient admitted.
-```
+## Option 2: Local Setup (Professional / Cloud Code)
 
-## Option 2: Local Setup (Without Dev Container)
+This option mimics the real Cloud environment using **Minikube** and **Cloud Code**. Ideal for deep development.
 
 ### Step 1: Install Prerequisites
 
-1. **Install Node.js 18+ and Java 17+**
-2. **Install Firebase CLI**: `npm install -g firebase-tools`
-3. **Install Python Dependencies**:
+Even though Cloud Code can attempt to install dependencies, **manual installation is recommended** for stability.
 
+#### Linux (Debian/Ubuntu)
+Ensure `curl` is installed:
 ```bash
-pip3 install uv && uv sync
+sudo apt-get install -y curl
 ```
 
-### Step 2: Start Emulators
+1. **Python (Min v3.12)**:
+   ```bash
+   sudo apt-get update && sudo apt-get install -y python3 python3-pip python3-venv
+   ```
+
+2. **Node.js v24**: [Install Guide](https://nodesource.com/products/distributions)
+   ```bash
+   curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+   sudo apt-get install -y nodejs
+   ```
+
+3. **Java JDK v21**: [Download (Oracle)](https://www.oracle.com/java/technologies/downloads/)
+   ```bash
+   sudo apt-get update && sudo apt-get install -y openjdk-21-jdk
+   ```
+
+4. **Google Cloud CLI**: [Install Guide](https://cloud.google.com/sdk/docs/install)
+   ```bash
+   sudo apt-get install -y apt-transport-https ca-certificates gnupg curl
+   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+   echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+   sudo apt-get update && sudo apt-get install -y google-cloud-cli google-cloud-cli-skaffold
+   ```
+
+5. **Minikube**: [Install Guide](https://minikube.sigs.k8s.io/docs/start/)
+   ```bash
+   curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
+   sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+   ```
+
+6. **Firebase CLI**:
+   ```bash
+   sudo npm install -g firebase-tools
+   ```
+
+#### Windows
+1. **Python (Min v3.12)**: [Download](https://www.python.org/downloads/)
+2. **Node.js (Min v18)**: [Download](https://nodejs.org/en/download/)
+3. **Java JDK (Min v17)**: [Download (Oracle)](https://www.oracle.com/java/technologies/downloads/)
+4. **Google Cloud CLI**: [Install Guide](https://cloud.google.com/sdk/docs/install)
+5. **Minikube**:
+   ```powershell
+   winget install Kubernetes.minikube
+   ```
+6. **Firebase CLI**:
+   ```powershell
+   npm install -g firebase-tools
+   ```
+
+#### macOS
+1. **Python (Min v3.12)**: [Download](https://www.python.org/downloads/)
+2. **Node.js (Min v18)**: [Download](https://nodejs.org/en/download/)
+3. **Java JDK (Min v17)**: [Download (Oracle)](https://www.oracle.com/java/technologies/downloads/)
+4. **Google Cloud CLI**: [Install Guide](https://cloud.google.com/sdk/docs/install)
+5. **Minikube**:
+   ```bash
+   brew install minikube
+   ```
+6. **Firebase CLI**:
+   ```bash
+   sudo npm install -g firebase-tools
+   ```
+
+7. **Install VS Code Extension**: Search for "Google Cloud Code" in VS Code and install it.
+
+### Step 2: Setup Project
+
+1. **Install Python Dependencies**:
+   It is recommended to use the standalone installer for `uv` to avoid system conflicts.
+
+   **Linux/macOS**:
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   source $HOME/.local/bin/env
+   uv sync
+   ```
+
+   **Windows**:
+   ```powershell
+   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+   uv sync
+   ```
+
+### Step 3: Start Emulators
 
 ```bash
 firebase emulators:start
 ```
 
-### Step 3: Run Service
+### Step 4: Run with Cloud Code
 
-In a new terminal:
+1. Click on the **Cloud Code** icon in VS Code activity bar.
+2. Expand **Cloud Run**.
+3. Click the **Run on Cloud Run Emulator** (play icon).
+   - > **Note**: If asked to enable **minikube gcp-auth addon**, select **Yes**. If prompted to **Sign in** to Google Cloud, you can **Cancel** to keep it 100% local.
+   - > **Linux Users**: If connection fails, change `FIRESTORE_EMULATOR_HOST` in `.vscode/launch.json` to `host.minikube.internal:8081` or `172.17.0.1:8081`. The default `host.docker.internal` is optimized for Windows/WSL/macOS.
+   - Cloud Code will use `skaffold` to build and deploy to your local Minikube.
+   - **Hot Reload** is active: save a file, and it updates automatically.
 
-```bash
-cd app
-pip3 install -r requirements.txt
-export FIRESTORE_EMULATOR_HOST=localhost:8081
-python3 main.py
-```
-
-### Step 4: Run the Client
-
-In another terminal:
+### Step 5: Test
 
 ```bash
+# Option A: using python script
 python3 main.py
+
+# Option B: using curl
+curl -v -X POST http://localhost:8080 \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Test", "surname": "User", "dni": "12345678X", "age": 30, "gender": "Female"}'
 ```
 
 ## Project Components
 
 ### Cloud Run Service (`app/main.py`)
-
-A Flask application acting as a microservice:
-
-- **`admit_patient`**: Endpoint receiving POST requests with patient data.
-- **Firestore Integration**: Connects to Firestore to save the data.
-- **Automatic Environment Detection**: Uses `FIRESTORE_EMULATOR_HOST` to connect to the emulator automatically.
+Flask app that receives patient data and writes to Firestore. Auto-detects emulator via `FIRESTORE_EMULATOR_HOST`.
 
 ### Dockerfile (`app/Dockerfile`)
-
-Defines the container image for Cloud Run:
-
-- Uses `python:3.12-slim` base image.
-- Installs dependencies from `requirements.txt`.
-- Uses `gunicorn` as the production WSGI server.
-- Exposes port 8080.
+Production-grade container using `gunicorn`.
 
 ### Firestore Rules (`firestore.rules`)
-
-Simple security rules for local development:
-- Allows read/write access to all documents.
+Permissive rules for local development.
 
 ## Environment Variables
 
@@ -161,49 +227,15 @@ FIRESTORE_EMULATOR_HOST=localhost:8081
 PORT=8080
 ```
 
-**Note**: `FIRESTORE_EMULATOR_HOST` is crucial for the Python client to find the local emulator.
-
 ## Useful Commands
 
-### Docker Commands
-
 ```bash
-# Build the container
-docker build -t patient-service ./app
-
-# Run the container (connecting to host emulator requires network config)
-docker run -p 8080:8080 --net=host -e FIRESTORE_EMULATOR_HOST=localhost:8081 patient-service
-```
-
-### Firebase Commands
-
-```bash
-# Start only Firestore
-firebase emulators:start --only firestore
-```
-
-## Troubleshooting
-
-### Emulator Port Conflict
-
-If port 8081 is in use, change it in `firebase.json` and update `.env`.
-
-### Service Cannot Connect to Firestore
-
-Ensure `FIRESTORE_EMULATOR_HOST` is set in the terminal running the service.
-
-## Clean Up
-
-```bash
-# Stop emulators (Ctrl+C)
+# Stop containers
 docker system prune
+
+# Stop Minikube
+minikube stop
 ```
-
-## Next Steps
-
-- Deploy to Google Cloud Run
-- Add authentication
-- Add data validation
 
 ## License
 
