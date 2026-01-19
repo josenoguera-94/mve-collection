@@ -1,0 +1,17 @@
+{
+  "name": "Azure Container Apps Dev",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspaces/azure-container-apps",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-azurecontainerapps",
+        "ms-azuretools.vscode-cosmosdb",
+        "ms-python.python",
+        "ms-azuretools.vscode-dapr"
+      ]
+    }
+  },
+  "postCreateCommand": "pip3 install uv && uv sync"
+}
