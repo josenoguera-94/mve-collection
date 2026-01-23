@@ -83,7 +83,7 @@ src/[mve-name]/
 | --------------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------- |
 | [airflow-docker](./src/airflow-docker/)                         | Apache Airflow setup with Docker Compose and Python       | Apache Airflow, Docker, Python          |
 | [aws-step-functions](./src/aws-step-functions/)           | AWS Step Functions local development with LocalStack      | Step Functions, Lambda, DynamoDB, LocalStack, Python |
-| [azure-container-apps](./src/azure-container-apps/)         | Azure Container Apps local development with Dapr and Cosmos DB | Azure Container Apps, Dapr, Cosmos DB, Docker, Python |
+| [azure-container-apps](./src/azure-container-apps/)         | Azure Container Apps local development with Cosmos DB     | Azure Container Apps, Cosmos DB, Docker, Python |
 | [azure-functions](./src/azure-functions/)                       | Azure Functions local development with Azurite            | Azure Functions, Azurite, Blob Storage, Docker, Python |
 | [azurite-docker](./src/azurite-docker/)                         | Azurite setup with Azure Blob Storage emulation           | Azurite, Azure, Blob Storage, Docker, Python |
 | [databricks-docker](./src/databricks-docker/)                       | Local Databricks emulation with Docker, Spark, and Delta Lake | Databricks, Spark, Delta Lake, Docker, Python |

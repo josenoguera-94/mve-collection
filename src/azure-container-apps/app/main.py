@@ -1,23 +1,31 @@
 import os
-import requests
 from flask import Flask, request, jsonify
+from azure.cosmos import CosmosClient, PartitionKey
+from dotenv import load_dotenv
 
+load_dotenv()
 app = Flask(__name__)
 
-# Dapr State Store endpoint
-DAPR_URL = f"http://localhost:3500/v1.0/state/statestore"
+# Cosmos DB configuration
+URL = os.getenv("COSMOS_ENDPOINT")
+KEY = os.getenv("COSMOS_KEY")
+DATABASE_NAME = "Inventory"
+CONTAINER_NAME = "users"
+
+# Initialize Client
+client = CosmosClient(URL, credential=KEY)
+database = client.create_database_if_not_exists(id=DATABASE_NAME)
+container = database.create_container_if_not_exists(
+    id=CONTAINER_NAME, 
+    partition_key=PartitionKey(path="/username")
+)
 
 @app.route('/user', methods=['POST'])
 def save_user():
     user_data = request.json
-    # Dapr expects a list of key-value pairs for state management
-    state = [{"key": user_data['username'], "value": user_data}]
-    
-    response = requests.post(DAPR_URL, json=state)
-    
-    if response.status_code == 204:
-        return jsonify({"status": "success", "message": "User saved to CosmosDB"}), 201
-    return jsonify({"status": "error", "message": "Failed to save to CosmosDB"}), 500
+    user_data['id'] = user_data['username'] # Required by Cosmos
+    container.upsert_item(user_data)
+    return jsonify({"status": "success", "message": "Saved to CosmosDB"}), 201
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)

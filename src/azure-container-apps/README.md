@@ -1,148 +1,95 @@
-# Azure Container Apps + Dapr + Cosmos DB
+# Azure Container Apps + Cosmos DB
 
-Minimal viable example to work with Azure Container Apps locally using Dapr and Cosmos DB Emulator. This example demonstrates how to create a microservice that registers users in Cosmos DB without an Azure subscription.
+Minimal viable example to work with Azure Container Apps and Azure Cosmos DB locally. This example demonstrates how to develop a microservice that stores data in a Cosmos DB emulator.
 
 ## Project Structure
 
 ```
 azure-container-apps/
-├── app/
-│   ├── Dockerfile
-│   ├── main.py
-│   └── requirements.txt
-├── components/
-│   └── statestore.yaml
 ├── .devcontainer/
 │   └── devcontainer.json
-├── docker-compose.yml
-├── .env
-├── main.py
-├── pyproject.toml
+├── .vscode/
+│   └── settings.json
+├── app/
+│   ├── main.py          # Flask API
+│   ├── Dockerfile       # App container definition
+│   └── requirements.txt # Python dependencies
+├── docker-compose.yml   # Orchestrates App and Cosmos Emulator
+├── .env                 # Local environment variables
+├── main.py              # Test client script
+├── pyproject.toml       # Project metadata
 └── README.md
 ```
 
 ## Prerequisites
 
 - Docker and Docker Compose installed
-- VS Code with Dev Containers extension (optional)
+- VS Code with Dev Containers extension (Recommended)
 
 ## Option 1: Using Dev Container (Recommended)
 
 ### Step 1: Open Project in Dev Container
 
-1. Open VS Code in the project folder.
-2. Press `F1` and select: **Dev Containers: Reopen in Container**.
-3. Wait for the services to build (this will automatically start the emulator and the app).
+1. Open VS Code in the project folder
+2. Press `F1` and select: **Dev Containers: Reopen in Container**
+3. Wait for the containers to start and dependencies to install
 
 ### Step 2: Run the Example
 
-Inside the container terminal, run:
+Inside the Dev Container terminal, run the test script:
 
 ```bash
 python main.py
 ```
 
-You should see output indicating the user was saved successfully.
+You should see:
+```
+Status Code: 201
+Response: {"status": "success", "message": "Saved to CosmosDB"}
+```
 
----
-
-## Option 2: Local Setup (Without Dev Container)
+## Option 2: Local Setup
 
 ### Step 1: Install Dependencies
 
 ```bash
-pip3 install uv && uv sync
+pip install uv && uv sync
 ```
 
-### Step 2: Start Infrastructure
+### Step 2: Start Services
 
 ```bash
 docker-compose up -d
 ```
 
-### Step 3: Run the Example
+### Step 3: Run the Test
 
 ```bash
 python main.py
 ```
-
----
-
-## Project Components
-
-### Flask API (`app/main.py`)
-
-Microservice that receives user data. The magic here is it **doesn't use the Cosmos DB SDK**. It communicates with the Dapr sidecar via HTTP, making it fully portable.
-
-### Dapr Configuration (`components/statestore.yaml`)
-
-Defines the state store component. This is where we tell Dapr to use the Cosmos DB emulator. In production, you would only change this YAML to point to the real instance.
-
-### Test Script (`main.py`)
-
-Simulates an external request by sending a JSON with LinkedIn profile data.
-
----
 
 ## Environment Variables
 
 The `.env` file contains:
 
 ```
-COSMOS_KEY=C2y6yDjf5/...
-COSMOS_URL=https://localhost:8081
+COSMOS_ENDPOINT=https://localhost:8081
+COSMOS_KEY=C2y6yDjf5/R+ob0N8...
 ```
-
-**Note**: The emulator key is a standard, public key provided by Microsoft for local testing.
-
----
-
-## Useful Commands
-
-### Docker Commands
-
-```bash
-# View app logs
-docker logs aca_app
-
-# View Dapr sidecar logs
-docker logs azure-container-apps-app-dapr-1
-
-# Stop everything
-docker-compose down
-```
-
----
 
 ## Troubleshooting
 
 ### SSL Certificate Error
+The Cosmos DB emulator uses a self-signed certificate. In this MVE, we use `PYTHONHTTPSVERIFY=0` in the `docker-compose.yml` to disable verification for local development.
 
-The Cosmos DB emulator uses self-signed certificates. Dapr is already configured to ignore validation in this dev environment.
-
-### Data Explorer not loading
-
-Ensure port `1234` is free. You can access the explorer at `http://localhost:1234` once the `cosmos_local` container is running.
-
----
+### Emulator Startup Time
+The Cosmos DB emulator can take 1-2 minutes to be fully ready. The `app` service is configured to wait for the emulator's healthcheck.
 
 ## Clean Up
 
-To completely remove the setup:
-
 ```bash
 docker-compose down -v
-docker rmi azure-container-apps-app
 ```
 
----
-
-## Next Steps
-
-- Implement Pub/Sub with Dapr and Redis.
-- Add Dapr-managed secrets.
-- Configure autoscaling with KEDA.
-
 ## License
-
-This is a minimal example for educational purposes. Feel free to use and modify as needed.
+This is a minimal example for educational purposes.
