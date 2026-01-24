@@ -79,22 +79,43 @@ Response: {
    uv sync
 ```
 
-### Paso 2: Iniciar Infraestructura y Construir App
+### Paso 2: Iniciar Infraestructura
 
 1. Inicia Cosmos DB:
    ```bash
    docker compose up -d cosmos-emulator
    ```
-2. Construye la app:
+2. Espera a que el emulador esté saludable (revisa con `docker ps`).
+
+### Paso 3: Instalar Certificado del Emulador
+
+Para permitir que tu host local confíe en el certificado autofirmado del emulador, sigue estos pasos:
+
+1. Descarga el certificado:
+   ```bash
+   curl --insecure https://localhost:8081/_explorer/emulator.pem > ~/emulatorcert.crt
+   ```
+2. Cópialo a la carpeta de certificados de confianza:
+   ```bash
+   sudo cp ~/emulatorcert.crt /usr/local/share/ca-certificates/
+   ```
+3. Actualiza el almacén de confianza del sistema:
+   ```bash
+   sudo update-ca-certificates
+   ```
+
+### Paso 4: Construir y Ejecutar la App
+
+1. Construye la app (asegúrate de estar en la raíz del proyecto):
    ```bash
    docker build -t aca-api -f app/Dockerfile .
    ```
-3. Ejecuta la app:
+2. Ejecuta la app:
    ```bash
    docker run -d --name aca_app --network host aca-api
    ```
 
-### Paso 3: Ejecutar el Ejemplo
+### Paso 5: Ejecutar el Ejemplo
 
 ```bash
 python main.py

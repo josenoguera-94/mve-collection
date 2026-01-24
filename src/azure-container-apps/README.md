@@ -79,22 +79,43 @@ Response: {
    uv sync
 ```
 
-### Step 2: Start Infrastructure and Build App
+### Step 2: Start Infrastructure
 
 1. Start Cosmos DB:
    ```bash
    docker compose up -d cosmos-emulator
    ```
-2. Build the app:
+2. Wait until the emulator is healthy (check with `docker ps`).
+
+### Step 3: Install Emulator Certificate
+
+To allow your local host to trust the emulator's self-signed certificate, follow these steps:
+
+1. Download the certificate:
+   ```bash
+   curl --insecure https://localhost:8081/_explorer/emulator.pem > ~/emulatorcert.crt
+   ```
+2. Copy it to the trusted certificates folder:
+   ```bash
+   sudo cp ~/emulatorcert.crt /usr/local/share/ca-certificates/
+   ```
+3. Update the system trust store:
+   ```bash
+   sudo update-ca-certificates
+   ```
+
+### Step 4: Build and Run the App
+
+1. Build the app (ensure you are in the project root):
    ```bash
    docker build -t aca-api -f app/Dockerfile .
    ```
-3. Run the app:
+2. Run the app:
    ```bash
    docker run -d --name aca_app --network host aca-api
    ```
 
-### Step 3: Run the Example
+### Step 5: Run the Example
 
 ```bash
 python main.py
