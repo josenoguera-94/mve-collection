@@ -1,7 +1,7 @@
 services:
   # Cosmos DB Emulator
   cosmos-emulator:
-    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
+    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-EN20251223
     container_name: cosmos_local
     hostname: cosmos_local
     ports:
@@ -10,11 +10,11 @@ services:
     environment:
       - AZURE_COSMOS_EMULATOR_PARTITION_COUNT=10
       - AZURE_COSMOS_EMULATOR_ENABLE_DATA_EXPLORER=True
-    volumes:
+    volu.vscodemes:
       - ./certificates:/tmp/cosmos-cert
     healthcheck:
       # The healthcheck downloads the cert and saves it to the shared host folder
-      test: ["CMD", "curl", "http://localhost:8081/_explorer/emulator.pem", "-o", "/tmp/cosmos-cert/emulator.crt"]
+      test: ["CMD", "curl", "-k", "https://localhost:8081/_explorer/emulator.pem", "-o", "/tmp/cosmos-cert/emulator.crt"]
       interval: 5s
       timeout: 5s
       retries: 20

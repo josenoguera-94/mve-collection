@@ -3,13 +3,15 @@
   "dockerComposeFile": "../docker-compose.yml",
   "service": "dev",
   "workspaceFolder": "/workspaces/azure-container-apps",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-azuretools.vscode-azurecontainerapps",
         "ms-azuretools.vscode-cosmosdb",
-        "ms-python.python",
-        "ms-azuretools.vscode-dapr"
+        "ms-python.python"
       ]
     }
   },
