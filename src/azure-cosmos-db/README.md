@@ -48,8 +48,17 @@ Connecting to database: TestDB...
 Connecting to container: TestContainer...
 Uploading test item with ID: ...
 SUCCESS: Item uploaded successfully to Cosmos DB!
-Check it out at http://localhost:1234/
 ```
+
+### Step 3: Validate the results
+
+You can verify that the data was uploaded in two ways:
+
+1.  **Web Explorer**: Open [http://localhost:1234/](http://localhost:1234/) in your browser.
+2.  **VS Code Extension**: Install the [Azure Cosmos DB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb) and connect using the following connection string (HTTP):
+    ```
+    AccountEndpoint=http://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;
+    ```
 
 ## Option 2: Local Setup (Without Dev Container)
 
@@ -76,6 +85,16 @@ If you see `PostgreSQL=FAIL` in the terminal logs, `main.py` will fail. Please r
 ```bash
 python main.py
 ```
+
+### Step 4: Validate the results
+
+You can verify that the data was uploaded in two ways:
+
+1.  **Web Explorer**: Open [http://localhost:1234/](http://localhost:1234/) in your browser.
+2.  **VS Code Extension**: Install the [Azure Cosmos DB extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb) and connect using the following connection string (HTTP):
+    ```
+    AccountEndpoint=http://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;
+    ```
 
 ## Project Components
 
