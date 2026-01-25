@@ -1,7 +1,7 @@
 [project]
-name = "azure-container-apps"
+name = "azure-cosmos-db"
 version = "0.1.0"
-description = "Azure Container Apps + Dapr + CosmosDB MVE"
+description = "Minimal viable example for Azure Cosmos DB with Docker"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
