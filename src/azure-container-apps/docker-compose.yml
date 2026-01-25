@@ -1,25 +1,14 @@
 services:
-  # Cosmos DB Emulator
-  cosmos-emulator:
+  cosmos:
     image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:vnext-EN20251223
-    container_name: cosmos_local
-    hostname: cosmos_local
+    # image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
+    container_name: cosmos
     ports:
       - "8081:8081"
       - "1234:1234"
     environment:
       - AZURE_COSMOS_EMULATOR_PARTITION_COUNT=10
       - AZURE_COSMOS_EMULATOR_ENABLE_DATA_EXPLORER=True
-      - AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=cosmos_local
-    volumes:
-      - ./certificates:/tmp/cosmos-cert
-    healthcheck:
-      # The healthcheck downloads the cert and saves it to the shared host folder
-      test: ["CMD", "curl", "http://localhost:8081/_explorer/emulator.pem", "-o", "/tmp/cosmos-cert/emulator.crt"]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-      start_period: 30s
 
   # Dev Container service
   dev:
@@ -27,5 +16,4 @@ services:
     network_mode: host
     volumes:
       - .:/workspaces/azure-container-apps:cached
-    # No network_mode to preserve internet access
     command: /bin/sh -c "while sleep 1000; do :; done"

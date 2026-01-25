@@ -1,5 +1,0 @@
-Flask
-requests
-gunicorn
-azure-cosmos
-python-dotenv

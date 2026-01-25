@@ -1,25 +1,42 @@
-import requests
-import json
+import os
+import uuid
+from azure.cosmos import CosmosClient, PartitionKey
+from dotenv import load_dotenv
 
-# Terminal colors for better visibility
-GREEN = "\033[92m"
-RESET = "\033[0m"
+load_dotenv()
+COSMOS_ENDPOINT = os.getenv("COSMOS_ENDPOINT")
+COSMOS_KEY = os.getenv("COSMOS_KEY")
+DATABASE_NAME = "TestDB"
+CONTAINER_NAME = "TestContainer"
 
-API_URL = "http://localhost:8080/user"
-
-def test_save_user():
-    print(f"Sending request to {API_URL}...")
+def run():
+    print(f"--- Cosmos DB Connection Test ---")
+    print(f"Endpoint: {COSMOS_ENDPOINT}")
     
-    user_payload = {
-        "username": "raulcastilla",
-        "email": "raul@example.com",
-        "role": "admin"
+    client = CosmosClient(COSMOS_ENDPOINT, credential=COSMOS_KEY)
+    
+    print(f"Connecting to database: {DATABASE_NAME}...")
+    database = client.create_database_if_not_exists(id=DATABASE_NAME)
+    
+    print(f"Connecting to container: {CONTAINER_NAME}...")
+    container = database.create_container_if_not_exists(
+        id=CONTAINER_NAME, 
+        partition_key=PartitionKey(path="/category"),
+        offer_throughput=400
+    )
+    
+    test_id = str(uuid.uuid4())
+    test_item = {
+        "id": test_id,
+        "message": "Hello from local Python script!",
+        "category": "testing",
     }
     
-    response = requests.post(API_URL, json=user_payload)
+    print(f"Uploading test item with ID: {test_id}...")
+    container.upsert_item(test_item)
     
-    print(f"Status Code: {GREEN}{response.status_code}{RESET}")
-    print(f"Response: {json.dumps(response.json(), indent=2)}")
+    print(f"SUCCESS: Item uploaded successfully to Cosmos DB!")
+        
 
 if __name__ == "__main__":
-    test_save_user()
+    run()
