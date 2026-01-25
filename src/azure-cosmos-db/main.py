@@ -36,6 +36,7 @@ def run():
     container.upsert_item(test_item)
     
     print(f"SUCCESS: Item uploaded successfully to Cosmos DB!")
+    print("Check it out at http://localhost:1234/")
         
 
 if __name__ == "__main__":

@@ -33,6 +33,8 @@ azure-cosmos-db/
 
 ### Step 2: Run the Example
 
+If you see `PostgreSQL=FAIL` in the terminal logs, `main.py` will fail. Please refer to the **Troubleshooting** section to fix it.
+
 ```bash
 python main.py
 ```
@@ -46,6 +48,7 @@ Connecting to database: TestDB...
 Connecting to container: TestContainer...
 Uploading test item with ID: ...
 SUCCESS: Item uploaded successfully to Cosmos DB!
+Check it out at http://localhost:1234/
 ```
 
 ## Option 2: Local Setup (Without Dev Container)
@@ -64,7 +67,11 @@ uv sync
 docker compose up -d cosmos
 ```
 
+**Wait for 15-30 seconds** to ensure the emulator is fully initialized before running the script.
+
 ### Step 3: Run the Example
+
+If you see `PostgreSQL=FAIL` in the terminal logs, `main.py` will fail. Please refer to the **Troubleshooting** section to fix it.
 
 ```bash
 python main.py
@@ -113,6 +120,19 @@ Make sure the emulator is running:
 ```bash
 docker ps
 ```
+
+### PostgreSQL=FAIL warning
+
+If you see `PostgreSQL=FAIL, Gateway=OK, Explorer=OK` or `pgcosmos readiness check still waiting` in the logs, it means the PostgreSQL compatibility layer of the emulator failed to start. 
+
+**This warning will prevent `main.py` from running successfully**, as the SDK might fail to connect while the internal services are still in a retry loop.
+
+**Solution:**
+To fix this and allow `main.py` to run, you must wipe the data volumes to reset the emulator state:
+```bash
+docker compose down -v
+```
+*(Note: This will delete any existing databases in the emulator).*
 
 ### Evaluation period has expired / PAL initialization failed
 
