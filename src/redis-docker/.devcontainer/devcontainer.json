@@ -1,8 +1,10 @@
 {
 	"name": "Python 3 - Redis",
-	"image": "mcr.microsoft.com/devcontainers/python:2-3.12-bullseye",
+	"image": "mcr.microsoft.com/devcontainers/python:2-3.14-trixie",
 	"features": {
-		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+			"moby": false
+		}
 	},
 	"postCreateCommand": "pip install uv && uv sync",
 	"runArgs": [

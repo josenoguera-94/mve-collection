@@ -62,6 +62,7 @@ docker ps
 ### Paso 3: Iniciar Azure Functions
 
 ```bash
+source .venv/bin/activate
 func start --prefix ./upload-function/
 ```
 
@@ -124,6 +125,7 @@ docker compose up -d
 ### Paso 4: Iniciar Azure Functions
 
 ```bash
+source .venv/bin/activate
 func start --prefix ./upload-function/
 ```
 

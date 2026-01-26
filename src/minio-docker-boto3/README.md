@@ -46,9 +46,13 @@ Verify it's running:
 docker ps
 ```
 
-### Step 3: Create Bucket and Upload Data
+### Step 3: Create Bucket
 
-Run the Python script:
+Before running the script, create the bucket in the MinIO Console:
+1. Open [http://localhost:9001](http://localhost:9001) (User/Pass: `minioadmin`).
+2. Go to **Buckets** > **Create Bucket** and name it `test-bucket`.
+
+### Step 4: Run the Example
 
 ```bash
 python main.py
@@ -92,7 +96,12 @@ pip3 install uv && uv sync
 docker compose up -d
 ```
 
-### Step 3: Create Bucket and Upload Data
+### Step 3: Create Bucket
+
+1. Open [http://localhost:9001](http://localhost:9001) (User/Pass: `minioadmin`).
+2. Go to **Buckets** > **Create Bucket** and name it `test-bucket`.
+
+### Step 4: Run the Example
 
 ```bash
 python main.py

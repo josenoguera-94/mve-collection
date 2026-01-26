@@ -22,7 +22,7 @@ def deploy_lambda(client, name, handler, zip_data, role, env_vars=None):
     """Create or update a Lambda function with environment variables."""
     params = {
         "FunctionName": name,
-        "Runtime": "python3.12",
+        "Runtime": "python3.14",
         "Role": role,
         "Handler": handler,
         "Code": {"ZipFile": zip_data},

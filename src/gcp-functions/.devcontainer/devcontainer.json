@@ -1,6 +1,6 @@
 {
   "name": "GCP Functions Dev",
-  "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
+  "image": "mcr.microsoft.com/devcontainers/python:2-3.14-trixie",
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "18"
@@ -17,7 +17,7 @@
       ]
     }
   },
-  "postCreateCommand": "npm install -g firebase-tools && pip3 install uv && uv sync",
+  "postCreateCommand": "bash .devcontainer/postCreateCommand.sh",
   "forwardPorts": [
     4000,
     5001,
