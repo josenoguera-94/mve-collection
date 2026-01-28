@@ -82,6 +82,7 @@ src/[nombre-mve]/
 | Ejemplo                                                         | Descripción                                                     | Tecnologías                              |
 | --------------------------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------- |
 | [airflow-docker](./src/airflow-docker/)                         | Configuración de Apache Airflow con Docker Compose y Python     | Apache Airflow, Docker, Python           |
+| [aws-dynamo-db](./src/aws-dynamo-db/) | Desarrollo local de AWS DynamoDB con LocalStack (Terraform/CloudFormation) | DynamoDB, S3, Lambda, Terraform, CloudFormation, LocalStack, Python |
 | [aws-step-functions](./src/aws-step-functions/)           | Desarrollo local de AWS Step Functions con LocalStack      | Step Functions, Lambda, DynamoDB, LocalStack, Python |
 | [azure-cosmos-db](./src/azure-cosmos-db/) | Desarrollo local de Azure Cosmos DB con Docker | Cosmos DB, Docker, Python |
 | [azure-functions](./src/azure-functions/)                       | Desarrollo local de Azure Functions con Azurite                 | Azure Functions, Azurite, Blob Storage, Docker, Python |
@@ -91,14 +92,14 @@ src/[nombre-mve]/
 | [gcp-cloud-run](./src/gcp-cloud-run/)               | Desarrollo local de Google Cloud Run con Firebase Emulator Suite | Cloud Run, Firebase, Firestore, Docker, Python |
 | [gcp-functions](./src/gcp-functions/)                           | Desarrollo local de Google Cloud Functions con Firebase Emulator Suite | Google Cloud Functions, Firebase, Cloud Storage, Python |
 | [localstack-docker](./src/localstack-docker/)                   | Configuración de LocalStack con servicios Lambda y S3           | LocalStack, Lambda, S3, Docker, Python   |
-| [localstack-docker-terraform](./src/localstack-docker-terraform/) | LocalStack con Terraform para infraestructura S3, Lambda y DynamoDB | LocalStack, Terraform, S3, Lambda, DynamoDB, Docker, Python |
+| [localstack-docker](./src/localstack-docker/)                   | Configuración de LocalStack con servicios Lambda y S3           | LocalStack, Lambda, S3, Docker, Python   |
 | [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Escenario de nube híbrida con LocalStack y Postgres externo | LocalStack, Terraform, Secrets Manager, PostgreSQL, Docker, Python |
 | [metabase-docker](./src/metabase-docker/)                       | Configuración de Metabase con Docker Compose y PostgreSQL       | Metabase, PostgreSQL, Docker, Python     |
 | [minio-docker-boto3](./src/minio-docker-boto3/)                 | Configuración de MinIO con Docker Compose y Boto3               | MinIO, Docker, Boto3, Python             |
 | [minio-docker-delta](./src/minio-docker-delta/)                 | Configuración de MinIO con Docker Compose y Delta Lake          | MinIO, Delta Lake, Docker, Python        |
 | [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/)     | Configuración de MongoDB con Docker Compose y ODM mongoengine   | MongoDB, Docker, mongoengine, Python     |
 | [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | Configuración de PostgreSQL con Docker Compose y ORM SQLAlchemy | PostgreSQL, Docker, SQLAlchemy, Python   |
-| [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | Configuración de RabbitMQ con Docker Compose y Python           | Redis, Docker, Python                    |
+| [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | Configuración de RabbitMQ con Docker Compose y Python           | RabbitMQ, Docker, Python                 |
 | [redis-docker](./src/redis-docker/)                             | Configuración de Redis con Docker Compose y Python              | Redis, Docker, Python                    |
 | [redis-docker-mutex](./src/redis-docker-mutex/)                 | Mutex distribuido usando Redis con Docker Compose               | Redis, Docker, Python                    |
 | _Más ejemplos próximamente..._                                  |                                                                 |                                          |
@@ -107,7 +108,7 @@ src/[nombre-mve]/
 
 ### Tecnologías Core
 
-- **Python 3.12+**: Lenguaje de programación principal
+- **Python 3.14+**: Lenguaje de programación principal
 - **uv**: Instalador y resolvedor rápido de paquetes de Python
 - **Docker**: Contenedorización y orquestación de servicios
 - **Dev Containers**: Entornos de desarrollo consistentes

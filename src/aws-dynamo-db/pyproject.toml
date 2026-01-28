@@ -1,7 +1,7 @@
 [project]
-name = "localstack-docker-terraform"
+name = "aws-dynamo-db"
 version = "0.1.0"
-description = "LocalStack example with Terraform, S3, Lambda, and DynamoDB"
+description = "AWS DynamoDB example with LocalStack, S3, and Lambda"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [

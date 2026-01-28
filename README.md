@@ -82,6 +82,7 @@ src/[mve-name]/
 | Example                                                         | Description                                               | Technologies                            |
 | --------------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------- |
 | [airflow-docker](./src/airflow-docker/)                         | Apache Airflow setup with Docker Compose and Python       | Apache Airflow, Docker, Python          |
+| [aws-dynamo-db](./src/aws-dynamo-db/) | AWS DynamoDB local development with LocalStack (Terraform/CloudFormation) | DynamoDB, S3, Lambda, Terraform, CloudFormation, LocalStack, Python |
 | [aws-step-functions](./src/aws-step-functions/)           | AWS Step Functions local development with LocalStack      | Step Functions, Lambda, DynamoDB, LocalStack, Python |
 | [azure-cosmos-db](./src/azure-cosmos-db/) | Azure Cosmos DB local development with Docker | Cosmos DB, Docker, Python |
 | [azure-functions](./src/azure-functions/)                       | Azure Functions local development with Azurite            | Azure Functions, Azurite, Blob Storage, Docker, Python |
@@ -91,7 +92,7 @@ src/[mve-name]/
 | [gcp-cloud-run](./src/gcp-cloud-run/)               | Google Cloud Run local development with Firebase Emulator Suite | Cloud Run, Firebase, Firestore, Docker, Python |
 | [gcp-functions](./src/gcp-functions/)                           | Google Cloud Functions local development with Firebase Emulator Suite | Google Cloud Functions, Firebase, Cloud Storage, Python |
 | [localstack-docker](./src/localstack-docker/)                   | LocalStack setup with Lambda and S3 services              | LocalStack, Lambda, S3, Docker, Python  |
-| [localstack-docker-terraform](./src/localstack-docker-terraform/) | LocalStack with Terraform for S3, Lambda, and DynamoDB infrastructure | LocalStack, Terraform, S3, Lambda, DynamoDB, Docker, Python |
+| [localstack-docker](./src/localstack-docker/)                   | LocalStack setup with Lambda and S3 services              | LocalStack, Lambda, S3, Docker, Python  |
 | [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Hybrid cloud scenario with LocalStack and external Postgres | LocalStack, Terraform, Secrets Manager, PostgreSQL, Docker, Python |
 | [metabase-docker](./src/metabase-docker/)                       | Metabase setup with Docker Compose and PostgreSQL         | Metabase, PostgreSQL, Docker, Python    |
 | [minio-docker-boto3](./src/minio-docker-boto3/)                 | MinIO setup with Docker Compose and Boto3                 | MinIO, Docker, Boto3, Python            |
@@ -107,7 +108,7 @@ src/[mve-name]/
 
 ### Core Technologies
 
-- **Python 3.12+**: Primary programming language
+- **Python 3.14+**: Primary programming language
 - **uv**: Fast Python package installer and resolver
 - **Docker**: Containerization and service orchestration
 - **Dev Containers**: Consistent development environments
