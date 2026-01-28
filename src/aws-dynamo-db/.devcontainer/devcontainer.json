@@ -1,6 +1,10 @@
 {
-  "name": "LocalStack Terraform Dev",
-  "image": "mcr.microsoft.com/devcontainers/python:2-3.14-trixie",
+  "name": "AWS DynamoDB",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "dev",
+  "workspaceFolder": "/workspaces/aws-dynamo-db",
   "features": {
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
       "moby": false
@@ -11,12 +15,14 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "hashicorp.terraform"
+        "hashicorp.terraform",
+        "mermaidchart.vscode-mermaid-chart",
+        "amazonwebservices.aws-toolkit-vscode"
       ]
     }
   },
-  "postCreateCommand": "pip3 install uv && uv sync",
-  "runArgs": [
-    "--network=host"
-  ]
+  "containerEnv": {
+    "AWS_PROFILE": "localstack"
+  },
+  "postCreateCommand": "bash .devcontainer/postCreateCommand.sh"
 }

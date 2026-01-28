@@ -22,27 +22,24 @@ flowchart LR
 
 ## Quickstart (Dev Container)
 
+The Dev Container automatically provisions the LocalStack infrastructure and configures the Python environment and AWS CLI for immediate use.
+
 1. **Prerequisites:**
     1. [Docker](https://www.docker.com/get-started) installed and running.
     2. [Dev Containers extension](vscode:extension/ms-vscode-remote.remote-containers) installed.
 
 2. **Open project:** Open the **Command Palette** (`F1` or `Ctrl/Cmd+Shift+P`), also accessible via **View > Command Palette**, and select **Dev Containers: Reopen in Container**.
-3. **Deploy Infrastructure:**
-   ```bash
-   docker compose up -d && python package_lambda.py
-   terraform init && terraform apply -auto-approve 
-   ```
-4. **Run MVE:** 
+3. **Run MVE:** 
    ```bash
    python main.py
    ```
-5. **List buckets**:
+4. **List buckets**:
     ```bash
-    aws --endpoint-url=http://localhost:4566 s3 ls
+    aws s3 ls
     ```
-6. **Scan DynamoDB table**:
+5. **Scan DynamoDB table**:
    ```bash
-   aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name file-logs
+   aws dynamodb scan --table-name file-logs
    ```
 
 ## Option 2: Local Setup (Without Dev Container)

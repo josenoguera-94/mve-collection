@@ -1,15 +1,22 @@
 services:
   localstack:
     image: localstack/localstack
-    container_name: localstack_terraform_local
+    container_name: localstack
     ports:
       - "4566:4566"
     environment:
       - SERVICES=s3,lambda,dynamodb,iam
       - DEBUG=0
     volumes:
-      - localstack_terraform_data:/var/lib/localstack
+      - localstack_data:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock
 
+  dev:
+    image: mcr.microsoft.com/devcontainers/python:2-3.14-trixie
+    volumes:
+      - .:/workspaces/aws-dynamo-db:cached
+    network_mode: host
+    command: sleep infinity
+
 volumes:
-  localstack_terraform_data:
+  localstack_data:
