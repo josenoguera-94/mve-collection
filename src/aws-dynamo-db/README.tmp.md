@@ -20,6 +20,21 @@ flowchart LR
 ```
 [![View Diagram](https://img.shields.io/badge/View_Diagram-Install-blue?logo=visualstudiocode)](vscode:extension/mermaidchart.vscode-mermaid-chart)
 
+## Index
+
+- [Quickstart (Dev Container)](#quickstart-dev-container)
+- [Step by Step (without Dev Container)](#step-by-step-without-dev-container)
+    - [1. Start Infrastructure](#1-start-infrastructure)
+    - [2. Configure AWS CLI](#2-configure-aws-cli)
+    - [3. Install AWS Toolkit](#3-install-aws-toolkit)
+    - [4. Install Python](#4-install-python)
+    - [5. Deploy Resources](#5-deploy-resources)
+    - [6. Run the Example](#6-run-the-example)
+    - [7. Validation](#7-validation)
+    - [8. Clean Up](#8-clean-up)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
+
 ## Quickstart (Dev Container)
 
 The Dev Container automatically provisions the LocalStack infrastructure and configures the Python environment and AWS CLI for immediate use.
@@ -41,116 +56,149 @@ The Dev Container automatically provisions the LocalStack infrastructure and con
    ```bash
    aws dynamodb scan --table-name file-logs
    ```
-
-## Option 2: Local Setup (Without Dev Container)
-
-### Step 1: Install Dependencies
-
-1. Install **Terraform** (if using it) or **AWS CLI**.
-2. Install Python dependencies:
+6. **Clean up:**
    ```bash
-   pip3 install uv && uv sync
+   docker compose down -v
    ```
 
-### Step 2: Start LocalStack
+## Step by Step (without Dev Container)
+
+This section details the steps performed automatically within the Dev Container, exploring additional variations and deployment options.
+
+### 1. Start Infrastructure
+
+To start only the **LocalStack** service (avoiding the development container), run:
 
 ```bash
-docker compose up -d
+docker compose up -d localstack
 ```
 
-### Step 3: Package and Deploy
+### 2. Configure AWS CLI
 
-Follow the same instructions as in the Dev Container section (**Step 3** and **Step 4**).
-
-### Step 4: Run the Example
+Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and configure a dedicated profile to point to your LocalStack instance:
 
 ```bash
-python main.py
+aws configure set aws_access_key_id test --profile localstack
+aws configure set aws_secret_access_key test --profile localstack
+aws configure set region us-east-1 --profile localstack
+aws configure set output json --profile localstack
+aws configure set endpoint_url http://localhost:4566 --profile localstack
+aws configure set cli_pager "" --profile localstack
 ```
 
-## Project Components
+### 3. Install AWS Toolkit
 
-### Lambda Function (`lambda_function.py`)
+Install the [AWS Toolkit](vscode:extension/amazonwebservices.aws-toolkit-vscode) extension. To use it with LocalStack:
 
-A Python function that:
-- Triggered by S3 `ObjectCreated` events.
-- Extracts file metadata (name, size, timestamp).
-- Writes a record to the DynamoDB table.
+1. Open the **AWS Toolkit** explorer in VS Code.
+2. Click on the **Profiles** or **Connections** settings.
+3. Select the `localstack` profile configured in step 2.
 
-### Infrastructure as Code
+### 4. Install Python
 
-- **`main.tf`**: Provisions a bucket, a table, and the Lambda function using Terraform.
-- **`cloud_formation.yaml`**: Provisions the same resources using an AWS CloudFormation template.
-
-### Demo Script (`main.py`)
-
-- Uploads diverse sample files (PDF, Image, JSON) to the S3 bucket.
-- Waits for the asynchronous Lambda execution.
-- Scans the DynamoDB table to display the processing logs.
-
-## Environment Variables
-
-The `.env` file contains:
-
-```
-AWS_ACCESS_KEY_ID=test
-AWS_SECRET_ACCESS_KEY=test
-AWS_DEFAULT_REGION=us-east-1
-ENDPOINT_URL=http://localhost:4566
-BUCKET_NAME=file-uploads-bucket
-DYNAMODB_TABLE_NAME=file-logs
-```
-
-**Note**: LocalStack uses 'test' credentials by default. The `BUCKET_NAME` variable should match the one defined in your chosen IaaC (Terraform uses `file-uploads-bucket`, CloudFormation uses `file-uploads-bucket-cf`).
-
-## Useful Commands
-
-### Docker Commands
+Install [Python](https://www.python.org/downloads/) and verify the installation:
 
 ```bash
-# Start services
-docker compose up -d
+python --version
+```
 
-# View logs
-docker compose logs -f
+Then, install [uv](https://github.com/astral-sh/uv) and sync dependencies to create the virtual environment:
 
-# Stop services
+```bash
+pip install uv
+uv sync
+```
+
+### 5. Deploy Resources
+
+Before deploying, you must package the Lambda function:
+
+```bash
+python deploy/utils/package_lambda.py
+```
+
+Choose your preferred Infrastructure as Code (IaC) tool:
+
+> 💡 **Note:** If you switch between **Terraform** and **CloudFormation**, ensure you perform a **Clean Up** first. Both methods use the same resource names, and deploying one without removing the other will result in "Resource Already Exists" errors.
+
+* **Option A**: Terraform
+
+   ```bash
+   terraform -chdir=deploy init
+   terraform -chdir=deploy apply -auto-approve
+   ```
+
+* **Option B**: CloudFormation
+
+   ```bash
+   # 1. Create a temporary bucket for deployment
+   aws s3 mb s3://lambda-deploy-bucket --profile localstack
+
+   # 2. Upload the Lambda package
+   aws s3 cp tmp/lambda.zip s3://lambda-deploy-bucket/lambda.zip --profile localstack
+
+   # 3. Deploy the stack
+   aws cloudformation deploy --profile localstack \
+     --stack-name aws-dynamo-db-stack \
+     --template-file deploy/cloud_formation.yaml \
+     --capabilities CAPABILITY_NAMED_IAM
+   ```
+
+### 6. Run the Example
+
+* **Option A**: Python Script. Run the demonstration script to upload sample files and view the logs:
+
+   ```bash
+   python main.py
+   ```
+
+* **Option B**: Manual Upload (CURL). You can also trigger the Lambda manually by uploading any file via `curl`:
+
+   ```bash
+   curl -X PUT -T src/lambda.py http://localhost:4566/file-uploads-bucket/manual-upload.py
+   ```
+
+* **Option C**: AWS Toolkit. You can browse resources and even upload files directly from the IDE:
+    1. Select the `localstack` profile in the AWS Toolkit.
+    2. To trigger the example, right-click on the `file-uploads-bucket` and select **Upload Files...**.
+
+### 7. Validation
+
+Choose your preferred way to verify the results:
+
+* **Option A**: AWS CLI. Verify that the files were uploaded and the logs were created:
+    - **Check S3 Bucket**:
+      ```bash
+      aws s3 ls s3://file-uploads-bucket --profile localstack
+      ```
+    - **Scan DynamoDB Table**:
+      ```bash
+      aws dynamodb scan --table-name file-logs --profile localstack
+      ```
+    - **View Lambda Logs**:
+      ```bash
+      aws logs tail /aws/lambda/s3-file-processor --profile localstack
+      ```
+
+* **Option B**: AWS Toolkit. Browse the resources directly from the VS Code sidebar:
+    1. **S3**: Expand the S3 section to see the uploaded files.
+    2. **DynamoDB**: Expand the DynamoDB section and click on the `file-logs` table to see the records.
+    3. **CloudWatch**: Expand the Logs section to see the Lambda execution output.
+
+### 8. Clean Up
+
+To completely remove the local infrastructure:
+
+```bash
 docker compose down -v
-```
-
-### AWS CLI (LocalStack)
-
-```bash
-# List buckets
-aws --endpoint-url=http://localhost:4566 s3 ls
-
-# Scan DynamoDB table
-aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name file-logs
 ```
 
 ## Troubleshooting
 
-### Connection Refused
-
-Ensure LocalStack is running and wait until the log shows `Ready.`.
-
-### Lambda Not Triggering
-
-Check the Lambda logs using:
-```bash
-aws --endpoint-url=http://localhost:4566 logs tail /aws/lambda/s3-file-processor
-```
-
-## Clean Up
-
-- **Terraform**: `terraform destroy -auto-approve`
-- **CloudFormation**: `aws --endpoint-url=http://localhost:4566 cloudformation delete-stack --stack-name aws-dynamo-db-stack`
-
-## Next Steps
-
-- Add SNS notifications for processing failures.
-- Implement file content validation inside the Lambda.
-- Explore LocalStack AWS Web Console at [app.localstack.cloud](https://app.localstack.cloud).
+| Issue | Solution |
+| :--- | :--- |
+| **Connection Refused** | Ensure LocalStack is running and wait for the `Ready.` message in logs. |
+| **Lambda Not Triggering** | Verify logs: `aws logs tail /aws/lambda/s3-file-processor --profile localstack` |
 
 ## License
 

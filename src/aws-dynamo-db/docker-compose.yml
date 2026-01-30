@@ -5,7 +5,7 @@ services:
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=s3,lambda,dynamodb,iam
+      - SERVICES=s3,lambda,dynamodb,iam,cloudformation,logs
       - DEBUG=0
     volumes:
       - localstack_data:/var/lib/localstack

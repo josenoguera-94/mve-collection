@@ -11,8 +11,9 @@ __pycache__/
 *.tfstate.*
 .terraform.lock.hcl
 
-# Lambda package
-lambda_function.zip
+# Local temporary files
+tmp/
+*.zip
 
 # IDE
 .vscode/

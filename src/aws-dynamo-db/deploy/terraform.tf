@@ -37,7 +37,7 @@ resource "aws_dynamodb_table" "file_logs" {
 }
 
 resource "aws_iam_role" "lambda_role" {
-  name = "lambda_s3_processor_role"
+  name = "lambda-s3-processor-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -49,7 +49,7 @@ resource "aws_iam_role" "lambda_role" {
 }
 
 resource "aws_iam_role_policy" "lambda_policy" {
-  name = "lambda_s3_dynamodb_policy"
+  name = "lambda-s3-dynamodb-policy"
   role = aws_iam_role.lambda_role.id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -74,10 +74,10 @@ resource "aws_iam_role_policy" "lambda_policy" {
 }
 
 resource "aws_lambda_function" "s3_processor" {
-  filename      = "lambda_function.zip"
+  filename      = "../tmp/lambda.zip"
   function_name = "s3-file-processor"
   role          = aws_iam_role.lambda_role.arn
-  handler       = "lambda_function.lambda_handler"
+  handler       = "lambda.lambda_handler"
   runtime       = "python3.12"
   environment {
     variables = { DYNAMODB_TABLE = aws_dynamodb_table.file_logs.name }
