@@ -1,406 +1,257 @@
-# LocalStack + Terraform Example
+# AWS DynamoDB
 
-Minimal viable example to work with LocalStack using Terraform for infrastructure provisioning. This example demonstrates how to create a complete AWS-like environment locally with S3, Lambda, and DynamoDB, all managed through Terraform.
+This project demonstrates a file processing pipeline where S3 uploads trigger a Lambda to log metadata into a DynamoDB table.
 
-## What This Example Does
+```mermaid
+architecture-beta
+   group localstack(cloud)[AWS LocalStack]
+    service s3(disk)[S3 Bucket] in localstack
+    service lambda(server)[Lambda] in localstack
+    service db(database)[Dynamo DB] in localstack
 
-This example creates a file processing pipeline:
-
-1. **S3 Bucket**: Receives uploaded files (PDF, images, ZIP, etc.)
-2. **Lambda Function**: Automatically triggered when a file is uploaded to S3
-3. **DynamoDB Table**: Stores logs with file metadata (name, size, timestamp)
-
-All infrastructure is provisioned using **Terraform** and runs locally on **LocalStack**.
-
-## Project Structure
-
+    s3:R --> L:lambda
+    lambda:R --> L:db
 ```
-localstack-docker-terraform/
-├── .devcontainer/
-│   └── devcontainer.json
-├── .vscode/
-│   └── settings.json
-├── docker-compose.yml
-├── .env
-├── main.tf                    # Terraform configuration
-├── lambda_function.py         # Lambda function code
-├── package_lambda.py          # Script to package Lambda
-├── main.py                    # Demo script
-├── pyproject.toml
-└── README.md
-```
+[![View Diagram](https://img.shields.io/badge/View_Diagram-Install-blue?logo=visualstudiocode)](vscode:extension/mermaidchart.vscode-mermaid-chart)
 
-## Prerequisites
+## Index
 
-- Docker and Docker Compose installed
-- VS Code with Dev Containers extension (optional, for dev container setup)
-- Terraform installed (automatically included in Dev Container)
+- [Quickstart (Dev Container)](#quickstart-dev-container)
+- [Step by Step (without Dev Container)](#step-by-step-without-dev-container)
+    - [1. Start infrastructure](#1-start-infrastructure)
+    - [2. Configure AWS CLI](#2-configure-aws-cli)
+    - [3. Install AWS Toolkit](#3-install-aws-toolkit)
+    - [4. Install Python](#4-install-python)
+    - [5. Deploy resources](#5-deploy-resources)
+    - [6. Run the example](#6-run-the-example)
+    - [7. Validation](#7-validation)
+    - [8. Clean up](#8-clean-up)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
 
-## Option 1: Using Dev Container (Recommended)
+## Quickstart (Dev Container)
 
-### Step 1: Open Project in Dev Container
+The Dev Container automatically provisions the LocalStack infrastructure and configures the Python environment and AWS CLI for immediate use.
 
-1. Open VS Code in the project folder
-2. Press `F1` or `Ctrl+Shift+P` (Windows/Linux) / `Cmd+Shift+P` (Mac)
-3. Type and select: **Dev Containers: Reopen in Container**
-4. Wait for the container to build and dependencies to install
+1. **Prerequisites:**
+    1. [Docker](https://www.docker.com/get-started) installed and running.
+    2. [Dev Containers extension](vscode:extension/ms-vscode-remote.remote-containers) installed.
 
-The Dev Container includes:
-- Python 3.12
-- Terraform
-- AWS CLI
-- Docker support
-- All Python dependencies
+2. **Open project:** Open the **Command Palette** (`F1` or `Ctrl/Cmd+Shift+P`), also accessible via **View > Command Palette**, and select **Dev Containers: Reopen in Container**.
+3. **Run MVE:** 
+   ```bash
+   python main.py
+   ```
+4. **List buckets**:
+    ```bash
+    aws s3 ls
+    ```
+5. **Scan DynamoDB table**:
+   ```bash
+   aws dynamodb scan --table-name file-logs
+   ```
+6. **Clean up:**
+   ```bash
+   docker compose down -v
+   ```
 
-### Step 2: Start LocalStack
+## Step by Step (without Dev Container)
+
+This section details the steps performed automatically within the Dev Container, exploring additional variations and deployment options.
+
+### 1. Start infrastructure
+
+To start only the **LocalStack** service (avoiding the development container), run:
 
 ```bash
-docker compose up -d
+docker compose up -d localstack
 ```
 
-Wait a few seconds for LocalStack to be ready:
+### 2. Configure AWS CLI
+
+Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and configure a dedicated profile to point to your LocalStack instance:
 
 ```bash
-docker compose logs -f
+aws configure set aws_access_key_id test --profile localstack
+aws configure set aws_secret_access_key test --profile localstack
+aws configure set region us-east-1 --profile localstack
+aws configure set output json --profile localstack
+aws configure set endpoint_url http://localhost:4566 --profile localstack
+aws configure set cli_pager "" --profile localstack
 ```
 
-You should see: `Ready.`
+### 3. Install AWS Toolkit
 
-### Step 3: Package the Lambda Function
+Install the [AWS Toolkit](vscode:extension/amazonwebservices.aws-toolkit-vscode) extension. To use it with LocalStack:
+
+1. Open the **AWS Toolkit** explorer in VS Code.
+2. Click on the **Profiles** or **Connections** settings.
+3. Select the `localstack` profile configured in step 2.
+
+### 4. Install Python
+
+Install [Python](https://www.python.org/downloads/) and verify the installation:
 
 ```bash
-python package_lambda.py
+python --version
 ```
 
-This creates `lambda_function.zip` required by Terraform.
-
-### Step 4: Deploy Infrastructure with Terraform
-
-Initialize Terraform:
+Then, install [uv](https://github.com/astral-sh/uv) and sync dependencies to create the virtual environment:
 
 ```bash
-terraform init
+pip install uv
+uv sync
 ```
 
-Apply the Terraform configuration:
+### 5. Deploy resources
+
+Before deploying, you must package the Lambda function:
 
 ```bash
-terraform apply
+python deploy/utils/package_lambda.py
 ```
 
-Type `yes` when prompted. Terraform will create:
-- S3 bucket (`file-uploads-bucket`)
-- DynamoDB table (`file-logs`)
-- Lambda function (`s3-file-processor`)
-- IAM roles and policies
-- S3 event notification
+Choose your preferred deployment option:
 
-You should see output like:
+💡 **Note:** If you switch between different deployment methods (**Terraform**, **CloudFormation**, **Boto3**, or **CLI**), ensure you perform a **Clean Up** first to avoid resource name conflicts.
 
-```
-Apply complete! Resources: 7 added, 0 changed, 0 destroyed.
+* **Option A**: Terraform
 
-Outputs:
+   ```bash
+   terraform -chdir=deploy init
+   terraform -chdir=deploy apply -auto-approve
+   ```
 
-bucket_name = "file-uploads-bucket"
-dynamodb_table_name = "file-logs"
-lambda_function_name = "s3-file-processor"
-```
+* **Option B**: CloudFormation
 
-### Step 5: Run the Demo
+   ```bash
+   # 1. Create a temporary bucket for deployment
+   aws s3 mb s3://lambda-deploy-bucket --profile localstack
+
+   # 2. Upload the Lambda package
+   aws s3 cp tmp/lambda.zip s3://lambda-deploy-bucket/lambda.zip --profile localstack
+
+   # 3. Deploy the stack
+   aws cloudformation deploy --profile localstack \
+     --stack-name aws-dynamo-db-stack \
+     --template-file deploy/cloud_formation_deploy.yaml \
+     --capabilities CAPABILITY_NAMED_IAM
+   ```
+
+   > 🎨 **Tip:** You can visualize this template using the **AWS Infrastructure Composer** from **AWS Toolkit** by opening `deploy/cloud_formation_deploy.yaml` and clicking the "Infrastructure composer" button in the top-right corner of the editor.
+
+* **Option C**: Boto3 (Python)
+
+   ```bash
+   python deploy/boto3_deploy.py
+   ```
+
+* <details><summary><b>Option D</b>: AWS CLI (Manual) - Click to expand</summary>
+
+   ```bash
+   # 1. Create DynamoDB Table
+   aws dynamodb create-table --profile localstack \
+     --table-name file-logs \
+     --attribute-definitions AttributeName=file_id,AttributeType=S \
+     --key-schema AttributeName=file_id,KeyType=HASH \
+     --billing-mode PAY_PER_REQUEST
+
+   # 2. Create IAM Role
+   aws iam create-role --profile localstack \
+     --role-name lambda-s3-processor-role \
+     --assume-role-policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole"}]}'
+
+   # 3. Create Lambda Function
+   aws lambda create-function --profile localstack \
+     --function-name s3-file-processor \
+     --runtime python3.12 \
+     --role arn:aws:iam::000000000000:role/lambda-s3-processor-role \
+     --handler lambda.lambda_handler \
+     --zip-file fileb://tmp/lambda.zip \
+     --environment Variables={DYNAMODB_TABLE=file-logs}
+
+   # 4. Create S3 Bucket
+   aws s3 mb s3://file-uploads-bucket --profile localstack
+
+   # 5. Add S3 Permission and Configure Notification
+   aws lambda add-permission --profile localstack \
+     --function-name s3-file-processor \
+     --statement-id s3-trigger \
+     --action lambda:InvokeFunction \
+     --principal s3.amazonaws.com \
+     --source-arn arn:aws:s3:::file-uploads-bucket
+
+   aws s3api put-bucket-notification-configuration --profile localstack \
+     --bucket file-uploads-bucket \
+     --notification-configuration '{"LambdaFunctionConfigurations":[{"LambdaFunctionArn":"arn:aws:lambda:us-east-1:000000000000:function:s3-file-processor","Events":["s3:ObjectCreated:*"]}]}'
+   ```
+</details>
+
+### 6. Run the example
+
+* **Option A**: Python Script. Run the demonstration script to upload sample files and view the logs:
+
+   ```bash
+   python main.py
+   ```
+
+* **Option B**: Manual Upload (CURL). You can also trigger the Lambda manually by uploading any file via `curl`:
+
+   ```bash
+   curl -X PUT -T src/lambda.py http://localhost:4566/file-uploads-bucket/manual-upload.py
+   ```
+
+* **Option C**: AWS Toolkit. You can browse resources and even upload files directly from the IDE:
+    1. Select the `localstack` profile in the AWS Toolkit.
+    2. To trigger the example, right-click on the `file-uploads-bucket` and select **Upload Files...**.
+
+### 7. Validation
+
+Choose your preferred way to verify the results:
+
+* **Option A**: AWS CLI. Verify that the files were uploaded and the logs were created:
+    - **Check S3 Bucket**:
+      ```bash
+      aws s3 ls s3://file-uploads-bucket --profile localstack
+      ```
+    - **Scan DynamoDB Table**:
+      ```bash
+      aws dynamodb scan --table-name file-logs --profile localstack
+      ```
+    - **View Lambda Logs**:
+      ```bash
+      aws logs tail /aws/lambda/s3-file-processor --profile localstack
+      ```
+
+* **Option B**: AWS Toolkit. Browse the resources directly from the VS Code sidebar:
+    1. **S3**: Expand the S3 section to see the uploaded files.
+    2. **CloudWatch**: Expand the Logs section to see the Lambda execution output.
+
+* **Option C**: NoSQL Workbench. A desktop application for designing and visualizing DynamoDB data.
+    1. **Download**: [NoSQL Workbench for DynamoDB](https://docs.aws.amazon.com/es_es/amazondynamodb/latest/developerguide/workbench.settingup.html).
+    2. **Setup Connection**: 
+        - Click on **Operation builder** > **Add connection**.
+        - Select **DynamoDB local**.
+        - Enter the following values:
+            - **Connection Name**: `LocalStack`
+            - **Hostname**: `localhost`
+            - **Port**: `4566`
+        - Click **Connect** to browse and edit the `file-logs` table documents.
+
+### 8. Clean up
+
+To completely remove the local infrastructure:
 
 ```bash
-python main.py
+docker compose down -v
 ```
-
-You should see output like:
-
-```
-Uploading files to file-uploads-bucket...
-✓ Uploaded: document.pdf
-✓ Uploaded: image.jpg
-✓ Uploaded: data.json
-
-File logs from file-logs:
-- image.jpg | 17 bytes | 2025-12-20T08:41:50.038208
-- data.json | 16 bytes | 2025-12-20T08:41:50.038003
-- document.pdf | 18 bytes | 2025-12-20T08:41:50.037275
-```
-
-## Visualizing Resources
-
-You can visualize the resources created in LocalStack using several methods:
-
-### 1. Terraform (CLI)
-The easiest way to see what Terraform has managed:
-```bash
-terraform state list
-terraform show
-```
-
-### 2. LocalStack Web App (Recommended)
-LocalStack provides a web interface to visualize your local resources:
-1. Go to [app.localstack.cloud](https://app.localstack.cloud/inst/default/resources)
-2. The dashboard will automatically connect to your local instance at `http://localhost:4566`.
-3. You can browse S3 buckets, Lambda functions, and DynamoDB tables visually.
-
-### 3. AWS CLI (Terminal)
-Use the standard AWS CLI pointing to the local endpoint.
-> [!NOTE]
-> If you get "Unable to locate credentials", run the following once:
-> ```bash
-> aws configure set aws_access_key_id test
-> aws configure set aws_secret_access_key test
-> aws configure set region us-east-1
-> ```
-
-```bash
-# S3
-aws --endpoint-url=http://localhost:4566 s3 ls s3://file-uploads-bucket
-
-# DynamoDB
-aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name file-logs
-
-# Lambda
-aws --endpoint-url=http://localhost:4566 lambda list-functions
-```
-
-## Option 2: Local Setup (Without Dev Container)
-
-### Step 1: Install Dependencies
-
-Install Terraform:
-
-```bash
-# On Ubuntu/Debian
-wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update && sudo apt install terraform
-```
-
-Install Python dependencies:
-
-```bash
-pip3 install uv && uv sync
-```
-
-### Step 2: Start LocalStack
-
-```bash
-docker compose up -d
-```
-
-### Step 3: Package Lambda and Deploy with Terraform
-
-```bash
-python package_lambda.py
-terraform init
-terraform apply
-```
-
-### Step 4: Run the Demo
-
-```bash
-python main.py
-```
-
-## Project Components
-
-### Terraform Configuration (`main.tf`)
-
-Defines the complete infrastructure:
-
-- **AWS Provider**: Configured to use LocalStack endpoints
-- **S3 Bucket**: `file-uploads-bucket` with `force_destroy = true` for easy cleanup
-- **DynamoDB Table**: `file-logs` with `file_id` as hash key
-- **IAM Role**: For Lambda execution with necessary permissions
-- **Lambda Function**: Processes S3 events and logs to DynamoDB
-- **S3 Event Notification**: Triggers Lambda on file uploads
-- **Outputs**: Displays created resource names
-
-### Lambda Function (`lambda_function.py`)
-
-Triggered automatically when files are uploaded to S3:
-
-- Extracts file metadata (name, size, content type)
-- Generates timestamp
-- Logs information to DynamoDB table
-
-### Demo Script (`main.py`)
-
-Demonstrates the complete workflow:
-
-- Uploads sample files to S3 (PDF, JPG, ZIP, JSON)
-- Waits for Lambda processing
-- Queries and displays logs from DynamoDB
-
-### Package Script (`package_lambda.py`)
-
-Creates the ZIP package required for Lambda deployment:
-
-- Packages `lambda_function.py` into `lambda_function.zip`
-- Required before running `terraform apply`
-
-## Environment Variables
-
-The `.env` file contains:
-
-```
-# AWS Credentials (for LocalStack)
-AWS_ACCESS_KEY_ID=test
-AWS_SECRET_ACCESS_KEY=test
-AWS_DEFAULT_REGION=us-east-1
-
-# LocalStack Configuration
-ENDPOINT_URL=http://localhost:4566
-
-# S3 Configuration
-BUCKET_NAME=file-uploads-bucket
-
-# DynamoDB Configuration
-DYNAMODB_TABLE_NAME=file-logs
-```
-
-**Note**: LocalStack accepts any credentials in local development. The values `test/test` are standard placeholders.
-
-## Useful Commands
-
-### Docker Commands
-
-```bash
-# Start LocalStack
-docker compose up -d
-
-# Stop LocalStack
-docker compose down
-
-# View logs
-docker compose logs -f
-
-# Restart LocalStack
-docker compose restart
-```
-
-### Terraform Commands
-
-```bash
-# Initialize Terraform
-terraform init
-
-# Plan changes
-terraform plan
-
-# Apply changes
-terraform apply
-
-# Destroy infrastructure
-terraform destroy
-
-# Show current state
-terraform show
-
-# List resources
-terraform state list
-```
-
-### AWS CLI Commands (with LocalStack)
-
-```bash
-# List S3 buckets
-aws --endpoint-url=http://localhost:4566 s3 ls
-
-# List files in bucket
-aws --endpoint-url=http://localhost:4566 s3 ls s3://file-uploads-bucket
-
-# Scan DynamoDB table
-aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name file-logs
-
-# List Lambda functions
-aws --endpoint-url=http://localhost:4566 lambda list-functions
-```
-
-## How It Works
-
-1. **Infrastructure Provisioning**: Terraform creates all AWS resources in LocalStack
-2. **File Upload**: When a file is uploaded to S3, an event is generated
-3. **Lambda Trigger**: S3 event notification triggers the Lambda function
-4. **Metadata Extraction**: Lambda extracts file name, size, and timestamp
-5. **Logging**: Lambda writes the metadata to DynamoDB
-6. **Query**: You can query DynamoDB to see all file logs
 
 ## Troubleshooting
 
-### Port Already in Use
-
-If port 4566 is already in use, modify the `docker-compose.yml`:
-
-```yaml
-ports:
-  - "4567:4566"
-```
-
-And update `ENDPOINT_URL` in `.env` and `main.tf`.
-
-### Terraform Apply Fails
-
-Make sure LocalStack is running:
-
-```bash
-docker ps
-```
-
-You should see `localstack_terraform_local` container running.
-
-### Lambda Not Triggering
-
-Check Lambda logs:
-
-```bash
-aws --endpoint-url=http://localhost:4566 logs tail /aws/lambda/s3-file-processor --follow
-```
-
-### Lambda Package Not Found
-
-Make sure to run `package_lambda.py` before `terraform apply`:
-
-```bash
-python package_lambda.py
-```
-
-## Clean Up
-
-To completely remove everything:
-
-```bash
-# Destroy Terraform resources
-terraform destroy
-
-# Stop and remove containers
-docker compose down -v
-
-# Remove Lambda package
-rm lambda_function.zip
-
-# Remove Terraform state
-rm -rf .terraform terraform.tfstate*
-```
-
-## Next Steps
-
-- Add more Lambda functions for different file types
-- Implement file validation and error handling
-- Add SNS notifications for processing results
-- Create API Gateway endpoints
-- Add CloudWatch metrics and alarms
-- Implement Step Functions for complex workflows
-
-## Why Terraform + LocalStack?
-
-- **Infrastructure as Code**: Version control your infrastructure
-- **Local Development**: Test AWS services without cloud costs
-- **Reproducible**: Same infrastructure every time
-- **Fast Iteration**: No waiting for cloud provisioning
-- **Learning**: Practice Terraform and AWS services safely
+| Issue | Solution |
+| :--- | :--- |
+| **Connection Refused** | Ensure LocalStack is running and wait for the `Ready.` message in logs. |
+| **Lambda Not Triggering** | Verify logs: `aws logs tail /aws/lambda/s3-file-processor --profile localstack` |
 
 ## License
 
