@@ -134,11 +134,11 @@ Choose your preferred deployment option:
    # 3. Deploy the stack
    aws cloudformation deploy --profile localstack \
      --stack-name aws-dynamo-db-stack \
-     --template-file deploy/cloud_formation.yaml \
+     --template-file deploy/cloud_formation_deploy.yaml \
      --capabilities CAPABILITY_NAMED_IAM
    ```
 
-   > 🎨 **Tip:** You can visualize this template using the **AWS Infrastructure Composer** from **AWS Toolkit** by opening `deploy/cloud_formation.yaml` and clicking the "Infrastructure composer" button in the top-right corner of the editor.
+   > 🎨 **Tip:** You can visualize this template using the **AWS Infrastructure Composer** from **AWS Toolkit** by opening `deploy/cloud_formation_deploy.yaml` and clicking the "Infrastructure composer" button in the top-right corner of the editor.
 
 * **Option C**: Boto3 (Python)
 
