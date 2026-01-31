@@ -138,6 +138,8 @@ Choose your preferred deployment option:
      --capabilities CAPABILITY_NAMED_IAM
    ```
 
+   > 🎨 **Tip:** You can visualize this template using the **AWS Infrastructure Composer** from **AWS Toolkit** by opening `deploy/cloud_formation.yaml` and clicking the "Infrastructure composer" button in the top-right corner of the editor.
+
 * **Option C**: Boto3 (Python)
 
    ```bash
@@ -223,8 +225,18 @@ Choose your preferred way to verify the results:
 
 * **Option B**: AWS Toolkit. Browse the resources directly from the VS Code sidebar:
     1. **S3**: Expand the S3 section to see the uploaded files.
-    2. **DynamoDB**: Expand the DynamoDB section and click on the `file-logs` table to see the records.
-    3. **CloudWatch**: Expand the Logs section to see the Lambda execution output.
+    2. **CloudWatch**: Expand the Logs section to see the Lambda execution output.
+
+* **Option C**: NoSQL Workbench. A desktop application for designing and visualizing DynamoDB data.
+    1. **Download**: [NoSQL Workbench for DynamoDB](https://docs.aws.amazon.com/es_es/amazondynamodb/latest/developerguide/workbench.settingup.html).
+    2. **Setup Connection**: 
+        - Click on **Operation builder** > **Add connection**.
+        - Select **DynamoDB local**.
+        - Enter the following values:
+            - **Connection Name**: `LocalStack`
+            - **Hostname**: `localhost`
+            - **Port**: `4566`
+        - Click **Connect** to browse and edit the `file-logs` table documents.
 
 ### 8. Clean up
 
