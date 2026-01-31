@@ -3,20 +3,14 @@
 This project demonstrates a file processing pipeline where S3 uploads trigger a Lambda to log metadata into a DynamoDB table.
 
 ```mermaid
-flowchart LR
- subgraph LocalStack["LocalStack (localhost:4566)"]
-    direction LR
-        S3[("file-uploads-bucket")]
-        Lambda{"s3-file-processor"}
-        DynamoDB[("file-logs")]
-  end
-    S3 -- s3:ObjectCreated --> Lambda
-    Lambda -- dynamodb:PutItem --> DynamoDB
- 
-    S3@{ icon: "aws:arch-amazon-simple-storage-service", pos: "b"}
-    Lambda@{ icon: "aws:arch-aws-lambda", pos: "b"}
-    DynamoDB@{ icon: "aws:arch-amazon-dynamodb", pos: "b"}
-    style LocalStack fill:#fff,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
+architecture-beta
+   group localstack(cloud)[AWS LocalStack]
+    service s3(disk)[S3 Bucket] in localstack
+    service lambda(server)[Lambda] in localstack
+    service db(database)[Dynamo DB] in localstack
+
+    s3:R --> L:lambda
+    lambda:R --> L:db
 ```
 [![View Diagram](https://img.shields.io/badge/View_Diagram-Install-blue?logo=visualstudiocode)](vscode:extension/mermaidchart.vscode-mermaid-chart)
 
@@ -24,14 +18,14 @@ flowchart LR
 
 - [Quickstart (Dev Container)](#quickstart-dev-container)
 - [Step by Step (without Dev Container)](#step-by-step-without-dev-container)
-    - [1. Start Infrastructure](#1-start-infrastructure)
+    - [1. Start infrastructure](#1-start-infrastructure)
     - [2. Configure AWS CLI](#2-configure-aws-cli)
     - [3. Install AWS Toolkit](#3-install-aws-toolkit)
     - [4. Install Python](#4-install-python)
-    - [5. Deploy Resources](#5-deploy-resources)
-    - [6. Run the Example](#6-run-the-example)
+    - [5. Deploy resources](#5-deploy-resources)
+    - [6. Run the example](#6-run-the-example)
     - [7. Validation](#7-validation)
-    - [8. Clean Up](#8-clean-up)
+    - [8. Clean up](#8-clean-up)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
 
@@ -65,7 +59,7 @@ The Dev Container automatically provisions the LocalStack infrastructure and con
 
 This section details the steps performed automatically within the Dev Container, exploring additional variations and deployment options.
 
-### 1. Start Infrastructure
+### 1. Start infrastructure
 
 To start only the **LocalStack** service (avoiding the development container), run:
 
@@ -109,7 +103,7 @@ pip install uv
 uv sync
 ```
 
-### 5. Deploy Resources
+### 5. Deploy resources
 
 Before deploying, you must package the Lambda function:
 
@@ -117,9 +111,9 @@ Before deploying, you must package the Lambda function:
 python deploy/utils/package_lambda.py
 ```
 
-Choose your preferred Infrastructure as Code (IaC) tool:
+Choose your preferred deployment option:
 
-> 💡 **Note:** If you switch between **Terraform** and **CloudFormation**, ensure you perform a **Clean Up** first. Both methods use the same resource names, and deploying one without removing the other will result in "Resource Already Exists" errors.
+💡 **Note:** If you switch between different deployment methods (**Terraform**, **CloudFormation**, **Boto3**, or **CLI**), ensure you perform a **Clean Up** first to avoid resource name conflicts.
 
 * **Option A**: Terraform
 
@@ -144,7 +138,54 @@ Choose your preferred Infrastructure as Code (IaC) tool:
      --capabilities CAPABILITY_NAMED_IAM
    ```
 
-### 6. Run the Example
+* **Option C**: Boto3 (Python)
+
+   ```bash
+   python deploy/boto3_deploy.py
+   ```
+
+* <details><summary><b>Option D</b>: AWS CLI (Manual) - Click to expand</summary>
+
+   ```bash
+   # 1. Create DynamoDB Table
+   aws dynamodb create-table --profile localstack \
+     --table-name file-logs \
+     --attribute-definitions AttributeName=file_id,AttributeType=S \
+     --key-schema AttributeName=file_id,KeyType=HASH \
+     --billing-mode PAY_PER_REQUEST
+
+   # 2. Create IAM Role
+   aws iam create-role --profile localstack \
+     --role-name lambda-s3-processor-role \
+     --assume-role-policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole"}]}'
+
+   # 3. Create Lambda Function
+   aws lambda create-function --profile localstack \
+     --function-name s3-file-processor \
+     --runtime python3.12 \
+     --role arn:aws:iam::000000000000:role/lambda-s3-processor-role \
+     --handler lambda.lambda_handler \
+     --zip-file fileb://tmp/lambda.zip \
+     --environment Variables={DYNAMODB_TABLE=file-logs}
+
+   # 4. Create S3 Bucket
+   aws s3 mb s3://file-uploads-bucket --profile localstack
+
+   # 5. Add S3 Permission and Configure Notification
+   aws lambda add-permission --profile localstack \
+     --function-name s3-file-processor \
+     --statement-id s3-trigger \
+     --action lambda:InvokeFunction \
+     --principal s3.amazonaws.com \
+     --source-arn arn:aws:s3:::file-uploads-bucket
+
+   aws s3api put-bucket-notification-configuration --profile localstack \
+     --bucket file-uploads-bucket \
+     --notification-configuration '{"LambdaFunctionConfigurations":[{"LambdaFunctionArn":"arn:aws:lambda:us-east-1:000000000000:function:s3-file-processor","Events":["s3:ObjectCreated:*"]}]}'
+   ```
+</details>
+
+### 6. Run the example
 
 * **Option A**: Python Script. Run the demonstration script to upload sample files and view the logs:
 
@@ -185,7 +226,7 @@ Choose your preferred way to verify the results:
     2. **DynamoDB**: Expand the DynamoDB section and click on the `file-logs` table to see the records.
     3. **CloudWatch**: Expand the Logs section to see the Lambda execution output.
 
-### 8. Clean Up
+### 8. Clean up
 
 To completely remove the local infrastructure:
 
