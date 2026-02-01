@@ -1,170 +1,69 @@
 # Minimal Viable Examples (MVE)
 
-A curated collection of minimal, production-ready code examples designed to help developers quickly understand and implement common patterns and technologies.
+This repository teaches how to develop for the Cloud for free, without an account and without a credit card, emulating AWS, Azure, and Google Cloud locally:
 
-## 🎯 Objective
-
-This repository provides **clean, minimal, and fully functional examples** that demonstrate specific technologies, patterns, or integrations. Each example is:
-
-- **Self-contained**: Everything you need is included
-- **Well-documented**: Clear explanations and step-by-step instructions
-- **Container-ready**: Dev Container configuration for consistent development environment
-- **Dependency-managed**: Using `uv` for fast and reliable Python dependency management
-
-## 📁 Repository Structure
-
-```
-mve-collection/
-├── README.md                          # This file
-└── src/
-    ├── postgres-docker-sqlalchemy/    # Example 1
-    │   ├── .devcontainer.json
-    │   ├── pyproject.toml
-    │   ├── uv.lock
-    │   ├── README.md
-    │   └── [example files]
-    ├── mongo-docker-mongoengine/      # Example 2
-    │   ├── .devcontainer.json
-    │   ├── pyproject.toml
-    │   ├── uv.lock
-    │   ├── README.md
-    │   └── [example files]
-    └── [more examples]/
-```
-
-### Structure of Each MVE
-
-Each example follows a consistent structure:
-
-```
-src/[mve-name]/
-├── .devcontainer.json     # Dev Container configuration
-├── pyproject.toml         # Project dependencies (uv)
-├── uv.lock               # Locked dependencies
-├── README.md             # Example-specific documentation
-└── [source files]        # Code and configuration files
-```
+* ✅ **Free and account-less**: All technologies are free and do not require creating an account anywhere.
+* **💯% compatible**: The code you develop locally is 100% compatible with the real Cloud.
+* 📦 **Self-contained**: Each example is independent and includes everything necessary to run it.
+* 🚀 **Ready to run**: Examples are ready to run without making code changes.
+* 🐳 **Dockerized**: All have dockerized development environments.
+* 🖥️ **Graphical interfaces**: Use of graphical tools to manage the local Cloud environment.
+* 📖 **Well documented**: All examples are documented in English and Spanish.
 
 ## 🚀 Quick Start
 
-### Prerequisites
+1. **Prerequisites:**
+    1. [Docker](https://www.docker.com/get-started) installed and running.
+    2. [Dev Containers extension](vscode:extension/ms-vscode-remote.remote-containers) installed.
 
-- [Docker](https://www.docker.com/get-started) installed
-- [VS Code](https://code.visualstudio.com/) with [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-
-### Running an Example
-
-1. **Clone the repository**:
-
+2. **Open an example:** Open an example folder (e.g., `src/aws-dynamo-db`) in VS Code.
+3. **Reopen in Container:** Open the **Command Palette** (`F1` or `Ctrl/Cmd+Shift+P`) and select **Dev Containers: Reopen in Container**.
+4. **Follow instructions:** Once the container is ready, follow the instructions in the example's `README.md`. Usually, it's just:
    ```bash
-   git clone https://github.com/raulcastillabravo/mve-collection.git
-   cd mve-collection
+   python main.py
    ```
-
-2. **Open an example in VS Code**:
-
-   ```bash
-   cd src/postgres-docker-sqlalchemy
-   code .
-   ```
-
-3. **Reopen in Dev Container**:
-
-   - Press `F1` or `Ctrl+Shift+P` (Windows/Linux) / `Cmd+Shift+P` (Mac)
-   - Select: **Dev Containers: Reopen in Container**
-   - Wait for the container to build and dependencies to install
-
-4. **Follow the example's README**:
-   - Each example has its own `README.md` with specific instructions
 
 ## 📚 Available Examples
 
-| Example                                                         | Description                                               | Technologies                            |
-| --------------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------- |
-| [airflow-docker](./src/airflow-docker/)                         | Apache Airflow setup with Docker Compose and Python       | Apache Airflow, Docker, Python          |
-| [aws-dynamo-db](./src/aws-dynamo-db/) | AWS DynamoDB local development with LocalStack (Terraform/CloudFormation) | DynamoDB, S3, Lambda, Terraform, CloudFormation, LocalStack, Python |
-| [aws-step-functions](./src/aws-step-functions/)           | AWS Step Functions local development with LocalStack      | Step Functions, Lambda, DynamoDB, LocalStack, Python |
-| [azure-cosmos-db](./src/azure-cosmos-db/) | Azure Cosmos DB local development with Docker | Cosmos DB, Docker, Python |
-| [azure-functions](./src/azure-functions/)                       | Azure Functions local development with Azurite            | Azure Functions, Azurite, Blob Storage, Docker, Python |
-| [azurite-docker](./src/azurite-docker/)                         | Azurite setup with Azure Blob Storage emulation           | Azurite, Azure, Blob Storage, Docker, Python |
-| [databricks-docker](./src/databricks-docker/)                       | Local Databricks emulation with Docker, Spark, and Delta Lake | Databricks, Spark, Delta Lake, Docker, Python |
-| [devcontainers-docker](./src/devcontainers-docker/)             | Understanding DevContainers with Python and pandas        | DevContainers, Docker, Python, VS Code  |
-| [gcp-cloud-run](./src/gcp-cloud-run/)               | Google Cloud Run local development with Firebase Emulator Suite | Cloud Run, Firebase, Firestore, Docker, Python |
-| [gcp-functions](./src/gcp-functions/)                           | Google Cloud Functions local development with Firebase Emulator Suite | Google Cloud Functions, Firebase, Cloud Storage, Python |
-| [localstack-docker](./src/localstack-docker/)                   | LocalStack setup with Lambda and S3 services              | LocalStack, Lambda, S3, Docker, Python  |
-| [localstack-docker](./src/localstack-docker/)                   | LocalStack setup with Lambda and S3 services              | LocalStack, Lambda, S3, Docker, Python  |
-| [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Hybrid cloud scenario with LocalStack and external Postgres | LocalStack, Terraform, Secrets Manager, PostgreSQL, Docker, Python |
-| [metabase-docker](./src/metabase-docker/)                       | Metabase setup with Docker Compose and PostgreSQL         | Metabase, PostgreSQL, Docker, Python    |
-| [minio-docker-boto3](./src/minio-docker-boto3/)                 | MinIO setup with Docker Compose and Boto3                 | MinIO, Docker, Boto3, Python            |
-| [minio-docker-delta](./src/minio-docker-delta/)                 | MinIO setup with Docker Compose and Delta Lake            | MinIO, Delta Lake, Docker, Python       |
-| [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/)     | MongoDB setup with Docker Compose and mongoengine ODM     | MongoDB, Docker, mongoengine, Python    |
-| [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | PostgreSQL setup with Docker Compose and SQLAlchemy ORM   | PostgreSQL, Docker, SQLAlchemy, Python  |
-| [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/)             | RabbitMQ setup with Docker Compose and Python             | RabbitMQ, Docker, Python                |
-| [redis-docker](./src/redis-docker/)                             | Redis setup with Docker Compose and Python                | Redis, Docker, Python                   |
-| [redis-docker-mutex](./src/redis-docker-mutex/)                 | Distributed mutex using Redis with  Docker Compose        | Redis, Docker, Python                   |
-| _More examples coming soon..._                                  |                                                           |                                         |
+Some examples appear multiple times in the table because they integrate several cloud services.
 
-## 🛠️ Technology Stack
+| Cloud | Service | MVE | Description | Technologies |
+| :--- | :--- | :--- | :--- | :--- |
+| **AWS** | Dynamo DB | [aws-dynamo-db](./src/aws-dynamo-db/) | AWS DynamoDB local development with LocalStack (Terraform/CloudFormation) | DynamoDB, S3, Lambda, Terraform, CloudFormation, LocalStack, Python |
+| **AWS** | Dynamo DB | [aws-step-functions](./src/aws-step-functions/) | AWS Step Functions local development with LocalStack | Step Functions, Lambda, DynamoDB, LocalStack, Python |
+| **AWS** | Lambda | [aws-dynamo-db](./src/aws-dynamo-db/) | AWS DynamoDB local development with LocalStack (Terraform/CloudFormation) | DynamoDB, S3, Lambda, Terraform, CloudFormation, LocalStack, Python |
+| **AWS** | Lambda | [aws-step-functions](./src/aws-step-functions/) | AWS Step Functions local development with LocalStack | Step Functions, Lambda, DynamoDB, LocalStack, Python |
+| **AWS** | Lambda | [localstack-docker](./src/localstack-docker/) | LocalStack setup with Lambda and S3 services | LocalStack, Lambda, S3, Docker, Python |
+| **AWS** | RDS (Postgres) | [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Hybrid cloud scenario with LocalStack and external Postgres | LocalStack, Terraform, Secrets Manager, PostgreSQL, Docker, Python |
+| **AWS** | S3 | [aws-dynamo-db](./src/aws-dynamo-db/) | AWS DynamoDB local development with LocalStack (Terraform/CloudFormation) | DynamoDB, S3, Lambda, Terraform, CloudFormation, LocalStack, Python |
+| **AWS** | S3 | [localstack-docker](./src/localstack-docker/) | LocalStack setup with Lambda and S3 services | LocalStack, Lambda, S3, Docker, Python |
+| **AWS** | Step Functions | [aws-step-functions](./src/aws-step-functions/) | AWS Step Functions local development with LocalStack | Step Functions, Lambda, DynamoDB, LocalStack, Python |
+| **Azure** | Azure Functions | [azure-functions](./src/azure-functions/) | Azure Functions local development with Azurite | Azure Functions, Azurite, Blob Storage, Docker, Python |
+| **Azure** | Blob Storage | [azure-functions](./src/azure-functions/) | Azure Functions local development with Azurite | Azure Functions, Azurite, Blob Storage, Docker, Python |
+| **Azure** | Blob Storage | [azurite-docker](./src/azurite-docker/) | Azurite setup with Azure Blob Storage emulation | Azurite, Azure, Blob Storage, Docker, Python |
+| **Azure** | Cosmos DB | [azure-cosmos-db](./src/azure-cosmos-db/) | Azure Cosmos DB local development with Docker | Cosmos DB, Docker, Python |
+| **Azure** | Databricks | [databricks-docker](./src/databricks-docker/) | Local Databricks emulation with Docker, Spark, and Delta Lake | Databricks, Spark, Delta Lake, Docker, Python |
+| **GCP** | Cloud Functions | [gcp-functions](./src/gcp-functions/) | Google Cloud Functions local development with Firebase Emulator Suite | Google Cloud Functions, Firebase, Cloud Storage, Python |
+| **GCP** | Cloud Run | [gcp-cloud-run](./src/gcp-cloud-run/) | Google Cloud Run local development with Firebase Emulator Suite | Cloud Run, Firebase, Firestore, Docker, Python |
+| **GCP** | Cloud Storage | [gcp-functions](./src/gcp-functions/) | Google Cloud Functions local development with Firebase Emulator Suite | Google Cloud Functions, Firebase, Cloud Storage, Python |
+| **GCP** | Firestore | [gcp-cloud-run](./src/gcp-cloud-run/) | Google Cloud Run local development with Firebase Emulator Suite | Cloud Run, Firebase, Firestore, Docker, Python |
+| **Hybrid** | Airflow | [airflow-docker](./src/airflow-docker/) | Apache Airflow setup with Docker Compose and Python | Apache Airflow, Docker, Python |
+| **Hybrid** | Metabase | [metabase-docker](./src/metabase-docker/) | Metabase setup with Docker Compose and PostgreSQL | Metabase, PostgreSQL, Docker, Python |
+| **Hybrid** | MinIO | [minio-docker-boto3](./src/minio-docker-boto3/) | MinIO setup with Docker Compose and Boto3 | MinIO, Docker, Boto3, Python |
+| **Hybrid** | MinIO | [minio-docker-delta](./src/minio-docker-delta/) | MinIO setup with Docker Compose and Delta Lake | MinIO, Delta Lake, Docker, Python |
+| **Hybrid** | Mongo | [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/) | MongoDB setup with Docker Compose and mongoengine ODM | MongoDB, Docker, mongoengine, Python |
+| **Hybrid** | Postgres | [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Hybrid cloud scenario with LocalStack and external Postgres | LocalStack, Terraform, Secrets Manager, PostgreSQL, Docker, Python |
+| **Hybrid** | Postgres | [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | PostgreSQL setup with Docker Compose and SQLAlchemy ORM | PostgreSQL, Docker, SQLAlchemy, Python |
+| **Hybrid** | RabbitMQ | [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/) | RabbitMQ setup with Docker Compose and Python | RabbitMQ, Docker, Python |
+| **Hybrid** | Redis | [redis-docker](./src/redis-docker/) | Redis setup with Docker Compose and Python | Redis, Docker, Python |
+| **Hybrid** | Redis | [redis-docker-mutex](./src/redis-docker-mutex/) | Distributed mutex using Redis with Docker Compose | Redis, Docker, Python |
+| - | Dev Containers | [devcontainers-docker](./src/devcontainers-docker/) | Understanding DevContainers with Python and pandas | DevContainers, Docker, Python, VS Code |
 
-### Core Technologies
-
-- **Python 3.14+**: Primary programming language
-- **uv**: Fast Python package installer and resolver
-- **Docker**: Containerization and service orchestration
-- **Dev Containers**: Consistent development environments
-
-### Example-Specific Technologies
-
-Each example may include additional technologies like:
-
-- Databases (PostgreSQL, MongoDB, Redis)
-- Web frameworks (FastAPI, Flask, Django)
-- Message queues (RabbitMQ, Kafka)
-- And more...
-
-## 🤝 Contributing
-
-Contributions are welcome! If you have a minimal viable example you'd like to share:
-
-1. Fork the repository
-2. Create a new directory under `src/` with your example name
-3. Follow the standard structure (see above)
-4. Include a comprehensive `README.md`
-5. Test your example in the Dev Container
-6. Submit a pull request
-
-### Guidelines for New Examples
-
-- **Keep it minimal**: Only include what's necessary to demonstrate the concept
-- **Document thoroughly**: Clear explanations and commands
-- **Use uv**: Manage dependencies with `pyproject.toml` and `uv.lock`
-- **Include Dev Container**: Provide `.devcontainer.json` for easy setup
-- **Follow best practices**: Proper error handling, environment variables, etc.
-
-## 📖 Why This Repository?
-
-Learning new technologies often involves:
-
-- ❌ Wading through extensive documentation
-- ❌ Debugging complex setup issues
-- ❌ Finding outdated examples
-- ❌ Missing dependencies or configurations
-
-This repository solves these problems by providing:
-
-- ✅ Ready-to-run examples
-- ✅ Containerized environments
-- ✅ Complete dependency specifications
-- ✅ Clear, step-by-step documentation
-- ✅ Best practices and patterns
+_More examples coming soon..._
 
 ## 📝 License
 
-This repository is open source and available under the [MIT License](LICENSE).
-
-## 🙏 Acknowledgments
-
-Each example credits the technologies and resources that made it possible. See individual example READMEs for specific attributions.
+This is a minimal example for educational purposes. Feel free to use and modify as needed.
 
 ## 🌐 Follow Me
 
