@@ -1,10 +1,7 @@
 # Ejemplos Mínimos Viables (MVE)
 
-[![GitHub stars](https://img.shields.io/github/stars/raulcastillabravo/mve-collection?style=flat-square&logo=github)](https://github.com/raulcastillabravo/mve-collection/stargazers)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/raulcastillabravo/)
 [![Licencia](https://img.shields.io/badge/licencia-MIT-green.svg)](https://github.com/raulcastillabravo/mve-collection/blob/main/LICENSE)
-
-> ⭐ **Si encuentras este repositorio útil, ¡por favor considera darle una estrella!** Ayuda a otros desarrolladores a encontrar estos ejemplos y apoya el desarrollo continuo.
 
 Este repositorio enseña cómo desarrollar para el Cloud gratis, sin cuenta y sin tarjeta de crédito, emulando AWS, Azure y Google Cloud en local:
 
@@ -15,6 +12,8 @@ Este repositorio enseña cómo desarrollar para el Cloud gratis, sin cuenta y si
 * 🐳 **Dockerizado**: Todos cuentan con entornos de desarrollo dockerizados.
 * 🖥️ **Interfaces gráficas**: Uso de herramientas gráficas para gestionar el entorno Cloud local.
 * 📖 **Bien documentado**: Todos los ejemplos están documentados en inglés y español.
+
+> ⭐ **Si encuentras este repositorio útil, ¡por favor considera darle una estrella!** Ayuda a otros desarrolladores a encontrar estos ejemplos y apoya el desarrollo continuo.
 
 ## 🚀 Inicio Rápido
 

@@ -1,6 +1,5 @@
 # Minimal Viable Examples (MVE)
 
-[![GitHub stars](https://img.shields.io/github/stars/raulcastillabravo/mve-collection?style=flat-square&logo=github)](https://github.com/raulcastillabravo/mve-collection/stargazers)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/raulcastillabravo/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/raulcastillabravo/mve-collection/blob/main/LICENSE)
 
