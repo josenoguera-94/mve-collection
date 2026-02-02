@@ -1,5 +1,9 @@
 # Minimal Viable Examples (MVE)
 
+[![GitHub stars](https://img.shields.io/github/stars/raulcastillabravo/mve-collection?style=flat-square&logo=github)](https://github.com/raulcastillabravo/mve-collection/stargazers)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/raulcastillabravo/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/raulcastillabravo/mve-collection/blob/main/LICENSE)
+
 This repository teaches how to develop for the Cloud for free, without an account and without a credit card, emulating AWS, Azure, and Google Cloud locally:
 
 * ✅ **Free and account-less**: All technologies are free and do not require creating an account anywhere.
@@ -9,6 +13,8 @@ This repository teaches how to develop for the Cloud for free, without an accoun
 * 🐳 **Dockerized**: All have dockerized development environments.
 * 🖥️ **Graphical interfaces**: Use of graphical tools to manage the local Cloud environment.
 * 📖 **Well documented**: All examples are documented in English and Spanish.
+
+> ⭐ **If you find this repository useful, please consider giving it a star!** It helps other developers find these examples and supports further development.
 
 ## 🚀 Quick Start
 
@@ -25,54 +31,59 @@ This repository teaches how to develop for the Cloud for free, without an accoun
 
 ## 📚 Available Examples
 
-Some examples appear multiple times in the table because they integrate several cloud services.
+Some examples appear multiple times because they integrate several cloud services.
 
-| Cloud | Service | MVE | Description | Technologies |
-| :--- | :--- | :--- | :--- | :--- |
-| **AWS** | Dynamo DB | [aws-dynamo-db](./src/aws-dynamo-db/) | AWS DynamoDB local development with LocalStack (Terraform/CloudFormation) | DynamoDB, S3, Lambda, Terraform, CloudFormation, LocalStack, Python |
-| **AWS** | Dynamo DB | [aws-step-functions](./src/aws-step-functions/) | AWS Step Functions local development with LocalStack | Step Functions, Lambda, DynamoDB, LocalStack, Python |
-| **AWS** | Lambda | [aws-dynamo-db](./src/aws-dynamo-db/) | AWS DynamoDB local development with LocalStack (Terraform/CloudFormation) | DynamoDB, S3, Lambda, Terraform, CloudFormation, LocalStack, Python |
-| **AWS** | Lambda | [aws-step-functions](./src/aws-step-functions/) | AWS Step Functions local development with LocalStack | Step Functions, Lambda, DynamoDB, LocalStack, Python |
-| **AWS** | Lambda | [localstack-docker](./src/localstack-docker/) | LocalStack setup with Lambda and S3 services | LocalStack, Lambda, S3, Docker, Python |
-| **AWS** | RDS (Postgres) | [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Hybrid cloud scenario with LocalStack and external Postgres | LocalStack, Terraform, Secrets Manager, PostgreSQL, Docker, Python |
-| **AWS** | S3 | [aws-dynamo-db](./src/aws-dynamo-db/) | AWS DynamoDB local development with LocalStack (Terraform/CloudFormation) | DynamoDB, S3, Lambda, Terraform, CloudFormation, LocalStack, Python |
-| **AWS** | S3 | [localstack-docker](./src/localstack-docker/) | LocalStack setup with Lambda and S3 services | LocalStack, Lambda, S3, Docker, Python |
-| **AWS** | Step Functions | [aws-step-functions](./src/aws-step-functions/) | AWS Step Functions local development with LocalStack | Step Functions, Lambda, DynamoDB, LocalStack, Python |
-| **Azure** | Azure Functions | [azure-functions](./src/azure-functions/) | Azure Functions local development with Azurite | Azure Functions, Azurite, Blob Storage, Docker, Python |
-| **Azure** | Blob Storage | [azure-functions](./src/azure-functions/) | Azure Functions local development with Azurite | Azure Functions, Azurite, Blob Storage, Docker, Python |
-| **Azure** | Blob Storage | [azurite-docker](./src/azurite-docker/) | Azurite setup with Azure Blob Storage emulation | Azurite, Azure, Blob Storage, Docker, Python |
-| **Azure** | Cosmos DB | [azure-cosmos-db](./src/azure-cosmos-db/) | Azure Cosmos DB local development with Docker | Cosmos DB, Docker, Python |
-| **Azure** | Databricks | [databricks-docker](./src/databricks-docker/) | Local Databricks emulation with Docker, Spark, and Delta Lake | Databricks, Spark, Delta Lake, Docker, Python |
-| **GCP** | Cloud Functions | [gcp-functions](./src/gcp-functions/) | Google Cloud Functions local development with Firebase Emulator Suite | Google Cloud Functions, Firebase, Cloud Storage, Python |
-| **GCP** | Cloud Run | [gcp-cloud-run](./src/gcp-cloud-run/) | Google Cloud Run local development with Firebase Emulator Suite | Cloud Run, Firebase, Firestore, Docker, Python |
-| **GCP** | Cloud Storage | [gcp-functions](./src/gcp-functions/) | Google Cloud Functions local development with Firebase Emulator Suite | Google Cloud Functions, Firebase, Cloud Storage, Python |
-| **GCP** | Firestore | [gcp-cloud-run](./src/gcp-cloud-run/) | Google Cloud Run local development with Firebase Emulator Suite | Cloud Run, Firebase, Firestore, Docker, Python |
-| **Hybrid** | Airflow | [airflow-docker](./src/airflow-docker/) | Apache Airflow setup with Docker Compose and Python | Apache Airflow, Docker, Python |
-| **Hybrid** | Metabase | [metabase-docker](./src/metabase-docker/) | Metabase setup with Docker Compose and PostgreSQL | Metabase, PostgreSQL, Docker, Python |
-| **Hybrid** | MinIO | [minio-docker-boto3](./src/minio-docker-boto3/) | MinIO setup with Docker Compose and Boto3 | MinIO, Docker, Boto3, Python |
-| **Hybrid** | MinIO | [minio-docker-delta](./src/minio-docker-delta/) | MinIO setup with Docker Compose and Delta Lake | MinIO, Delta Lake, Docker, Python |
-| **Hybrid** | Mongo | [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/) | MongoDB setup with Docker Compose and mongoengine ODM | MongoDB, Docker, mongoengine, Python |
-| **Hybrid** | Postgres | [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Hybrid cloud scenario with LocalStack and external Postgres | LocalStack, Terraform, Secrets Manager, PostgreSQL, Docker, Python |
-| **Hybrid** | Postgres | [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | PostgreSQL setup with Docker Compose and SQLAlchemy ORM | PostgreSQL, Docker, SQLAlchemy, Python |
-| **Hybrid** | RabbitMQ | [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/) | RabbitMQ setup with Docker Compose and Python | RabbitMQ, Docker, Python |
-| **Hybrid** | Redis | [redis-docker](./src/redis-docker/) | Redis setup with Docker Compose and Python | Redis, Docker, Python |
-| **Hybrid** | Redis | [redis-docker-mutex](./src/redis-docker-mutex/) | Distributed mutex using Redis with Docker Compose | Redis, Docker, Python |
-| - | Dev Containers | [devcontainers-docker](./src/devcontainers-docker/) | Understanding DevContainers with Python and pandas | DevContainers, Docker, Python, VS Code |
+### 🟠 AWS (Amazon Web Services)
+
+| Service | MVE | Description |
+| :--- | :--- | :--- |
+| **S3** | [localstack-docker](./src/localstack-docker/) | Deploys a Lambda function that uploads objects to S3, simulating AWS services locally using LocalStack and Python. |
+| **S3** | [aws-dynamo-db](./src/aws-dynamo-db/) | Demonstrates a file processing pipeline where S3 uploads trigger a Lambda to log metadata into a DynamoDB table, all emulated with LocalStack, Terraform, and CloudFormation. |
+| **Dynamo DB** | [aws-dynamo-db](./src/aws-dynamo-db/) | Demonstrates a file processing pipeline where S3 uploads trigger a Lambda to log metadata into a DynamoDB table, all emulated with LocalStack, Terraform, and CloudFormation. |
+| **Dynamo DB** | [aws-step-functions](./src/aws-step-functions/) | Orchestrates a user onboarding workflow with AWS Step Functions that executes parallel Lambdas and logs results to DynamoDB, using LocalStack and the AWS Toolkit. |
+| **RDS (Postgres)** | [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Demonstrates a hybrid cloud scenario where an AWS Lambda (simulated in LocalStack) retrieves credentials from Secrets Manager via Terraform to interact with an external PostgreSQL database. |
+| **Lambda** | [localstack-docker](./src/localstack-docker/) | Deploys a Lambda function that uploads objects to S3, simulating AWS services locally using LocalStack and Python. |
+| **Lambda** | [aws-dynamo-db](./src/aws-dynamo-db/) | Demonstrates a file processing pipeline where S3 uploads trigger a Lambda to log metadata into a DynamoDB table, all emulated with LocalStack, Terraform, and CloudFormation. |
+| **Lambda** | [aws-step-functions](./src/aws-step-functions/) | Orchestrates a user onboarding workflow with AWS Step Functions that executes parallel Lambdas and logs results to DynamoDB, using LocalStack and the AWS Toolkit. |
+| **Step Functions** | [aws-step-functions](./src/aws-step-functions/) | Orchestrates a user onboarding workflow with AWS Step Functions that executes parallel Lambdas and logs results to DynamoDB, using LocalStack and the AWS Toolkit. |
+
+### 🔵 Microsoft Azure
+
+| Service | MVE | Description |
+| :--- | :--- | :--- |
+| **Blob Storage** | [azurite-docker](./src/azurite-docker/) | Implements local Azure Blob Storage operations like creating containers and uploading/downloading blobs using Azurite and Python. |
+| **Blob Storage** | [azure-functions](./src/azure-functions/) | Creates an HTTP-triggered Azure Function that uploads files to local blob storage emulated by Azurite, using Python and Docker Compose. |
+| **Cosmos DB** | [azure-cosmos-db](./src/azure-cosmos-db/) | Integrates a Python application with the Azure Cosmos DB Emulator running in Docker to perform basic database operations locally. |
+| **Azure Functions** | [azure-functions](./src/azure-functions/) | Creates an HTTP-triggered Azure Function that uploads files to local blob storage emulated by Azurite, using Python and Docker Compose. |
+| **Databricks** | [databricks-docker](./src/databricks-docker/) | Simulates a high-fidelity Databricks environment (Runtime 15.4 LTS) using Docker, MinIO for S3 storage, and PostgreSQL for the Hive Metastore to test Spark and Delta Lake ETLs. |
+
+### 🔴 GCP (Google Cloud Platform)
+
+| Service | MVE | Description |
+| :--- | :--- | :--- |
+| **Cloud Storage** | [gcp-functions](./src/gcp-functions/) | Implements an HTTP-triggered Google Cloud Function that uploads files to Cloud Storage using the Firebase Emulator Suite for local development. |
+| **Firestore** | [gcp-cloud-run](./src/gcp-cloud-run/) | Deploys a containerized Google Cloud Run service that registers patient data in Firestore using the Firebase Emulator Suite and Python. |
+| **Cloud Functions** | [gcp-functions](./src/gcp-functions/) | Implements an HTTP-triggered Google Cloud Function that uploads files to Cloud Storage using the Firebase Emulator Suite for local development. |
+| **Cloud Run** | [gcp-cloud-run](./src/gcp-cloud-run/) | Deploys a containerized Google Cloud Run service that registers patient data in Firestore using the Firebase Emulator Suite and Python. |
+
+### 🟢 Hybrid & Others
+
+| Service | MVE | Description |
+| :--- | :--- | :--- |
+| **MinIO** | [minio-docker-boto3](./src/minio-docker-boto3/) | Demonstrates S3-compatible object storage operations using MinIO, the Boto3 SDK, and pandas to manage CSV files locally. |
+| **MinIO** | [minio-docker-delta](./src/minio-docker-delta/) | Implements ACID transactions and time travel capabilities on MinIO using Delta Lake (delta-rs) and Python for reliable local data storage. |
+| **Mongo** | [mongo-docker-mongoengine](./src/mongo-docker-mongoengine/) | Integrates Python with MongoDB using the MongoEngine ODM and Docker Compose for local NoSQL database development. |
+| **Postgres** | [postgres-docker-sqlalchemy](./src/postgres-docker-sqlalchemy/) | Sets up a PostgreSQL database with SQLAlchemy ORM and Docker Compose for standard relational database development and testing. |
+| **Postgres** | [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Demonstrates interaction with an external PostgreSQL database from an AWS environment simulated in LocalStack. |
+| **Redis** | [redis-docker](./src/redis-docker/) | Implements basic Redis operations using the Python redis client and Docker for local caching and data structure storage. |
+| **Redis** | [redis-docker-mutex](./src/redis-docker-mutex/) | Implements a distributed mutex (lock) using Redis to coordinate access to shared resources across multiple processes or threads. |
+| **Metabase** | [metabase-docker](./src/metabase-docker/) | Sets up Metabase for data visualization and BI, connected to a local PostgreSQL database with sample data generated via SQLAlchemy. |
+| **RabbitMQ** | [rabbitmq-docker-pika](./src/rabbitmq-docker-pika/) | Implements a publish-subscribe messaging pattern using RabbitMQ, the pika client, and Python for asynchronous event processing. |
+| **Airflow** | [airflow-docker](./src/airflow-docker/) | Deploys a complete Apache Airflow environment with Docker to run and monitor a Python-based ETL pipeline using pandas. |
+| **Dev Containers** | [devcontainers-docker](./src/devcontainers-docker/) | Explains the core concepts of VS Code Dev Containers through a simple pandas application, showcasing environment isolation and pre-configured tools. |
 
 _More examples coming soon..._
 
 ## 📝 License
 
 This is a minimal example for educational purposes. Feel free to use and modify as needed.
-
-## 🌐 Follow Me
-
-Connect with me on LinkedIn for more content and updates:
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/raulcastillabravo/)
-
----
-
-**Happy coding! 🚀**
-
-If you find these examples helpful, please consider giving this repository a ⭐
