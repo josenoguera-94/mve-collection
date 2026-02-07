@@ -66,7 +66,6 @@ def deploy():
             Role=role_arn,
             Handler="lambda.lambda_handler",
             Code={"ZipFile": zipped_code},
-            Environment={"Variables": {"ENDPOINT_URL": ENDPOINT_URL}},
             Timeout=30
         )
     except awslambda.exceptions.ResourceConflictException:

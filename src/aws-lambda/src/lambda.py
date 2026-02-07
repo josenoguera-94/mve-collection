@@ -1,8 +1,7 @@
 import boto3
-import os
 
 # Initialize client outside the handler for connection reuse
-s3 = boto3.client('s3', endpoint_url=os.environ.get('ENDPOINT_URL'))
+s3 = boto3.client('s3')
 
 def lambda_handler(event, context):
     """
