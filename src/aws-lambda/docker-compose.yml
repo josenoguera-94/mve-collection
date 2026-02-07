@@ -5,11 +5,18 @@ services:
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=s3,lambda
+      - SERVICES=lambda,s3,iam,cloudformation,logs
       - DEBUG=0
     volumes:
       - localstack_data:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock
+
+  dev:
+    image: mcr.microsoft.com/devcontainers/python:2-3.14-trixie
+    volumes:
+      - .:/workspaces/aws-lambda:cached
+    network_mode: host
+    command: sleep infinity
 
 volumes:
   localstack_data:

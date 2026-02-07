@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+*.egg-info/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Local temporary files
+tmp/
+*.zip
+
+# IDE
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

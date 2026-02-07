@@ -1,0 +1,28 @@
+{
+  "name": "AWS Lambda",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "dev",
+  "workspaceFolder": "/workspaces/aws-lambda",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "moby": false
+    },
+    "ghcr.io/devcontainers/features/aws-cli:1": {},
+    "ghcr.io/devcontainers/features/terraform:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "hashicorp.terraform",
+        "mermaidchart.vscode-mermaid-chart",
+        "amazonwebservices.aws-toolkit-vscode"
+      ]
+    }
+  },
+  "containerEnv": {
+    "AWS_PROFILE": "localstack"
+  },
+  "postCreateCommand": "bash .devcontainer/postCreateCommand.sh"
+}

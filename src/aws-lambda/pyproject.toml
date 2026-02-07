@@ -1,0 +1,10 @@
+[project]
+name = "aws-lambda"
+version = "0.1.0"
+description = "Minimal Viable Example for AWS Lambda with S3 integration using LocalStack"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "boto3",
+    "python-dotenv",
+]

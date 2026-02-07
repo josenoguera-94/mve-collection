@@ -1,6 +1,9 @@
 import boto3
 import os
 
+# Initialize client outside the handler for connection reuse
+s3 = boto3.client('s3', endpoint_url=os.environ.get('ENDPOINT_URL'))
+
 def lambda_handler(event, context):
     """
     Lambda function that uploads an object to S3.
@@ -12,9 +15,6 @@ def lambda_handler(event, context):
     Returns:
         dict: Response with statusCode and body
     """
-    endpoint_url = os.environ.get('ENDPOINT_URL')
-    
-    s3 = boto3.client('s3', endpoint_url=endpoint_url)
     
     bucket_name = event['bucket_name']
     key = event['key']
