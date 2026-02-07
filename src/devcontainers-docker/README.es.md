@@ -129,7 +129,7 @@ Este es el corazón de los DevContainers. Analicemos cada sección:
 ```json
 {
   "name": "DevContainers Python Example",
-  "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
   "features": {
     "ghcr.io/devcontainers/features/aws-cli:1": {}
   },
@@ -155,7 +155,7 @@ El nombre de visualización para tu DevContainer. Aparece en la barra de estado 
 #### 2. **`image`** - Imagen Base del Contenedor
 
 ```json
-"image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye"
+"image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm"
 ```
 
 **Qué hace**: Especifica la imagen de Docker a usar como base para tu entorno de desarrollo.

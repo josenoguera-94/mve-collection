@@ -129,7 +129,7 @@ This is the heart of DevContainers. Let's break down each section:
 ```json
 {
   "name": "DevContainers Python Example",
-  "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
   "features": {
     "ghcr.io/devcontainers/features/aws-cli:1": {}
   },
@@ -155,7 +155,7 @@ The display name for your DevContainer. This appears in VS Code's status bar whe
 #### 2. **`image`** - Base Container Image
 
 ```json
-"image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye"
+"image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm"
 ```
 
 **What it does**: Specifies the Docker image to use as the base for your development environment.

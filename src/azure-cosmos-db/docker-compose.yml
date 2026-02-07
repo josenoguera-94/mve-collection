@@ -12,7 +12,7 @@ services:
 
   # Dev Container service
   dev:
-    image: mcr.microsoft.com/devcontainers/python:2-3.14-trixie
+    image: mcr.microsoft.com/devcontainers/python:3.12-bookworm
     network_mode: host
     volumes:
       - .:/workspaces/azure-container-apps:cached

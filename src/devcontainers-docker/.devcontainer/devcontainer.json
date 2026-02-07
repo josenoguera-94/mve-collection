@@ -1,6 +1,6 @@
 {
   "name": "DevContainers Python Example",
-  "image": "mcr.microsoft.com/devcontainers/python:2-3.14-trixie",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
   "features": {
     "ghcr.io/devcontainers/features/aws-cli:1": {}
   },
