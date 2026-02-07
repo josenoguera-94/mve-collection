@@ -36,12 +36,12 @@ Algunos ejemplos aparecen varias veces porque integran varios servicios cloud.
 
 | Servicio | MVE | Descripción |
 | :--- | :--- | :--- |
-| **S3** | [localstack-docker](./src/localstack-docker/) | Despliega una función Lambda que sube objetos a S3, simulando servicios de AWS localmente con LocalStack y Python. |
+| **S3** | [aws-lambda](./src/aws-lambda/) | Despliega una función Lambda que sube objetos a S3, emulado con LocalStack, Terraform, CloudFormation y Boto3. |
 | **S3** | [aws-dynamo-db](./src/aws-dynamo-db/) | Demuestra un pipeline de procesamiento de archivos donde las subidas a S3 disparan una Lambda para registrar metadatos en una tabla DynamoDB, todo emulado con LocalStack, Terraform y CloudFormation. |
 | **Dynamo DB** | [aws-dynamo-db](./src/aws-dynamo-db/) | Demuestra un pipeline de procesamiento de archivos donde las subidas a S3 disparan una Lambda para registrar metadatos en una tabla DynamoDB, todo emulado con LocalStack, Terraform y CloudFormation. |
 | **Dynamo DB** | [aws-step-functions](./src/aws-step-functions/) | Orquesta un flujo de registro de usuarios con AWS Step Functions que ejecuta Lambdas en paralelo y registra los resultados en DynamoDB, usando LocalStack y el AWS Toolkit. |
 | **RDS (Postgres)** | [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Demuestra un escenario de nube híbrida donde una Lambda de AWS (simulada en LocalStack) recupera credenciales de Secrets Manager vía Terraform para interactuar con una base de datos PostgreSQL externa. |
-| **Lambda** | [localstack-docker](./src/localstack-docker/) | Despliega una función Lambda que sube objetos a S3, simulando servicios de AWS localmente con LocalStack y Python. |
+| **Lambda** | [aws-lambda](./src/aws-lambda/) | Despliega una función Lambda que sube objetos a S3, emulado con LocalStack, Terraform, CloudFormation y Boto3. |
 | **Lambda** | [aws-dynamo-db](./src/aws-dynamo-db/) | Demuestra un pipeline de procesamiento de archivos donde las subidas a S3 disparan una Lambda para registrar metadatos en una tabla DynamoDB, todo emulado con LocalStack, Terraform y CloudFormation. |
 | **Lambda** | [aws-step-functions](./src/aws-step-functions/) | Orquesta un flujo de registro de usuarios con AWS Step Functions que ejecuta Lambdas en paralelo y registra los resultados en DynamoDB, usando LocalStack y el AWS Toolkit. |
 | **Step Functions** | [aws-step-functions](./src/aws-step-functions/) | Orquesta un flujo de registro de usuarios con AWS Step Functions que ejecuta Lambdas en paralelo y registra los resultados en DynamoDB, usando LocalStack y el AWS Toolkit. |

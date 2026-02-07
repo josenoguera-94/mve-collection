@@ -36,12 +36,12 @@ Some examples appear multiple times because they integrate several cloud service
 
 | Service | MVE | Description |
 | :--- | :--- | :--- |
-| **S3** | [localstack-docker](./src/localstack-docker/) | Deploys a Lambda function that uploads objects to S3, simulating AWS services locally using LocalStack and Python. |
+| **S3** | [aws-lambda](./src/aws-lambda/) | Deploys a Lambda function that uploads objects to S3, emulated with LocalStack, Terraform, CloudFormation, and Boto3. |
 | **S3** | [aws-dynamo-db](./src/aws-dynamo-db/) | Demonstrates a file processing pipeline where S3 uploads trigger a Lambda to log metadata into a DynamoDB table, all emulated with LocalStack, Terraform, and CloudFormation. |
 | **Dynamo DB** | [aws-dynamo-db](./src/aws-dynamo-db/) | Demonstrates a file processing pipeline where S3 uploads trigger a Lambda to log metadata into a DynamoDB table, all emulated with LocalStack, Terraform, and CloudFormation. |
 | **Dynamo DB** | [aws-step-functions](./src/aws-step-functions/) | Orchestrates a user onboarding workflow with AWS Step Functions that executes parallel Lambdas and logs results to DynamoDB, using LocalStack and the AWS Toolkit. |
 | **RDS (Postgres)** | [localstack-hybrid-cloud](./src/localstack-hybrid-cloud/) | Demonstrates a hybrid cloud scenario where an AWS Lambda (simulated in LocalStack) retrieves credentials from Secrets Manager via Terraform to interact with an external PostgreSQL database. |
-| **Lambda** | [localstack-docker](./src/localstack-docker/) | Deploys a Lambda function that uploads objects to S3, simulating AWS services locally using LocalStack and Python. |
+| **Lambda** | [aws-lambda](./src/aws-lambda/) | Deploys a Lambda function that uploads objects to S3, emulated with LocalStack, Terraform, CloudFormation, and Boto3. |
 | **Lambda** | [aws-dynamo-db](./src/aws-dynamo-db/) | Demonstrates a file processing pipeline where S3 uploads trigger a Lambda to log metadata into a DynamoDB table, all emulated with LocalStack, Terraform, and CloudFormation. |
 | **Lambda** | [aws-step-functions](./src/aws-step-functions/) | Orchestrates a user onboarding workflow with AWS Step Functions that executes parallel Lambdas and logs results to DynamoDB, using LocalStack and the AWS Toolkit. |
 | **Step Functions** | [aws-step-functions](./src/aws-step-functions/) | Orchestrates a user onboarding workflow with AWS Step Functions that executes parallel Lambdas and logs results to DynamoDB, using LocalStack and the AWS Toolkit. |
